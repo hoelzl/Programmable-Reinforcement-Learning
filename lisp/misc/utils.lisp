@@ -23,9 +23,7 @@
           (get fn 'si:debug))
   #+lispworks (lw:function-lambda-list fn)
   #+lucid (lcl:arglist fn)
-  #+sbcl (values (let ((st (sb-kernel:%fun-lambda-list fn)))
-                  (if (stringp st) (read-from-string st)
-                      #+ignore(eval:interpreted-function-arglist fn))))
+  #+sbcl (sb-introspect:function-lambda-list fn)
   #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl)
   (error 'not-implemented :proc (list 'arglist fn))) 
 

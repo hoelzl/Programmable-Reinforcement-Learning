@@ -125,10 +125,18 @@ Get the designated feature.  FEATURE-DESIGNATOR can be one of
   
   (if (functionp f)
       (let ((l (get-lambda-list f)))
-	(case (length l)
-	  (1 (lambda (s a) (declare (ignore a)) (funcall f s)))
-	  (2 f)
-	  (otherwise (error "Lambda list ~a for q-feature does not have length 1 or 2" l))))
+        ;; SBCL returns lambda-list '() for some functions that take
+        ;; an arbitrary number of arguments, e.g., (constantly 1).
+        ;; This hack fixes that until I find a better solution. --tc
+        (if (null l)
+            #+sbcl
+            (lambda (s a) (declare (ignore a)) (funcall f s))
+            #-sbcl
+            (error  "Lambda list ~a for q-feature has length 0" l)
+            (case (length l)
+              (1 (lambda (s a) (declare (ignore a)) (funcall f s)))
+              (2 f)
+              (otherwise (error "Lambda list ~a for q-feature does not have length 1 or 2" l)))))
     (constantly f)))
   
 
