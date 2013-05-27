@@ -73,6 +73,7 @@
 						 ))
 
 			   (:file "cache")
+                           #+allegro
 			   (:file "condition-variable")))
 		 
 		 

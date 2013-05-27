@@ -78,7 +78,8 @@ illegal-instantiation
   var-num
   var-names)
 
-(intern 'uninstantiated)
+;;; Is this really necessary? --tc
+(intern (symbol-name 'uninstantiated))
 
 (defmethod print-object ((x inst-var-accessors) str)
   (format str "<< Instantiation variable accessors >>"))

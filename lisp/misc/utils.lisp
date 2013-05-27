@@ -23,7 +23,7 @@
           (get fn 'si:debug))
   #+lispworks (lw:function-lambda-list fn)
   #+lucid (lcl:arglist fn)
-  #+sbcl (values (let ((st (sb-kernel:%function-arglist fn)))
+  #+sbcl (values (let ((st (sb-kernel:%fun-lambda-list fn)))
                   (if (stringp st) (read-from-string st)
                       #+ignore(eval:interpreted-function-arglist fn))))
   #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl)
@@ -111,8 +111,9 @@ If STREAM is nil, a string containing the output is returned.  Otherwise, nil is
 
   (with-standard-io-syntax
     (let
-	#+allegro ((excl:*print-nickname* t))
-	(format str "#.(utils:alist-to-hash '")
+	#+allegro ((excl:*print-nickname* t)) 
+        #-allegro ()
+        (format str "(utils:alist-to-hash '")
 	(write (hash-to-alist h) :stream str)
 	(format str " :test #'~a)"
 		(ecase (hash-table-test h)
@@ -358,7 +359,8 @@ Useful, for example, when saving a history of a given length for an algorithm."
 (defun check-not-null (x msg &rest args)
   "check-not-null X MSG &rest ARGS.  Check that X is not null and return it."
   (let ((val x))
-    (assert val () (concatenate 'string (format nil msg args) " was unexpectedly nil."))
+    (assert val () (concatenate 'string (apply #'format nil msg args)
+                                " was unexpectedly nil."))
     val))
 
 

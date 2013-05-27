@@ -43,7 +43,7 @@ Initargs
 	(check-exact-class pol '<greedy-policy>)
 	(format str "#.(make-instance 'policy:<greedy-policy> :q-function ")
 	(write (q-function pol) :stream str)
-	(format str " :random-choice ~W)"))
+	(format str " :random-choice ~W)" (random-choice pol)))
     (call-next-method)))
 
 		

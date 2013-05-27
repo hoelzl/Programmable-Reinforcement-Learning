@@ -133,15 +133,21 @@ print-current-node
 :child-edges
 :parent-edge
 :node-label"
-  (child-edges nil "list of child edges.")
-  (parent-edge nil "either the parent edge, or null if there's no parent (root node).")
-  (node-label nil "The node's label.  Nil by default."))
+  ;; A list of child edges.
+  (child-edges nil)
+  ;; Either the parent edge, or null if there's no parent (root node).
+  (parent-edge nil)
+  ;; The node's label.  Nil by default.
+  (node-label nil))
 
 (defstruct (edge (:conc-name nil) (:constructor make-edge (tail head &optional edge-label)))
   "Structure edge.  Create using make-edge TAIL HEAD &optional (EDGE-LABEL)."
-  (edge-label nil "Edge's label.  Nil by default.")
-  (head nil "Head node of edge.")
-  (tail nil "tail node of edge."))
+  ;; Edge's label.  Nil by default.
+  (edge-label nil)
+  ;; Head node of edge.
+  (head nil)
+  ;; Tail node of edge.
+  (tail nil))
 
 (defvar *current-node* nil)
 (defvar *max-print-depth* nil)

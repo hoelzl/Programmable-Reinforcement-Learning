@@ -69,8 +69,9 @@ It is an error for any of the values in the sets to be the symbol 'uninstantiate
 ;; constructor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod initialize-instance :after ((ps <prod-set>) &rest args 
+(defmethod initialize-instance :after ((ps <prod-set>) &rest args
 				       &key sets alist-keys (alist-test #'eql) inst-acc)
+  (declare (ignorable args))
   (when alist-keys
     (assert (not inst-acc))
     (set-inst-acc (make-alist-accessors alist-keys alist-test) ps))
@@ -111,7 +112,7 @@ It is an error for any of the values in the sets to be the symbol 'uninstantiate
 ;; subtypes of item-not-in-set
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defclass <invalid-inst> (item-not-in-set)
+(define-condition <invalid-inst> (item-not-in-set)
   ((reason :initarg :reason :reader reason))
   (:documentation "Class <invalid-inst> (item-not-in-set)
 Represents an explanation for an item not to be in a product set because of it not being a well-formed instantiation of the sort required by that product set."))
@@ -120,7 +121,7 @@ Represents an explanation for an item not to be in a product set because of it n
   (format nil "the instantiation is invalid for reason ~a" (reason c)))
 
 
-(defclass <invalid-component> (item-not-in-set)
+(define-condition <invalid-component> (item-not-in-set)
   ((comp :initarg :comp :reader comp)
    (comp-set :initarg :comp-set :reader comp-set)
    (reason :initarg :reason :reader reason))

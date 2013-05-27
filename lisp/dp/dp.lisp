@@ -32,7 +32,7 @@ the algorithms explicitly form the transition and reward matrices, and will ther
 ;; exported functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgeneric value-iteration (m &key (epsilon .01) (verbose nil) (init-val) (discount 1.0))
+(defgeneric value-iteration (m &key epsilon verbose init-val discount)
   (:documentation
    "value-iteration M &key (EPSILON .01) (VERBOSE NIL) (INIT-VAL) (DISCOUNT 1.0).  Perform value iteration on M, until value function doesn't change by more than EPSILON.  Starts with INIT-VAL, or the 0 vector if it's not provided.  Updates are done serially in that if a state s1 is updated during an iteration, and state s2 is later updated during the same iteration, then the update for s2 makes use of the new value of s1.
 
@@ -40,7 +40,7 @@ Methods are currently provided for M being an <mdp> or <sparse-tabular-smdp>.
 
 Returns value function stored in a vector."))
 
-(defgeneric policy-iteration (m &key (epsilon -1) (k -1) (verbose nil) (init-pol) (discount 1.0))
+(defgeneric policy-iteration (m &key epsilon k verbose init-pol discount)
   (:documentation "policy-iteration M &key (EPSILON -1) (K -1) (VERBOSE nil) (INIT-POL)  (DISCOUNT 1.0).  Performs (modified) policy iteration on M.  Starts with INIT-POL or policy of all 0's if it's not provided.  Each policy improvement step is exact and the policy evaluation step either value iteration using stopping parameters epsilon and k (at least one of which must be given a positive value).  Terminates when policy is unchanged.
 
 Methods are currently provided for M being an <mdp> or <sparse-tabular-smdp>.n
@@ -49,7 +49,7 @@ Methods are currently provided for M being an <mdp> or <sparse-tabular-smdp>.n
 
  Note : if epsilon version is used, and the initial policy is improper, then the first policy evaluation step will diverge."))
 
-(defgeneric policy-evaluation (m pol &key (epsilon .01) (discount 1.0))
+(defgeneric policy-evaluation (m pol &key epsilon discount)
   (:documentation "policy-evaluation M POL &key (EPSILON .01) (DISCOUNT 1.0).  Perform policy evaluation on policy POL in mdp M and return its value function.  Methods are currently provided for M being an <mdp> or <sparse-tabular-smdp>."))
 
 (defgeneric q-from-v (m v &optional discount)

@@ -13,7 +13,7 @@
 (in-package lin-alg)
 
 
-(defgeneric lp-dist (a1 a2 &optional (p 1))
+(defgeneric lp-dist (a1 a2 &optional p)
   (:documentation "lp-dist A1 A2 &optional (P 1)
 Return the l^p distance between two arrays of reals.  P is the norm to use. Either a positive number, or the symbol 'infinity to indicate infinity-norm"))
 
