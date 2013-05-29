@@ -443,6 +443,11 @@ The macro is useful to protect against situations when the standard semantics of
     (unless (member (class-name (class-of x)) class-list)
       (error 'exact-class-error :instance x :class-list class-list))))
 
+(defun required-initarg (&optional name)
+  (if name
+      (error "The initarg ~W is missing." name)
+      (error "A required initarg is missing.")))
+
 (in-package cl-user)
 
 

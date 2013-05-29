@@ -34,7 +34,7 @@
 	       :reader trans-dist-fn
 	       :documentation "If instantiated, holds the transition distribution.")
    (avail-actions :initarg :avail-actions
-		  :type function
+		  :type (or null function)
 		  :reader avail-actions-fn
 		  :initform nil
 		  :documentation "If instantiated, holds the avail actions function.")

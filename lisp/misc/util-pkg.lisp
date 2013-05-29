@@ -134,6 +134,7 @@
 	   #:pprint-tabulated-pair
 	   #:without-quotes
 	   #:create-mixin
+           #:required-initarg
 	   
 	   #:matlab-write
 	   #:matlab-read

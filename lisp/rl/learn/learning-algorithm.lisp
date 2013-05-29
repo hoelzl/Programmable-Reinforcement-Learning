@@ -61,7 +61,7 @@ knowledge-state and any methods from their parent (e.g. get-q-fn for subclasses 
 
 (defmethod inform-start-execution :before ((alg <learning-algorithm>))
   (awhen (hist-out-dir alg)
-    (ensure-directories-exist (concatenate 'string it "/dummy")))
+    (ensure-directories-exist (pathname (concatenate 'string it "/dummy"))))
   (setf (env-steps alg) 0
 	(episode-steps alg) 0))
   

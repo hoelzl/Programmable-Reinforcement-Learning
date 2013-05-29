@@ -183,7 +183,7 @@ NEW-VALUES list of values"
 			   'nav-choice))
 		     (= (mdp:outcome-reward outcome) (reward 2tbn s u s2)))
 		s2
-	      (error 'rv-inverse-not-defined outcome))))
+	      (error 'rv-inverse-not-defined :y outcome))))
 	(prob:cond-dist 2tbn (cons s u)))))
     (serve-exit (make-deterministic-dist 
 		 (mdp:make-outcome (change-fields omega (stack) ('pass-choice-exit)) 

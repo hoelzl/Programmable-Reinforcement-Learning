@@ -26,21 +26,26 @@
 (defclass <maze-mdp> (<mdp> <grid-world>)
   (
    (rewards :type array
-		:initarg :rewards
-		:reader rewards)
+            :initarg :rewards
+            :initform #()
+            :reader rewards)
    (cost-of-living :type integer
 		   :initarg :col
+                   :initform 0
 		   :reader col)
    (action-set :reader action-set
 	       :initarg :action-set)
    (move-success-prob :type float
 		      :initarg :msp
+                      :initform 0.0
 		      :reader msp)
    (term :type array
 	 :initarg :term
+         :initform #()
 	 :reader term)
    (collision-cost :type float
 		   :initarg :col-cost
+                   :initform 0.0
 		   :reader col-cost)))
 
 
@@ -72,7 +77,7 @@
 ;; the origin is at the top-left-corner, S increases the first coordinate and E increases the second coordinate.
 (defun make-maze-mdp (world-map &key (dims (array-dimensions world-map)) (rewards (make-array dims :initial-element 0))
 				     (move-success-prob .9) (termination (make-array dims :initial-element nil))
-				     (collision-cost 1) (cost-of-living 1) (allow-rests t))
+				     (collision-cost 1.0) (cost-of-living 1) (allow-rests t))
 
   (make-instance '<maze-mdp> :world-map world-map :legality-test #'identity
 		 :rewards rewards :msp move-success-prob :term termination
@@ -91,7 +96,6 @@
 	 (if (eq a 'R)
 	     0
 	   (if (equal s d)
-		 
 					; we must have hit a wall
 	       (- (col-cost m))
 

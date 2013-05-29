@@ -67,7 +67,7 @@
 (defparameter *term* (make-array '(2 3) :initial-contents '((nil nil T) (nil nil nil))))
 (defparameter *rew* (make-array '(2 3) :initial-contents '((2 0 4) (1 -2 -3))))
 
-(defparameter *test-mdp-2* (make-maze-mdp *world-map* :rewards *rew* :cost-of-living 5 :move-success-prob .8 :termination *term* :collision-cost 2))
+(defparameter *test-mdp-2* (make-maze-mdp *world-map* :rewards *rew* :cost-of-living 5 :move-success-prob .8 :termination *term* :collision-cost 2.0))
 
 (in-package common-lisp-user)	      
    
