@@ -1,4 +1,4 @@
-(in-package fn-approx)
+(in-package #:fn-approx)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32,6 +32,7 @@
 "))
 
 (defmethod initialize-instance :after ((fa <tabular-fn-approx>) &rest args)
+  (declare (ignore args))
   (set-params (or (params fa) (make-hash-table :test (test fa))) fa)
   (set-test (hash-table-test (params fa)) fa))
 

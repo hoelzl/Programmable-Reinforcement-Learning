@@ -6,7 +6,7 @@
 ;; equalp hash-tables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 (defgeneric canonicalize (x)
   (:documentation "canonicalize X.  Return a 'canonical' representative of the set of all objects that are 'the same' as X.  The intended meaning is that, whenever X and Y satisfy #'utils:same, then (canonicalize X) and (canonicalize Y) will be #'equal.  This is useful when making hashtables, etc. of complex objects.

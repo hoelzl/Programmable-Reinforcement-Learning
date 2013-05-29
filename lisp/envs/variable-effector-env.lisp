@@ -1,4 +1,6 @@
-(defpackage variable-effector-env
+(in-package #:common-lisp-user)
+
+(defpackage #:variable-effector-env
   (:documentation "Package variable effector-env (ve-env).
 
 A toy domain adapted from Stratagus, which provides an example of an environment where the set of effectors changes over time.
@@ -32,34 +34,34 @@ peasant
 footman
 
 ")
-  (:nicknames ve-env)
-  (:use create-env
-	cl
-	utils
-	prod-set
-	inst-vars
-	policy
-	set)
+  (:nicknames #:ve-env)
+  (:use #:create-env
+	#:common-lisp
+	#:utils
+	#:prod-set
+	#:inst-vars
+	#:policy
+	#:set)
   
   (:export
-   <ve-env>
-   units
-   resources
-   enemy-hps
-   base-hp
-   peas-cost
-   footman-cost
-   gather
-   train-peas
-   train-footman
-   wait
-   attack
-   defend
-   peasant
-   footman
+   #:<ve-env>
+   #:units
+   #:resources
+   #:enemy-hps
+   #:base-hp
+   #:peas-cost
+   #:footman-cost
+   #:gather
+   #:train-peas
+   #:train-footman
+   #:wait
+   #:attack
+   #:defend
+   #:peasant
+   #:footman
    ))
 
-(in-package ve-env)
+(in-package #:ve-env)
 
 
 (defstruct (ve-env-state (:conc-name nil))

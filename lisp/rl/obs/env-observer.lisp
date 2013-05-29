@@ -1,18 +1,20 @@
-(defpackage env-observer
+(in-package #:common-lisp-user)
+
+(defpackage #:env-observer
   (:documentation "Package env-observer.  Defines <env-observer>, a type of observer that prints out what happens in the environment to a stream.
 
 Exports
 -------
 <env-observer>
 make-env-observer")
-  (:use cl
-	rl-obs
-	utils)
+  (:use #:common-lisp
+	#:rl-obs
+	#:utils)
   (:export 
-   <env-observer>
-   make-env-observer))
+   #:<env-observer>
+   #:make-env-observer))
 
-(in-package env-observer)
+(in-package #:env-observer)
   
 (defclass <env-observer> (<rl-observer>)
   ((output-stream :type stream

@@ -1,5 +1,7 @@
+(in-package #:common-lisp-user)
+
 ;; Package info
-(defpackage grid-world
+(defpackage #:grid-world
   (:documentation "envs/grid-world.lisp
 Code for navigation in worlds whose map is a subset of a 2d grid.  The world is represented by a 2d array of integers where increasing the first coordinate corresponds to going south and increasing the second coordinate to going east. Locations in the grid are represented as two-element lists.  You can allow walls, doors, etc by using different values in the corresponding location in the array.  To use this when creating new environments, make a class that inherits from both <grid-world> and <env> (see resource-balance-env for an example).  To use a grid world directly, you can also just use a 2d boolean array (where t indicates a legal square) and all the operations will work.
 
@@ -28,34 +30,34 @@ Exported symbols
 
 Constants
 - *moves* : list of legal directions")
-  (:nicknames gw)
-  (:use common-lisp
-	utils)
-  (:export <grid-world>
-	   result
-	   result-legal
-	   rot-clockwise
-	   rot-counterclockwise
-	   N
-	   S
-	   E
-	   W
-	   R
-	   noisy-move-dist
-	   sample-noisy-move
-	   set-test
-	   world-map
-	   manhattan-dist
-	   *moves*
-	   unif-grid-dist-sampler
-	   dimensions
-	   shortest-path-dist
-	   is-valid-loc
-	   is-legal-loc
-	   loc-value
-	   weighted-grid-dist-sampler))
+  (:nicknames #:gw)
+  (:use #:common-lisp
+	#:utils)
+  (:export #:<grid-world>
+           #:result
+           #:result-legal
+           #:rot-clockwise
+           #:rot-counterclockwise
+           #:N
+           #:S
+           #:E
+           #:W
+           #:R
+           #:noisy-move-dist
+           #:sample-noisy-move
+           #:set-test
+           #:world-map
+           #:manhattan-dist
+           #:*moves*
+           #:unif-grid-dist-sampler
+           #:dimensions
+           #:shortest-path-dist
+           #:is-valid-loc
+           #:is-legal-loc
+           #:loc-value
+           #:weighted-grid-dist-sampler))
 
-(in-package grid-world)
+(in-package #:grid-world)
 
 
 ;; TODO clean up
@@ -102,16 +104,17 @@ Constants
 ;; 
 ;; returns a function that takes in zero arguments and returns a uniformly chosen
 ;; element from the set of locations in the grid whose value satisfies the test.
-(defmethod unif-grid-dist-sampler ((gw <grid-world>))
-  (let* ((grid (world-map gw))
-	 (dims (array-dimensions grid))
-	 (locs (loop
+(defgeneric unif-grid-dist-sampler (grid-world)
+  (:method ((gw <grid-world>))
+    (let* ((grid (world-map gw))
+           (dims (array-dimensions grid))
+           (locs (loop
 		   for i below (first dims)
 		   append (loop
-			      for j below (second dims)
-			      if (funcall (test gw) (aref grid i j))
+                            for j below (second dims)
+                            if (funcall (test gw) (aref grid i j))
 			      collect (list i j)))))
-    (lambda () (elt locs (random (length locs))))))
+      (lambda () (elt locs (random (length locs)))))))
 
 
 ;; weighted-grid-dist-sampler
@@ -250,10 +253,12 @@ Constants
 ;; clockwise and counterclockwise rotations of a with prob slip-prob each.  Next, if 
 ;; result l a-actual is on the map and valid, that's the new loc.  otherwise the new loc is l.
 ;;
-(defmethod noisy-move-dist ((gw <grid-world>) l a msp)
-  "Return list of pairs of form (new-loc . prob) representing the transition distribution"
-  (assert (member a *moves*) () "~a must be a valid move in grid-world:noisy-move-dist" a)
-	  
+(defgeneric noisy-move-dist (grid-world l a msp)
+  (:documentation
+   "Return list of pairs of form (new-loc . prob) representing the transition distribution")
+
+  (:method ((gw <grid-world>) l a msp)
+    (assert (member a *moves*) () "~a must be a valid move in grid-world:noisy-move-dist" a)
     (let* ((slip-prob (/ (- 1 msp) 2))
 	   (forward-loc (result l a))
 	   (left-loc (result l (rot-counterclockwise a)))
@@ -263,11 +268,10 @@ Constants
 	   (right-prob (* slip-prob (indicator (is-legal-loc gw right-loc))))
 	   (stay-prob (- 1 (+ forward-prob left-prob right-prob))))
       (loop
-	  for p in (list forward-prob left-prob right-prob stay-prob)
-	  for new-loc in (list forward-loc left-loc right-loc l)
-			 
-	  when (> p 0) collect (cons new-loc p))))
-
+        for p in (list forward-prob left-prob right-prob stay-prob)
+        for new-loc in (list forward-loc left-loc right-loc l)
+        
+        when (> p 0) collect (cons new-loc p)))))
 
 
 (defun compute-shortest-paths (gw)
@@ -348,12 +352,14 @@ the length of the shortest path between them, or nil if there's no such path.  I
 ;; l : location
 ;;
 ;; return value of this location.  Assumes location is valid.
-(defmethod loc-value ((gw <grid-world>) l)
-  (apply #'aref (world-map gw) l))
+(defgeneric loc-value (grid-world l)
+  (:method ((gw <grid-world>) l)
+    (apply #'aref (world-map gw) l)))
 
 
-(defmethod world-map ((gw <grid-world>))
-  (wmap gw))
+(defgeneric world-map (grid-world)
+  (:method ((gw <grid-world>))
+    (wmap gw)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; simpler version that just uses a 2d array

@@ -21,18 +21,19 @@
 ;; - bucket-val
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(in-package #:common-lisp-user)
 
-(defpackage bucketed-counts
-  (:use common-lisp)
-  (:export <bucketed-counts>
-	   get-current-val
-	   bucket-val
-	   bucket-function
-	   reset-table
-	   reset-counts))
+(defpackage #:bucketed-counts
+  (:use #:common-lisp)
+  (:export #:<bucketed-counts>
+	   #:get-current-val
+	   #:bucket-val
+	   #:bucket-function
+	   #:reset-table
+	   #:reset-counts))
   
 
-(in-package bucketed-counts)
+(in-package #:bucketed-counts)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class definition

@@ -1,5 +1,7 @@
-(defpackage calisp-smdpq
-  (:nicknames csq)
+(in-package #:common-lisp-user)
+
+(defpackage #:calisp-smdpq
+  (:nicknames #:csq)
   (:documentation "Package calisp-smdpq.  The smdp q-learning algorithm, applied to concurrent alisp. 
 
 Types
@@ -7,14 +9,14 @@ Types
 
 See also calisp-user package for other operations on <calisp-learning-algorithm> objects
 ")
-  (:export <smdpq>)
-  (:use common-lisp
-	utils
-	policy
-	calisp-obs))
+  (:export #:<smdpq>)
+  (:use #:common-lisp
+	#:utils
+	#:policy
+	#:calisp-obs))
 
 
-(in-package calisp-smdpq)
+(in-package #:calisp-smdpq)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

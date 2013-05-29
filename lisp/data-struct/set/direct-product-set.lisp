@@ -1,4 +1,6 @@
-(defpackage direct-product-set
+(in-package #:common-lisp-user)
+
+(defpackage #:direct-product-set
   (:documentation "Package direct-product-set (prod-set)
 
 A <prod-set> is the direct product of a finite number of finite [numbered-set]s. 
@@ -15,21 +17,22 @@ inst-acc - the instantiation accessor for elements of the set
 make-subspace - create the subspace corresponding to some subset of the variables.
 
 ")
-  (:nicknames prod-set)
+  (:nicknames #:prod-set)
   (:export 
-   <prod-set>
-   <var-set>
-   sets
-   uninstantiated
-   not-used
-   inst-acc
-   make-subspace)
-  (:use cl
-	utils
-	inst-vars
-	set))
+   #:<prod-set>
+   #:<var-set>
+   #:sets
+   #:uninstantiated
+   #:not-used
+   #:inst-acc
+   #:make-subspace)
+  (:use 
+   #:common-lisp
+   #:utils
+   #:inst-vars
+   #:set))
 
-(in-package prod-set)
+(in-package #:prod-set)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

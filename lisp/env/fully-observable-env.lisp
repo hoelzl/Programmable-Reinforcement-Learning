@@ -3,7 +3,7 @@
 ;; defines the <fully-observable-env> class
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package env)
+(in-package #:env)
 
 (defclass <fully-observable-env> (<env>)
   ()
@@ -16,7 +16,7 @@
 (defmethod sample-init-percept ((e <fully-observable-env>) s)
   s)
 
-
+;;; TODO: This should probably be in env.lisp, since it is called by CURRENT-EFFECTORS.
 (defgeneric get-state (e)
   (:documentation "get-state FULLY-OBSERVABLE-ENV.  Return the current state of FULLY-OBSERVABLE-ENV.  The returned object should be treated as immutable, since the environment might hold a reference to it.")
   (:method ((e <fully-observable-env>))

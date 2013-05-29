@@ -1,10 +1,12 @@
-(defpackage chi-square
-  (:export chi-square-inv-cdf)
-  (:use common-lisp
-	utils))
+(in-package #:common-lisp-user)
+
+(defpackage #:chi-square
+  (:use #:common-lisp
+	#:utils)
+  (:export #:chi-square-inv-cdf))
 
 
-(in-package chi-square)
+(in-package #:chi-square)
     
 
 

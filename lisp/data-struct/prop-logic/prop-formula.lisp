@@ -1,4 +1,6 @@
-(defpackage prop-logic
+(in-package #:common-lisp-user)
+
+(defpackage #:prop-logic
   (:documentation "Package for representing formulas in propositional logic.
 
 Formulas are representing using the [formula] type.  Elementary propositions are represented by symbols, and t and nil represent the logical constants TRUE and FALSE.  A propositional state, using the closed world assumption, is represented by a list of propositions that are true in that state.
@@ -55,53 +57,53 @@ pprint-dnf
 
    ")
   
+  (:use
+   #:common-lisp
+   #:utils
+   #:set)
 
   (:export
-   conjoin
-   conjoin-list
-   disjoin
-   disjoin-list
-   negate
-   conjuncts
-   disjuncts
-   negatee
-   literal-prop
+   #:conjoin
+   #:conjoin-list
+   #:disjoin
+   #:disjoin-list
+   #:negate
+   #:conjuncts
+   #:disjuncts
+   #:negatee
+   #:literal-prop
    
-   is-state
-   [state]
-   is-formula
-   [formula]
-   is-literal
-   is-negation
-   is-conjunction
-   is-disjunction
+   #:is-state
+   #:[state]
+   #:is-formula
+   #:[formula]
+   #:is-literal
+   #:is-negation
+   #:is-conjunction
+   #:is-disjunction
 
-   holds
-   implies
+   #:holds
+   #:implies
    
-   standardize-dnf
-   sort-dnf
-   simplify-dnf
-   dnf-or
-   dnf-and
-   is-dnf-clause
-   is-dnf-formula
-   dnf-clauses
+   #:standardize-dnf
+   #:sort-dnf
+   #:simplify-dnf
+   #:dnf-or
+   #:dnf-and
+   #:is-dnf-clause
+   #:is-dnf-formula
+   #:dnf-clauses
    
-   make-dnf-set
-   <dnf-set>
-   formula
-   props
+   #:make-dnf-set
+   #:<dnf-set>
+   #:formula
+   #:props
    
-   pprint-dnf
-   )
-  (:use
-   cl
-   utils
-   set))
+   #:pprint-dnf
+   ))
    
 
-(in-package prop-logic)
+(in-package #:prop-logic)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

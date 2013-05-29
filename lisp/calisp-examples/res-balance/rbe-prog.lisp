@@ -1,4 +1,6 @@
-(defpackage rbe-prog
+(in-package #:common-lisp-user)
+
+(defpackage #:rbe-prog
   (:documentation "Concurrent Alisp program for resource balance environment
 rbe-prog
 make-rbe-prog
@@ -23,44 +25,44 @@ rbe-reward-decomp2
 ")
   #+short-nicknames (:nicknames rp)
 
-  (:use common-lisp
-	utils
-	set
-	calisp-prog)
-  (:import-from rbe
-		N
-		S
-		E
-		W
-		R
-		P
-		D
-		gold
-		wood)
+  (:use #:common-lisp
+	#:utils
+	#:set
+	#:calisp-prog)
+  (:import-from #:rbe
+		#:N
+		#:S
+		#:E
+		#:W
+		#:R
+		#:P
+		#:D
+		#:gold
+		#:wood)
 		
 		
-  (:export rbe-prog
-	   make-rbe-prog
-	   gather-wood
-	   nav-choice
-	   task-choice
-	   gather-gold
-	   new-peasant
-	   G
-	   N
-	   S
-	   E
-	   W
-	   R
-	   P
-	   D
-	   loc
-	   get-resource
-	   dropoff-resource
-	   rbe-reward-decomp
-	   rbe-reward-decomp2))
+  (:export #:rbe-prog
+	   #:make-rbe-prog
+	   #:gather-wood
+	   #:nav-choice
+	   #:task-choice
+	   #:gather-gold
+	   #:new-peasant
+	   #:G
+	   #:N
+	   #:S
+	   #:E
+	   #:W
+	   #:R
+	   #:P
+	   #:D
+	   #:loc
+	   #:get-resource
+	   #:dropoff-resource
+	   #:rbe-reward-decomp
+	   #:rbe-reward-decomp2))
 
-(in-package rbe-prog)
+(in-package #:rbe-prog)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

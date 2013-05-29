@@ -1,4 +1,4 @@
-(in-package env)
+(in-package #:env)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15,6 +15,7 @@
   (:documentation "Abstract class <env>.  Defines an environment where agents do actions and get reward.  See documentation for env-user and create-env packages."))
 
 (defmethod initialize-instance :after ((e <env>) &rest args &key (initialize-state t))
+  (declare (ignore args))
   (when initialize-state
     (reset e)))
 

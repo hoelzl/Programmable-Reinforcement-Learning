@@ -3,7 +3,7 @@
 ;; Defines various components of the joint state of a Concurrent ALisp program 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package calisp)
+(in-package #:calisp)
 
 
 

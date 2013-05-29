@@ -3,7 +3,7 @@
 ;; operations on 'potential sets' (e.g. graphical models)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package pot-set)
+(in-package #:pot-set)
 
 
 (defparameter *argops* (list (cons *max* #'argmax) (cons *min* #'argmin)))

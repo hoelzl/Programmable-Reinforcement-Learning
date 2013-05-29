@@ -1,15 +1,15 @@
-(defpackage maxq0
+(defpackage #:maxq0
   (:documentation
    "Package for the MAXQ0 algorithm and associated feature templates for concurrent ALisp programs.
 ") 
-  (:use common-lisp
-	utils
-	policy
-	calisp-obs)
+  (:use #:common-lisp
+	#:utils
+	#:policy
+	#:calisp-obs)
   (:export
-        <maxq0>))
+        #:<maxq0>))
 
-(in-package maxq0)
+(in-package #:maxq0)
 
 (defclass <maxq0> (<calisp-learning-algorithm> <q-learning-algorithm>)
    ((prev-omega :accessor prev-omega)

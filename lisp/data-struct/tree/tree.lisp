@@ -1,4 +1,6 @@
-(defpackage tree
+(in-package #:common-lisp-user)
+
+(defpackage #:tree
   (:documentation "Package containing a simple implementation of trees in which nodes and edges can be labelled.
 
 
@@ -66,62 +68,63 @@ move-par
 print-current-node
 ")
 
-  (:use cl
-	utils)
+  (:use #:common-lisp
+	#:utils)
+  
   (:export
-   make-node
-   child-edges
-   parent-edge
-   node-label
-   node
+   #:make-node
+   #:child-edges
+   #:parent-edge
+   #:node-label
+   #:node
    
-   make-edge
-   head
-   tail
-   edge-label
-   edge
+   #:make-edge
+   #:head
+   #:tail
+   #:edge-label
+   #:edge
    
-   is-inconsistent-tree
-   is-consistent-tree
-   cycle
-   incorrect-child-edge
-   incorrect-parent-edge
-   not-root
+   #:is-inconsistent-tree
+   #:is-consistent-tree
+   #:cycle
+   #:incorrect-child-edge
+   #:incorrect-parent-edge
+   #:not-root
    
-   get-root
-   get-child
-   children
-   get-parent
-   get-child-edge-by-label
-   get-descendant
-   depth
+   #:get-root
+   #:get-child
+   #:children
+   #:get-parent
+   #:get-child-edge-by-label
+   #:get-descendant
+   #:depth
    
-   add-new-child
-   add-subtree
-   remove-subtree
-   remove-subtree-below
-   leaf?
-   num-nodes
+   #:add-new-child
+   #:add-subtree
+   #:remove-subtree
+   #:remove-subtree-below
+   #:leaf?
+   #:num-nodes
    
-   copy-subtree
-   copy-subtree-below
+   #:copy-subtree
+   #:copy-subtree-below
    
-   preorder-iterator
-   do-preorder
-   map-preorder
-   postorder-iterator
-   do-postorder
-   map-postorder
+   #:preorder-iterator
+   #:do-preorder
+   #:map-preorder
+   #:postorder-iterator
+   #:do-postorder
+   #:map-postorder
    
-   print-tree
-   *current-node*
-   *max-print-depth*
-   move-child
-   move-par
-   print-current-node
+   #:print-tree
+   #:*current-node*
+   #:*max-print-depth*
+   #:move-child
+   #:move-par
+   #:print-current-node
    ))
 
-(in-package tree)
+(in-package #:tree)
   
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

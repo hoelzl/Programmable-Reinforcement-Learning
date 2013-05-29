@@ -1,4 +1,6 @@
-(defpackage fn-approx 
+(in-package #:common-lisp-user)
+
+(defpackage #:fn-approx 
   (:documentation "Contains code for representing parametrized function approximators.
 
 Types
@@ -31,27 +33,28 @@ For subclasses
 set-params
 params")
 
-  (:use common-lisp
-	utils)
-  (:export <fn-approx>
-	   <tabular-fn-approx>
-	   <linear-fn-approx>
-	   <linear-fn-approx-with-bounds>
-	   <array-fn-approx>
-	   unknown-item
-	   unknown-item-evaluate
-	   unknown-item-update
-	   fn-approx
-	   reset
-	   update
-	   evaluate
-	   params
-	   get-params
-	   clone
-	   set-params))
+  (:use #:common-lisp
+	#:utils)
+
+  (:export #:<fn-approx>
+	   #:<tabular-fn-approx>
+	   #:<linear-fn-approx>
+	   #:<linear-fn-approx-with-bounds>
+	   #:<array-fn-approx>
+	   #:unknown-item
+	   #:unknown-item-evaluate
+	   #:unknown-item-update
+	   #:fn-approx
+	   #:reset
+	   #:update
+	   #:evaluate
+	   #:params
+	   #:get-params
+	   #:clone
+	   #:set-params))
 
 
-(in-package fn-approx)
+(in-package #:fn-approx)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

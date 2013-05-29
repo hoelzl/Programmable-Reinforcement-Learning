@@ -2,17 +2,17 @@
 ;; adv-tact-env.lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage adv-tact-env
-  (:use common-lisp
-	utils
-	stratagus-env
-        create-env
+(defpackage #:adv-tact-env
+  (:use #:common-lisp
+	#:utils
+	#:stratagus-env
+        #:create-env
   )
-  (:export <adv-tact-env>))
+  (:export #:<adv-tact-env>))
 	   
 	   
 
-(in-package adv-tact-env)
+(in-package #:adv-tact-env)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

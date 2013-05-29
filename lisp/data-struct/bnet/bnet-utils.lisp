@@ -1,4 +1,4 @@
-(in-package bnet)
+(in-package #:bnet)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; topological sort

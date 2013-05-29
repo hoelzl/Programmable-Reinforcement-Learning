@@ -1,4 +1,6 @@
-(defpackage probability
+(in-package #:common-lisp-user)
+
+(defpackage #:probability
   (:documentation "A package for probability distributions and operations on them.  
 
 Main types
@@ -61,54 +63,56 @@ rv-inverse-not-defined - signalled by inverse functions of random variables for 
 
 Constants
 ---------
-*prob-dist-sum-tol* - valid distributions must sum to within this of 1.0
++prob-dist-sum-tol+ - valid distributions must sum to within this of 1.0
 
 ")
   
-  (:nicknames prob)
-  (:export <prob-dist>
-	   [prob-dist]
-	   [cond-prob-dist]
-	   <cond-prob-dist>
-	   [random-variable]
-	   <rv-dist>
-	   <sampling-without-replacement>
-	   <sampling-with-replacement>
-	   make-multinomial-dist
-	   make-boltzmann-dist
-	   make-deterministic-dist
-	   make-unif-dist-over-set
-	   sample-uniformly
-	   sample-multinomial
-	   make-rv-dist
-	   make-invertible-rv-dist
-	   make-mixture-dist
-	   standardize-alist-prob-dist
-	   sample
-	   prob
-	   is-valid-prob-dist
-	   map-prob-dist
-	   updatef
-	   clone-dist
-	   cond-prob
-	   cond-dist
-	   cond-sample
-	   cond-exp
-	   evaluate-rv
-	   expectation
-	   sample-iterator
-	   sample-space
-	   do-sample-points
-	   invalid-distribution
-	   cond-dist-not-defined
-	   rv-inverse-not-defined
-	   element-not-in-domain)
-  (:use common-lisp
-	utils
-	set))
+  (:nicknames #:prob)
+  
+  (:use #:common-lisp
+	#:utils
+	#:set)
+
+  (:export #:<prob-dist>
+	   #:[prob-dist]
+	   #:[cond-prob-dist]
+	   #:<cond-prob-dist>
+	   #:[random-variable]
+	   #:<rv-dist>
+	   #:<sampling-without-replacement>
+	   #:<sampling-with-replacement>
+	   #:make-multinomial-dist
+	   #:make-boltzmann-dist
+	   #:make-deterministic-dist
+	   #:make-unif-dist-over-set
+	   #:sample-uniformly
+	   #:sample-multinomial
+	   #:make-rv-dist
+	   #:make-invertible-rv-dist
+	   #:make-mixture-dist
+	   #:standardize-alist-prob-dist
+	   #:sample
+	   #:prob
+	   #:is-valid-prob-dist
+	   #:map-prob-dist
+	   #:updatef
+	   #:clone-dist
+	   #:cond-prob
+	   #:cond-dist
+	   #:cond-sample
+	   #:cond-exp
+	   #:evaluate-rv
+	   #:expectation
+	   #:sample-iterator
+	   #:sample-space
+	   #:do-sample-points
+	   #:invalid-distribution
+	   #:cond-dist-not-defined
+	   #:rv-inverse-not-defined
+	   #:element-not-in-domain))
 
 
-(in-package probability)
+(in-package #:probability)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -175,7 +179,7 @@ Conditional distributions should never modify the object being conditioned on."
 ;; constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconstant *prob-dist-sum-tol* .0001)
+(defconstant +prob-dist-sum-tol+ .0001)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; operations for probability distributions

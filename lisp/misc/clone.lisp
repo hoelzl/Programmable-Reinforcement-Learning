@@ -13,7 +13,7 @@
 ;; Also defines clone-into
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 
 (defgeneric clone (x)

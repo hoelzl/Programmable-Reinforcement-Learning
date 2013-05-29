@@ -3,7 +3,7 @@
 ;; Defines <greedy-policy> class
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package policy)
+(in-package #:policy)
 
 (defclass <greedy-policy> (<policy>)
   ((q-function :type q-fn:<q-function>

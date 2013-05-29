@@ -3,7 +3,7 @@
 ;; Defines the <tabular-value-fn> class
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package value-fn)
+(in-package #:value-fn)
 
 (defclass <tabular-value-fn> (<value-fn>)
   ((vals :initarg :vals

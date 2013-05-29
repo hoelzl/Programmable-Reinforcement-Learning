@@ -1,4 +1,4 @@
-(in-package aed)
+(in-package #:aed)
 
 (defclass <array-exit-distribution> (<cond-prob-dist>)
   ((featurizer :reader featurizer :initarg :featurizer :type function
@@ -14,6 +14,7 @@ Initargs
 "))
 
 (defmethod initialize-instance :after ((d <array-exit-distribution>) &rest args &key key-fn num-keys)
+  (declare (ignore args))
   (assert (and key-fn num-keys))
   (unless (slot-boundp d 'cond-dists)
     (set-cond-dists (make-array num-keys :initial-element nil) d)))

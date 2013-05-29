@@ -1,7 +1,4 @@
-(in-package prod-set)
-
-
-
+(in-package #:prod-set)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class definition.  
@@ -23,7 +20,7 @@ Create with make-instance or using make-var-set.  Initargs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod initialize-instance :after ((s <var-set>) &rest args &key (element-type 'vector))
-  
+  (declare (ignore args))
   (let* ((d (dim s)))
     (set-inst-acc 
      (ecase element-type

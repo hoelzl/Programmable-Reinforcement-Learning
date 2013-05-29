@@ -1,18 +1,20 @@
-(defpackage rbe-decomposed-crl-q
+(in-package #:common-lisp-user)
+
+(defpackage #:rbe-decomposed-crl-q
   (:documentation "rbe-decomposed-crl-q (rbe-dec).  Decomposed crl features for resource balance program.")
   (:use
-   cl
-   rbe-prog
-   calisp-features
-   calisp-q-function
-   rbe
-   set
-   utils)
-  (:nicknames rbe-dec)
+   #:common-lisp
+   #:rbe-prog
+   #:calisp-features
+   #:calisp-q-function
+   #:rbe
+   #:set
+   #:utils)
+  (:nicknames #:rbe-dec)
   (:export
-   make-rbe-dec-q-function))
+   #:make-rbe-dec-q-function))
 
-(in-package rbe-dec)
+(in-package #:rbe-dec)
 
 (defun make-rbe-dec-q-function (max-gold max-wood num-peasants)
   (make-instance '<threadwise-crl-q-function>

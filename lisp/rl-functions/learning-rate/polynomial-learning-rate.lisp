@@ -1,4 +1,4 @@
-(in-package lrate)
+(in-package #:lrate)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class definition

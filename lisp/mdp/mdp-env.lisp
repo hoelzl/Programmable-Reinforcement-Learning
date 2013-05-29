@@ -1,4 +1,6 @@
-(defpackage mdp-env
+(in-package #:common-lisp-user)
+
+(defpackage #:mdp-env
   (:documentation "mdp-env package.  
 
 Exported ypes
@@ -9,17 +11,17 @@ mdp - get underlying mdp of <mdp-env>
 make-2tbn-mdp-env - create a <mdp-env> based on a 2TBN
 
 ")
-  (:use common-lisp
-	create-env)
+  (:use #:common-lisp
+	#:create-env)
   (:export 
-   mdp
-   <mdp-env>
-   <smdp-env>
-   make-2tbn-mdp-env))
+   #:mdp
+   #:<mdp-env>
+   #:<smdp-env>
+   #:make-2tbn-mdp-env))
 
 
 
-(in-package mdp-env)
+(in-package #:mdp-env)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 ;; Class definition
@@ -48,6 +50,8 @@ Initargs
 ;; Operations on the underlying MDP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defgeneric trans-prob (e s a d))
+
 (defmethod trans-prob ((e <mdp-env>) s a d)
   (mdp:trans-prob (mdp e) s a d))
 
@@ -56,6 +60,8 @@ Initargs
 
 (defmethod sample-init ((e <mdp-env>))
   (prob:sample (init-dist e)))
+
+(defgeneric reset-to-state (e s))
 
 (defmethod reset-to-state ((e <mdp-env>) s)
   (set-state s e))

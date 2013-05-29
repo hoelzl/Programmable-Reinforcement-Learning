@@ -4,7 +4,7 @@
 ;; TODO : make this a subclass of exploration-policy
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package policy)
+(in-package #:policy)
 
 
 (defclass <random-policy> (<policy>)
@@ -18,6 +18,7 @@ Initargs
 
 
 (defmethod initialize-instance :after ((pol <random-policy>) &rest args &key env)
+  (declare (ignore args))
   (unless (slot-boundp pol 'choice-fn)
     (set-choice-fn (lambda (s) (env:avail-actions env s)) pol)))
 

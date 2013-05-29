@@ -7,16 +7,18 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage maze-mdp
-  (:use common-lisp
-	utils
-	prod-set
-	grid-world
-	mdp)
-  (:export make-maze-mdp
-	   res))
+(in-package #:common-lisp-user)
 
-(in-package maze-mdp)
+(defpackage #:maze-mdp
+  (:use #:common-lisp
+	#:utils
+	#:prod-set
+	#:grid-world
+	#:mdp)
+  (:export #:make-maze-mdp
+	   #:res))
+
+(in-package #:maze-mdp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class definition
@@ -125,14 +127,15 @@
 ;; a : action (integer)
 ;;
 ;; returns the destination of the action if it's legal, or the original location if not
-(defmethod res ((m <maze-mdp>) l act)
-  (let ((a (first act)))
-    (if (member a *moves*)
-	(let ((d (result l a)))
-	  (if (is-legal-loc m d)
-	      d
-	    l))
-      l)))
+(defgeneric res (maze-mdp l act)
+  (:method ((m <maze-mdp>) l act)
+    (let ((a (first act)))
+      (if (member a *moves*)
+          (let ((d (result l a)))
+            (if (is-legal-loc m d)
+                d
+                l))
+          l))))
 
   
 

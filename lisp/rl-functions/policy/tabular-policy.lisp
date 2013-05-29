@@ -3,7 +3,7 @@
 ;; defines the <tabular-policy> class
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package policy)
+(in-package #:policy)
 
 (defclass <tabular-policy> (<policy>)
   ((state-set :initarg :state-set

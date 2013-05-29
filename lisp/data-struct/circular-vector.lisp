@@ -1,12 +1,14 @@
-(defpackage circular-vector
-  (:use cl
-	utils)
-  (:nicknames circ-vec)
+(in-package #:common-lisp-user)
+
+(defpackage #:circular-vector
+  (:use #:common-lisp
+	#:utils)
+  (:nicknames #:circ-vec)
   (:export
-   circular-vector
-   make-circular-vector
-   circular-push
-   get-flat-vector)
+   #:circular-vector
+   #:make-circular-vector
+   #:circular-push
+   #:get-flat-vector)
   (:documentation "
 Package circular-vector (circ-vec).
 Implements the circular-vector data type.
@@ -24,7 +26,7 @@ Operations
 circular-push
 get-flat-vector"))
 
-(in-package circular-vector)
+(in-package #:circular-vector)
 
 
 (defstruct (circular-vector (:conc-name nil) (:constructor create-circ-vec))

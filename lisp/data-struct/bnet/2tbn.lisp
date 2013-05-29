@@ -2,7 +2,7 @@
 ;; data-struct/bnet/2tbn.lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package bnet)
+(in-package #:bnet)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Variable descriptions
@@ -341,6 +341,7 @@ To create a 2tbn, call (make-instance '<2tbn> ...) with the following initargs
 					    (state-acc (make-vec-accessors (length state-descs)))
 					    (reward-acc (make-vec-accessors (length reward-descs)))
 					    (action-acc (make-vec-accessors (length action-descs))))
+  (declare (ignore args))
 
   ;; concatenate descriptions into single list
   (let ((descs (map 'vector (lambda (x) (if (listp x) (apply #'make-2tbn-var-desc x) (clone x)))

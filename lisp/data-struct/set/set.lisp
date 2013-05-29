@@ -1,4 +1,6 @@
-(defpackage set
+(in-package #:common-lisp-user)
+
+(defpackage #:set
   (:documentation "Package for operations related to sets.
 
 Set types, creation
@@ -59,49 +61,48 @@ Related packages
 The operations for sets are assumed to use #'same for equality testing.
 
 ")
-  (:use common-lisp
-	utils)
-  (:export [set]
-	   [numbered-set]
-	   <set>
-	   <numbered-set>
-	   <indexed-set>
-	   <directory-set>
-	   make-image-set
-	   natural-numbers
-	   real-numbers
-	   universal-set
-	   member?
-	   iterator
-	   iterator-not-done
-	   iterator-done
-	   item-number
-	   item
-	   do-elements
-	   mapset
-	   filter
-	   sum-over
-	   subset
-	   intersect
-	   binary-union
-	   unite
-	   set-eq
-	   symmetric-difference
-	   same
-	   add
-	   addf
-	   unionf
-	   recursive-closure
-	   powerset
-	   size
-	   is-empty
-	   item-not-in-set
-	   index-out-of-bounds
-	   get-explanation-string
-	   get-full-explanation-string
+  (:use #:common-lisp
+	#:utils)
+  (:export #:[set]
+	   #:[numbered-set]
+	   #:<set>
+	   #:<numbered-set>
+	   #:<indexed-set>
+	   #:<directory-set>
+	   #:make-image-set
+	   #:natural-numbers
+	   #:real-numbers
+	   #:universal-set
+	   #:member?
+	   #:iterator
+	   #:iterator-not-done
+	   #:iterator-done
+	   #:item-number
+	   #:item
+	   #:do-elements
+	   #:mapset
+	   #:filter
+	   #:sum-over
+	   #:subset
+	   #:intersect
+	   #:binary-union
+	   #:unite
+	   #:set-eq
+	   #:symmetric-difference
+	   #:same
+	   #:add
+	   #:addf
+	   #:unionf
+	   #:recursive-closure
+	   #:powerset
+	   #:size
+	   #:is-empty
+	   #:item-not-in-set
+	   #:index-out-of-bounds
+	   #:get-explanation-string
+	   #:get-full-explanation-string
 	   ))
-
-(in-package set)
+(in-package #:set)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

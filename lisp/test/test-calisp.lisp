@@ -1,18 +1,18 @@
-(defpackage test-calisp
-  (:use cl
-	rbe
-	calisp-user
-	prob
-	thread-dec-q
-	rbe-dec
-	utils
-	rbe-prog
-	rbe-linear-features
-	inst-vars))
+(defpackage #:test-calisp
+  (:use #:common-lisp
+	#:rbe
+	#:calisp-user
+	#:prob
+	#:thread-dec-q
+	#:rbe-dec
+	#:utils
+	#:rbe-prog
+	#:rbe-linear-features
+	#:inst-vars))
 
 
-(in-package test-calisp)
-
+(in-package #:test-calisp)
+;;; TODO: Change SETF into DEFPARAMETER and rename variables. --tc
 
 (setf num-peas 2)
 (setf wm (make-array '(1 4) :initial-element 't))

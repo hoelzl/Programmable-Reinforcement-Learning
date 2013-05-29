@@ -5,13 +5,15 @@
 ;; Utilities for dealing with sockets
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Package info
-(defpackage socket-utils
-  (:use common-lisp
-	socket)
-  (:export clear-all-input))
+(in-package #:common-lisp-user)
 
-(in-package socket-utils)
+;; Package info
+(defpackage #:socket-utils
+  (:use #:common-lisp
+	#:socket)
+  (:export #:clear-all-input))
+
+(in-package #:socket-utils)
 
 
 ;; clear-all-input

@@ -1,4 +1,6 @@
-(defpackage bayes-net
+(in-package #:common-lisp-user)
+
+(defpackage #:bayes-net
   (:documentation "Package for Bayes nets.
 
 Types
@@ -21,23 +23,23 @@ action-set
 
 ")
   
-  (:nicknames bnet)
-  (:use utils
-	cl
-	set
-	prod-set
-	inst-vars
-	prob)
-  (:export <2tbn>
-	   make-2tbn
-	   2tbn-var-desc
-	   make-cpd
-	   make-param-desc
-	   reward
-	   make-2tbn-var-desc
-	   state-set
-	   action-set
-	   init-dist)
+  (:nicknames #:bnet)
+  (:use #:utils
+	#:common-lisp
+	#:set
+	#:prod-set
+	#:inst-vars
+	#:prob)
+  (:export #:<2tbn>
+	   #:make-2tbn
+	   #:2tbn-var-desc
+	   #:make-cpd
+	   #:make-param-desc
+	   #:reward
+	   #:make-2tbn-var-desc
+	   #:state-set
+	   #:action-set
+	   #:init-dist)
   )
 
-(in-package bayes-net)
+(in-package #:bayes-net)

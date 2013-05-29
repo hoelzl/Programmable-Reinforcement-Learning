@@ -1,4 +1,6 @@
-(defpackage instantiation-variable-accessors
+(in-package #:common-lisp-user)
+
+(defpackage #:instantiation-variable-accessors
   (:documentation "Package that provides various functions/macros to create accessors for an instantiation with variables.  
 
 The basic set up is that we have some datatype that represents 'instantiations' to a known set of variables.  We want to refer to each variable using a number.  We need functions to create new instantiations, and get and set variable values in an instantiation either by number or some other id.
@@ -38,31 +40,31 @@ single-object
 illegal-instantiation
 ")
   (:use
-   cl
-   set
-   utils)
-  (:nicknames inst-vars)
+   #:common-lisp
+   #:set
+   #:utils)
+  (:nicknames #:inst-vars)
   (:export
-   uninstantiated
-   make-inst-var-accessors
-   make-vec-accessors
-   make-list-accessors
-   make-alist-accessors
-   make-struct-accessors
-   make-single-object-accessors
-   get-var-val
-   create-inst
-   set-var-val
-   get-var-val-by-name
-   set-var-val-by-name
-   get-var-num
-   detect-invalid-inst
-   var-names
-   num-vars
-   single-object
-   illegal-instantiation))
+   #:uninstantiated
+   #:make-inst-var-accessors
+   #:make-vec-accessors
+   #:make-list-accessors
+   #:make-alist-accessors
+   #:make-struct-accessors
+   #:make-single-object-accessors
+   #:get-var-val
+   #:create-inst
+   #:set-var-val
+   #:get-var-val-by-name
+   #:set-var-val-by-name
+   #:get-var-num
+   #:detect-invalid-inst
+   #:var-names
+   #:num-vars
+   #:single-object
+   #:illegal-instantiation))
 
-(in-package inst-vars)
+(in-package #:inst-vars)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

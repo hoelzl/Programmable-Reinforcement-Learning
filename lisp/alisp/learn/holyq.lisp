@@ -3,7 +3,7 @@
 ;; Hierarchically Optimal Yet Local Q learning Algorithm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package alisp-hordq)
+(in-package #:alisp-hordq)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Type defs
@@ -49,6 +49,7 @@ Initargs
 
 (defmethod initialize-instance :after ((alg <holyq>) &rest args 
 				       &key (features nil))
+  (declare (ignore args))
   (labels ((make-q-fn-approx ()
 	     (make-instance 'fn-approx:<tabular-fn-approx>))
 	   

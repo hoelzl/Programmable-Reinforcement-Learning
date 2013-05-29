@@ -2,7 +2,7 @@
 ;; defines the <env-q-function> subclass of <approx-q-function>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package q-function)
+(in-package #:q-function)
 
 
 (defclass <env-q-function> (<approx-q-function>)

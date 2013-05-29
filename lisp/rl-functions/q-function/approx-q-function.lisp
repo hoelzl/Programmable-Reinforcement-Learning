@@ -1,7 +1,4 @@
-(in-package q-function)
-
-
-
+(in-package #:q-function)
 
 (defvar *default-featurizer*
     #'(lambda (omega u)
@@ -43,6 +40,7 @@ choices
 featurize"))
 
 (defmethod initialize-instance :after ((q <approx-q-function>) &rest args)
+  (declare (ignore args))
   (when (equal (featurizer q) *default-featurizer*)
     (set-featurizer-name '*default-featurizer* q)))
     

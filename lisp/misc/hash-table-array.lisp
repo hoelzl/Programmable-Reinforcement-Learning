@@ -1,5 +1,6 @@
+(in-package #:common-lisp-user)
 
-(defpackage hash-table-array
+(defpackage #:hash-table-array
   (:documentation "Defines a data type for arrays of hash tables.
 
 Types
@@ -12,17 +13,17 @@ make-hta
 get-val
 set-val")
 
-  (:nicknames hta)
+  (:nicknames #:hta)
   (:use
-   utils
-   cl)
+   #:utils
+   #:common-lisp)
   (:export
-   hash-table-array
-   make-hta
-   get-val
-   set-val))
+   #:hash-table-array
+   #:make-hta
+   #:get-val
+   #:set-val))
 
-(in-package hta)
+(in-package #:hta)
 
 (defstruct (hash-table-array (:conc-name hta-))
   key-fn

@@ -2,17 +2,17 @@
 ;; footman-env.lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage footman-env
-  (:use common-lisp
-	utils
-	stratagus-env
-        create-env
+(defpackage #:footman-env
+  (:use #:common-lisp
+	#:utils
+	#:stratagus-env
+        #:create-env
   )
-  (:export <footman-env>))
+  (:export #:<footman-env>))
 	   
 	   
 
-(in-package footman-env)
+(in-package #:footman-env)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

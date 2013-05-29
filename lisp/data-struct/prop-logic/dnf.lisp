@@ -1,4 +1,4 @@
-(in-package prop-logic)
+(in-package #:prop-logic)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; dnf

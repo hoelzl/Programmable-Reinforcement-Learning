@@ -1,17 +1,17 @@
-(defpackage adv-tact-prog
+(defpackage #:adv-tact-prog
  (:documentation "adv-tact-prog.lisp - Alisp program for adv-tact-env.lisp domain
 Functions
 ---------
 adv-tact-prog")
 
- (:use adv-tact-env
-       stratagus-env
-       common-lisp
-       utils
-       calisp-prog)
- (:export <adv-tact-prog>))
+ (:use #:adv-tact-env
+       #:stratagus-env
+       #:common-lisp
+       #:utils
+       #:calisp-prog)
+ (:export #:<adv-tact-prog>))
 
-(in-package adv-tact-prog)
+(in-package #:adv-tact-prog)
 
 (defclass <adv-tact-prog> (<calisp-program>)
   ((actions-list   :accessor tact-actions-list

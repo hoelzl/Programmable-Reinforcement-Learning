@@ -3,7 +3,7 @@
 ;; operations on potentials
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package pot-set)
+(in-package #:pot-set)
 
 
 (defgeneric vars (potential)
@@ -16,7 +16,10 @@ POTENTIAL is a potential.
 INSTANTIATION is a joint instantiation.
 
 Signals an error if any variable referred to by POT is uninstantiated."))
-	   
+
+;;; Forward definition for MAKE-TABLULAR-POTENTIAL
+(declaim (ftype (function (t t function) *)
+                make-tabular-potential))
 
 (defgeneric multiply (op s pot &rest pots)
   (:documentation

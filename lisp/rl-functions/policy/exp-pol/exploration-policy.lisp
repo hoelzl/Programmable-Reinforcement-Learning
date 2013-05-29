@@ -1,4 +1,6 @@
-(defpackage exploration-policy
+(in-package #:common-lisp-user)
+
+(defpackage #:exploration-policy
   (:documentation "Package exploration-policy (exp-pol)
 
 Types
@@ -18,28 +20,32 @@ Other
 - make-temp-decay-fn
 - make-linear-epsilon-decay-fn
 ")
-  (:export
-   <exp-pol>
-   <boltzmann-exp-pol>
-   <epsilon-boltzmann-exp-pol>
-   
-   make-choice
-   choice-dist
-   reset-counts
-   reset-table
-   
-   make-temp-decay-fn
-   make-linear-epsilon-decay-fn
-   
-   get-choice-dist)
-  (:use
-   cl
-   policy
-   utils
-   prob)
-  (:nicknames exp-pol))
 
-(in-package exp-pol)
+  (:use
+   #:common-lisp
+   #:utils
+   #:policy
+   #:prob)
+
+  (:nicknames #:exp-pol)
+
+  (:export
+   #:<exp-pol>
+   #:<boltzmann-exp-pol>
+   #:<epsilon-boltzmann-exp-pol>
+   
+   #:make-choice
+   #:choice-dist
+   #:reset-counts
+   #:reset-table
+   
+   #:make-temp-decay-fn
+   #:make-linear-epsilon-decay-fn
+   
+   #:get-choice-dist)
+)
+
+(in-package #:exp-pol)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class def
@@ -60,6 +66,7 @@ Create using make-instance with initialization arguments
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod initialize-instance :after ((pol <exp-pol>) &rest args)
+  (declare (ignore args))
   (reset-table pol))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

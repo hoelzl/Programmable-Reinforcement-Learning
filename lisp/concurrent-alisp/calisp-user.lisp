@@ -4,7 +4,7 @@
 ;; alisp programs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package calisp)
+(in-package #:calisp)
 
 
 (defvar *io-interface-debug-threads* t

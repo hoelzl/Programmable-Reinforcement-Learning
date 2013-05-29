@@ -3,7 +3,7 @@
 ;; Defines the <undirected-graphical-model> class
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package pot-set)
+(in-package #:pot-set)
 
 (defclass <undirected-graphical-model> (<prob-dist>)
   ((potentials :type list :initarg :potentials :reader potentials)

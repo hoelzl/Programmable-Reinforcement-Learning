@@ -9,17 +9,17 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage strat-env1
-  (:use common-lisp
-	utils
-	stratagus-env)
-  (:export <strat-env1>
-	   do-action
-	   reset))
+(defpackage #:strat-env1
+  (:use #:common-lisp
+	#:utils
+	#:stratagus-env)
+  (:export #:<strat-env1>
+	   #:do-action
+	   #:reset))
 	   
 	   
 
-(in-package strat-env1)
+(in-package #:strat-env1)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,17 +1,19 @@
-(defpackage rbe-tabular-features
+(in-package #:common-lisp-user)
+
+(defpackage #:rbe-tabular-features
   (:documentation
    "Tabular features for calisp resource balance program")
   (:use 
-   cl
-   rbe-prog
-   calisp-features
-   rbe
-   utils)
+   #:common-lisp
+   #:rbe-prog
+   #:calisp-features
+   #:rbe
+   #:utils)
   (:export
-   make-tabular-featurizer))
+   #:make-tabular-featurizer))
   
 
-(in-package rbe-tabular-features)
+(in-package #:rbe-tabular-features)
    
 
 

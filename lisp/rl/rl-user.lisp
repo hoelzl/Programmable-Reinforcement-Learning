@@ -4,7 +4,7 @@
 ;; learning code
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package rl)
+(in-package #:rl)
 
 
 (defun learn (env policy obs num-steps &key (hist-length nil) (step-print-inc 100) (ep-print-inc 10))

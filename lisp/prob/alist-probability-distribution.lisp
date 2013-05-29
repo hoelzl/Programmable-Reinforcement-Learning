@@ -3,7 +3,7 @@
 ;; Code for treating alists as probability distributions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package prob)
+(in-package #:prob)
 
 (defmethod sample ((l list))
   (let ((x (random 1.0))

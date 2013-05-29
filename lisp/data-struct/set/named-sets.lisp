@@ -2,7 +2,7 @@
 ;; data-struct/set/named-sets.lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package set)
+(in-package #:set)
 
 
 (defmethod is-empty ((s symbol))

@@ -1,4 +1,4 @@
-(defpackage max-likelihood-rl-gs
+(defpackage #:max-likelihood-rl-gs
   (:documentation "
 Package max-likelihood-rl-gs (mle-rl-gs).  Defines <mle-gs>, a subclass of <q-learning-alg> that implements the ``gold-standard'' algorithm that maintains a maximum-likelihood estimate of the transition matrices (the reward function is assumed known) and performs dynamic programming on them to compute the Q-function.  Assumes states (resp actions) are integers between 0 and num-states - 1.
 
@@ -7,17 +7,17 @@ Operations inherited from <q-learning-alg>
 - observe.  Increment the appropriate count
 - get-q-fn.  Compute q using modified policy iteration and return it (as a NSxNA array).")
   
-  (:nicknames mle-rl-gs)
-  (:use common-lisp
-	q-learning-alg
-	tabular-mdp
-	dp)
-  (:export reset
-	   observe
-	   get-q-fn
-	   <mle-gs>))
+  (:nicknames #:mle-rl-gs)
+  (:use #:common-lisp
+	#:q-learning-alg
+	#+(or) #:tabular-mdp ;; It seems that tabular MDPs are now defined in the MDP package. --tc
+	#:dp)
+  (:export #:reset
+	   #:observe
+	   #:get-q-fn
+	   #:<mle-gs>))
 
-(in-package max-likelihood-rl-gs)
+(in-package #:max-likelihood-rl-gs)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -63,6 +63,7 @@ Operations inherited from <q-learning-alg>
 
 
 (defmethod initialize-instance :after ((qa <mle-gs>) &rest args &aux (ns (num-states qa)))
+  (declare (ignore args))
   (unless (slot-boundp qa 'term)
     (setf (slot-value qa 'term) (make-array ns :element-type 'boolean :initial-element nil)))
   (setf (slot-value qa 'counts) (make-array (list ns (num-actions qa) ns)
@@ -76,7 +77,7 @@ Operations inherited from <q-learning-alg>
 
 
 
-(defconstant *mpi-k* 20)
+(defconstant +mpi-k+ 20)
 
 
 
@@ -97,9 +98,10 @@ Operations inherited from <q-learning-alg>
 
 
 (defmethod get-q-fn ((qa <mle-gs>) &aux (m (mdp qa)))
+  ;;; TODO: The SET-TRANS function doesn't seem to be defined anywhere. --tc
   (set-trans (get-mle-trans qa (counts qa)) m)
   (multiple-value-bind (pol val)
-      (dp:policy-iteration m :k *mpi-k* :init-pol (pol qa))
+      (dp:policy-iteration m :k +mpi-k+ :init-pol (pol qa))
     (set-pol pol qa)
     (q-from-v m val)))
 

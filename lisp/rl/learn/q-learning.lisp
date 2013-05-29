@@ -1,22 +1,21 @@
-(defpackage q-learning
+(in-package #:common-lisp-user)
+
+(defpackage #:q-learning
   (:documentation "Defines the <q-learning> learning algorithm.
 
 Exports
 -------
 make-q-learning-alg
 <q-learning>")
-  (:import-from 
-   rl
-   make-q-learning-alg)
-  (:export 
-   make-q-learning-alg
-   <q-learning>)
   (:use 
-   rl-obs
-   cl
-   utils))
+   #:rl
+   #:common-lisp
+   #:utils)
+  (:export 
+   #:make-q-learning-alg
+   #:<q-learning>))
 
-(in-package q-learning)
+(in-package #:q-learning)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class def

@@ -1,5 +1,6 @@
+(in-package #:common-lisp-user)
 
-(defpackage message-logger
+(defpackage #:message-logger
   (:documentation "
 Types
 -----
@@ -8,15 +9,15 @@ Types
 Operations
 ----------
 get-log")
-  (:use calisp-obs
-	cl
-	circ-vec
-	utils)
+  (:use #:calisp-obs
+	#:common-lisp
+	#:circ-vec
+	#:utils)
   (:export 
-   <calisp-message-logger>
-   get-log))
+   #:<calisp-message-logger>
+   #:get-log))
 
-(in-package message-logger)
+(in-package #:message-logger)
 
 (defclass <calisp-message-logger> (<calisp-observer>)
   ((log-max-length :initform 1000 :type fixnum :reader log-max-length :initarg :log-max-length)

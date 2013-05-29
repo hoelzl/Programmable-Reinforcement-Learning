@@ -1,17 +1,57 @@
-(defpackage reinforcement-learning
+(defpackage #:reinforcement-learning
   (:documentation "
 The learning package.  Contains generic code for doing RL in an environment, as opposed to specific algorithms.  
 
 Operations
 - learn-in-env
 ")
-  (:nicknames rl)
-  (:export learn-in-env))
+  (:nicknames #:rl)
+  (:export 
+   #:*canonicalize-quickly*
+   #:*clone-quickly*
+   #:*hist*
+   #:<alisp-approx-q-function>
+   #:<learning-algorithm>
+   #:<on-policy-learning-algorithm>
+   #:<policy-learning-algorithm>
+   #:<q-learning-algorithm>
+   #:<rl-observer>
+   #:<value-learning-algorithm>
+   #:current-env-step
+   #:current-episode-step
+   #:debug-msg
+   #:debug-str
+   #:defmessage
+   #:evaluate
+   #:get-mdp
+   #:get-mdp-hist
+   #:get-policy
+   #:get-policy-hist
+   #:get-q-fn
+   #:get-q-hist
+   #:get-value-fn
+   #:get-value-fn-hist
+   #:hist
+   #:inform-env-step
+   #:inform-finish-execution
+   #:inform-start-episode
+   #:inform-start-execution
+   #:io-interface
+   #:knowledge-state
+   #:learn
+   #:learn-in-env
+   #:make-q-learning-alg
+   #:no-choice
+   #:on-policy-learning
+   #:random
+   #:reset
+   #:set-debug-str
+   #:set-hist-collect))
 
-(in-package reinforcement-learning)
+(in-package #:reinforcement-learning)
 
 
-(defconstant *env-reset-max* 200)
+(defconstant +env-reset-max+ 200)
 
 
 (defun learn-in-env (env algorithms num-steps hist-length &key (print-progress 100))
@@ -39,7 +79,7 @@ Operations
       do (loop while (env:at-terminal-state env)
 	     for i from 0
 	     do (env:reset env)
-		(assert (< i *env-reset-max*) nil "Tried ~a times and was unable to reset to a nonterminal state" *env-reset-max*))
+		(assert (< i +env-reset-max+) nil "Tried ~a times and was unable to reset to a nonterminal state" +env-reset-max+))
 	
 	
 	 (let* ((s (env:get-state env))

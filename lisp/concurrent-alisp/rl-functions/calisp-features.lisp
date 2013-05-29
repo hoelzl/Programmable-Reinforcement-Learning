@@ -1,4 +1,4 @@
-(in-package calisp)
+(in-package #:calisp)
 
 (defmacro use-calisp-bindings (omega &rest body)
   "use-calisp-bindings JOINT-STATE-NAME &rest BODY

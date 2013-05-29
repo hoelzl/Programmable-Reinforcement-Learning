@@ -1,4 +1,6 @@
-(defpackage dynamic-programming
+(in-package #:common-lisp-user)
+
+(defpackage #:dynamic-programming
   (:documentation "contains various dynamic programming algorithms for markov chains, mdps, and smdps.
 
 - exit-dist
@@ -10,22 +12,22 @@
 
 the algorithms explicitly form the transition and reward matrices, and will therefore probably die on large mdps
 ")
-  (:nicknames dp)
-  (:use common-lisp
-	utils
-	mdp
-	lin-alg
-	prob
-	set)
+  (:nicknames #:dp)
+  (:use #:common-lisp
+	#:utils
+	#:mdp
+	#:lin-alg
+	#:prob
+	#:set)
   (:export 
-   exit-dist
-   value-iteration
-   policy-iteration
-   policy-evaluation
-   q-from-v
-   greedy-policy))
+   #:exit-dist
+   #:value-iteration
+   #:policy-iteration
+   #:policy-evaluation
+   #:q-from-v
+   #:greedy-policy))
 
-(in-package dynamic-programming)
+(in-package #:dynamic-programming)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49,7 +51,7 @@ Methods are currently provided for M being an <mdp> or <sparse-tabular-smdp>.n
 
  Note : if epsilon version is used, and the initial policy is improper, then the first policy evaluation step will diverge."))
 
-(defgeneric policy-evaluation (m pol &key epsilon discount)
+(defgeneric policy-evaluation (m pol &key epsilon discount &allow-other-keys)
   (:documentation "policy-evaluation M POL &key (EPSILON .01) (DISCOUNT 1.0).  Perform policy evaluation on policy POL in mdp M and return its value function.  Methods are currently provided for M being an <mdp> or <sparse-tabular-smdp>."))
 
 (defgeneric q-from-v (m v &optional discount)
@@ -63,6 +65,9 @@ Methods are currently provided for M being an <mdp> or <sparse-tabular-smdp>.n
 ;; Internal functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; Forward declaration for BACKUP.
+;;; TODO: Maybe tighten this declaration? --tc
+(declaim (ftype (function (t t t t t t) t) backup))
 
 ; inner function for policy evaluation that writes value function onto array v
 (defun policy-evaluation-inner (trans rew pol v discount &key (epsilon -1) (k -1) (verbose nil))

@@ -4,7 +4,7 @@
 ;; feature templates for crl-q-functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package crlq)
+(in-package #:crlq)
 
 (defun compose-feature (fn f)
   "compose-feature FUNCTION FEATURE.  Returns a new feature that depends on the same variables as FEATURE, and is computed by applying FUNCTION to the result of FEATURE."

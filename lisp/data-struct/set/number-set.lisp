@@ -3,7 +3,7 @@
 ;; code relating to the integer n viewed as the set (0,1,...,n-1)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package set)
+(in-package #:set)
 
 (defmethod member? (item (s integer))
   (and (typep item 'integer) (utils:between2 item 0 s)))

@@ -1,4 +1,6 @@
-(defpackage rbe-progs
+(in-package #:common-lisp-user)
+
+(defpackage #:rbe-progs
   (:documentation "
 Package rbe-progs - various partial programs for the resource-balance environment.  See experiment 1 in the thesis.
 
@@ -30,39 +32,39 @@ E
 W
 R
 ")
-  (:use cl
-	utils
-	calisp-features
-	calisp-prog)
+  (:use #:common-lisp
+        #:utils
+        #:calisp-features
+        #:calisp-prog)
   (:import-from
-   rbe
-   N S E W R P D)
+   #:rbe
+   #:N #:S #:E #:W #:R #:P #:D)
   (:export
-   rbe-flat
-   *rbe-maxq-prog*
-   *rbe-prog*
-   *rbe-coord-prog*
-   *rbe-uncoord-prog*
-   maxq-gather-gold
-   maxq-gather-wood
-   maxq-get-resource
-   maxq-dropoff-resource
-   gather-wood
-   gather-gold
-   get-resource
-   dropoff-resource
-   nav
-   pickup
-   wait 
-   dropoff
-   N
-   S
-   E
-   W
-   R   
+   #:rbe-flat
+   #:*rbe-maxq-prog*
+   #:*rbe-prog*
+   #:*rbe-coord-prog*
+   #:*rbe-uncoord-prog*
+   #:maxq-gather-gold
+   #:maxq-gather-wood
+   #:maxq-get-resource
+   #:maxq-dropoff-resource
+   #:gather-wood
+   #:gather-gold
+   #:get-resource
+   #:dropoff-resource
+   #:nav
+   #:pickup
+   #:wait 
+   #:dropoff
+   #:N
+   #:S
+   #:E
+   #:W
+   #:R   
    ))
 
-(in-package rbe-progs)
+(in-package #:rbe-progs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; A. flat

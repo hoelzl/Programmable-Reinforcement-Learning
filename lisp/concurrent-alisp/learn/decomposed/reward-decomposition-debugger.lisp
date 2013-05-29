@@ -1,5 +1,6 @@
+(in-package #:common-lisp-user)
 
-(defpackage reward-decomposition-debugger
+(defpackage #:reward-decomposition-debugger
   (:documentation "Package reward-decomposition-debugger (rew-dec-deb)
 
 Types
@@ -7,15 +8,15 @@ Types
 <reward-decomposition-debugger>
 ")
   (:export
-   <reward-decomposition-debugger>
+   #:<reward-decomposition-debugger>
    )
-  (:nicknames rew-dec-deb)
+  (:nicknames #:rew-dec-deb)
   (:use
-   cl
-   utils
-   calisp-obs))
+   #:common-lisp
+   #:utils
+   #:calisp-obs))
 	    
-(in-package rew-dec-deb)
+(in-package #:rew-dec-deb)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class def

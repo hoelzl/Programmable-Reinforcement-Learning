@@ -1,4 +1,4 @@
-(defpackage robust-gs
+(defpackage #:robust-gs
   (:documentation "
 Package robust-gs .  Defines <robust-gs>, a subclass of <q-learning-alg> that implements the ``robust gold-standard'' algorithm that maintains rectangular confidence sets for the transition matrices based on samples (the reward function is assumed known) and performs robust dynamic programming on them to compute the Q-function.  Assumes states (resp actions) are integers between 0 and num-states - 1.
 
@@ -7,15 +7,15 @@ Operations inherited from <q-learning-alg>
 - observe.  Increment the appropriate count
 - get-q-fn.  Compute q using robust dynamic programming and return it (as a NSxNA array).")
   
-  (:use common-lisp
-	q-learning-alg
-	robust-dp)
-  (:export reset
-	   observe
-	   get-q-fn
-	   <robust-gs>))
+  (:use #:common-lisp
+	#:q-learning-alg
+	#:robust-dp)
+  (:export #:reset
+	   #:observe
+	   #:get-q-fn
+	   #:<robust-gs>))
 
-(in-package robust-gs)
+(in-package #:robust-gs)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -65,6 +65,7 @@ Operations inherited from <q-learning-alg>
 
 
 (defmethod initialize-instance :after ((qa <robust-gs>) &rest args &aux (ns (num-states qa)))
+  (declare (ignore args))
   (unless (slot-boundp qa 'term)
     (setf (slot-value qa 'term) (make-array ns :element-type 'boolean :initial-element nil)))
   (setf (slot-value qa 'counts) (make-array (list (num-actions qa) ns ns)

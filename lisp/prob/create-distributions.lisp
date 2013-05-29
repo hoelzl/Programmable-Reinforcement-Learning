@@ -3,7 +3,7 @@
 ;; Ways of creating various standard distributions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package prob)
+(in-package #:prob)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; deterministic distribution
@@ -273,6 +273,7 @@ Initargs
 Note that sampling is done just by repeatedly trying to sample each element until we get one that's different.  So if the DIST assigns most or all of its probability to some M < N elements, this could go into a long or infinite loop."))
 
 (defmethod initialize-instance :after ((p <sampling-without-replacement>) &rest args)
+  (declare (ignore args))
   ;; sanity check
   (let* ((s (sample-space (dist p)))
 	 (n (n p))

@@ -4,7 +4,7 @@
 ;; Defines the <alisp-program> abstract class
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package alisp)
+(in-package #:alisp)
 
 
 

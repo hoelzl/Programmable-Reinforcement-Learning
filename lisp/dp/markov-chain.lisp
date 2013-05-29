@@ -3,7 +3,7 @@
 ;; functions pertaining to Markov chains
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package dp)
+(in-package #:dp)
 
 (defun exit-dist (trans-dist allowed-states &key (epsilon .01) (test #'equalp) (print-progress nil))
   "exit-dist TRANSITION-KERNEL SET &key (EPSILON .01) (TEST #'equalp) (PRINT-PROGRESS nil)

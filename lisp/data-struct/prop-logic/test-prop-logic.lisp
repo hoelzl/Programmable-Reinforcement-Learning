@@ -1,19 +1,19 @@
-(defpackage test-prop-logic
+(defpackage #:test-prop-logic
   (:use 
-   cl
-   utils
-   set
-   prop-logic))
+   #:common-lisp
+   #:utils
+   #:set
+   #:prop-logic))
 
-(in-package test-prop-logic)
+(in-package #:test-prop-logic)
 
 
-(setf f1 'foo)
-(setf f2 (disjoin 'foo 'bar))
-(setf f3 (conjoin 'foo (negate 'bar)))
-(setf f4 (disjoin t (conjoin 'foo 'bar) (conjoin (negate 'bar) (negate 'baz))))
-(setf f5 (negate 'qux))
-(setf f6 (conjoin 'foo (disjoin 'bar 'baz)))
+(defparameter *f1* 'foo)
+(defparameter *f2* (disjoin 'foo 'bar))
+(defparameter *f3* (conjoin 'foo (negate 'bar)))
+(defparameter *f4* (disjoin t (conjoin 'foo 'bar) (conjoin (negate 'bar) (negate 'baz))))
+(defparameter *f5* (negate 'qux))
+(defparameter *f6* (conjoin 'foo (disjoin 'bar 'baz)))
 
 
 (do-boolean-tests 
@@ -27,26 +27,26 @@
   (is-formula '(and nil (or (and foo t) (and (not bar))) (not (and bar (or baz nil))))) t
   (is-formula '(and nil (or (and foo t) (and (not bar))) (not nil (and bar (or baz nil))))) nil
   (is-formula '(and nil (or (and (foo) t) (and (not bar))) (not nil (and bar (or baz nil))))) nil
-  (is-literal f1) t
+  (is-literal *f1*) t
   (is-literal t) nil
   (is-literal nil) nil
-  (is-literal f5) t
-  (is-literal f2) nil
-  (is-literal f3) nil
-  (is-dnf-clause f1) t
-  (is-dnf-clause f2) nil
-  (is-dnf-clause f3) t
+  (is-literal *f5*) t
+  (is-literal *f2*) nil
+  (is-literal *f3*) nil
+  (is-dnf-clause *f1*) t
+  (is-dnf-clause *f2*) nil
+  (is-dnf-clause *f3*) t
   (is-dnf-clause t) t
   (is-dnf-clause nil) t
-  (is-dnf-clause f4) nil
+  (is-dnf-clause *f4*) nil
   (is-dnf-formula t) t
   (is-dnf-formula nil) t
-  (is-dnf-formula f1) t
-  (is-dnf-formula f2) t
-  (is-dnf-formula f3) t
-  (is-dnf-formula f4) t
-  (is-dnf-formula f5) t
-  (is-dnf-formula f6) nil)
+  (is-dnf-formula *f1*) t
+  (is-dnf-formula *f2*) t
+  (is-dnf-formula *f3*) t
+  (is-dnf-formula *f4*) t
+  (is-dnf-formula *f5*) t
+  (is-dnf-formula *f6*) nil)
   
   
 
@@ -71,8 +71,8 @@
 
 
 
-(setf f1 '(or (and foo bar) nil (not baz) (and (not bar) foo)))
-(setf f2 '(or (and baz qux) (and (not qux) (not foo))))
+(setf *f1* '(or (and foo bar) nil (not baz) (and (not bar) foo)))
+(setf *f2* '(or (and baz qux) (and (not qux) (not foo))))
 
 (do-tests
     "DNF operations"
@@ -84,10 +84,10 @@
   (simplify-dnf '(and foo bar foo (not bar))) nil
   (simplify-dnf '(or foo bar (and foo qux (not qux)))) '(or foo bar)
   (simplify-dnf '(or foo bar (and foo qux (not qux)) t)) t
-  (sort-dnf (dnf-or f1 f2))
+  (sort-dnf (dnf-or *f1* *f2*))
   '(or (and bar foo) (and (not bar) foo) (and baz qux) (not baz) 
     (and (not foo) (not qux)))
-  (sort-dnf (dnf-and f1 f2))
+  (sort-dnf (dnf-and *f1* *f2*))
   '(or (and bar baz foo qux) (and (not bar) baz foo qux) (and (not baz) (not foo) (not qux))
     ))
 
@@ -112,17 +112,17 @@
 
       
 
-(setf s (make-dnf-set f1 '(foo bar qux baz)))
-(setf s2 (make-dnf-set f2 '(foo bar qux baz)))
-(setf s3 (intersect s s2))
-(setf s4 (binary-union s s2))
+(defparameter *s1* (make-dnf-set *f1* '(foo bar qux baz)))
+(defparameter *s2* (make-dnf-set *f2* '(foo bar qux baz)))
+(defparameter *s3* (intersect *s1* *s2*))
+(defparameter *s4* (binary-union *s1* *s2*))
 
 (do-tests
     "DNF sets"
-  (member? '(foo bar qux) s) t
-  (member? '(baz) s) nil
-  (member? '(foo bar qux) s3) nil
-  (member? '(foo baz qux) s3) t
-  (member? '(foo bar qux) s4) t
-  (member? '(foo baz qux) s4) t
+  (member? '(foo bar qux) *s1*) t
+  (member? '(baz) *s1*) nil
+  (member? '(foo bar qux) *s3*) nil
+  (member? '(foo baz qux) *s3*) t
+  (member? '(foo bar qux) *s4*) t
+  (member? '(foo baz qux) *s4*) t
   )

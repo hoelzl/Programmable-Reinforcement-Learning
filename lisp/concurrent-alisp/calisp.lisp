@@ -2,7 +2,9 @@
 ;; concurrent-alisp/calisp.lisp - defines and documents the various packages in the calisp code
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage calisp
+(in-package #:common-lisp-user)
+
+(defpackage #:calisp
   (:documentation "Package calisp.  The internal namespace for all code related to Concurrent ALisp.  For more information see help for
 calisp-user
 calisp-prog
@@ -10,22 +12,22 @@ calisp-obs")
 
   #+short-nicknames (:nicknames c)
 
-  (:use common-lisp
-	utils
-	mp
-	cv
-	threads
-	set
-	prob
-	rl-obs)
+  (:use #:common-lisp
+	#:utils
+	#:mp
+	#:cv
+	#:threads
+	#:set
+	#:prob
+	#:rl-obs)
   (:import-from
-   q-fn
-   <q-function>
-   unknown-state-action))
+   #:q-fn
+   #:<q-function>
+   #:unknown-state-action))
 
 
 
-(defpackage calisp-user
+(defpackage #:calisp-user
   (:documentation "Package calisp-user.  Package used when running concurrent alisp.
 
 Exported symbols
@@ -74,8 +76,8 @@ calisp-io-int-observer
 
 
 ")
-  (:use common-lisp
-	package-utils))
+  (:use #:common-lisp
+	#:package-utils))
 
 (in-package calisp-user)
 
@@ -107,7 +109,7 @@ calisp-io-int-observer
 
 (in-package cl-user)
 
-(defpackage calisp-obs
+(defpackage #:calisp-obs
   (:documentation "Package calisp-obs.  Package used when creating new observers.  A <calisp-observer> is any object that observes the execution of an concurrent alisp program.  This can include learning algorithms (see subdirectory learn/), and also objects that maintain logs or statistics of execution (see subdirectory obs/). 
 
 All observers must inherit from <calisp-observer>.  They may also inherit from <calisp-learning-algorithm>, <q-learning-algorithm>, or <policy-learning-algorithm>.
@@ -188,10 +190,10 @@ defmessage
 
 ")
 
-  (:use common-lisp
-	package-utils))
+  (:use #:common-lisp
+	#:package-utils))
 
-(in-package calisp-obs)
+(in-package #:calisp-obs)
 
 (export-from 'calisp
 	     "<calisp-observer>"
@@ -246,9 +248,9 @@ defmessage
 	     "debug-msg")
 
 
-(in-package cl-user)
+(in-package #:cl-user)
 
-(defpackage calisp-prog
+(defpackage #:calisp-prog
   (:documentation "Package calisp-prog.  Package used by concurrent Alisp partial programs.
 Types :
 - <calisp-program>
@@ -288,10 +290,10 @@ Other
 ")
 
 
-  (:use common-lisp
-	package-utils))
+  (:use #:common-lisp
+	#:package-utils))
 
-(in-package calisp-prog)
+(in-package #:calisp-prog)
 
 (export-from 'calisp
 	     "<calisp-program>"
@@ -321,9 +323,9 @@ Other
 	     "root-thread"
 	     )
 
-(in-package cl-user)
+(in-package #:cl-user)
 
-(defpackage calisp-features
+(defpackage #:calisp-features
   (:documentation "Package used when defining features for value/q-functions.
 
 Types
@@ -360,10 +362,10 @@ root-thread
 
 ")
   (:use
-   cl
-   package-utils))
+   #:common-lisp
+   #:package-utils))
 
-(in-package calisp-features)
+(in-package #:calisp-features)
 
 (export-from 'calisp
 	     "<calisp-q-function>"
@@ -392,7 +394,7 @@ root-thread
 
   
 
-(in-package calisp)
+(in-package #:calisp)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

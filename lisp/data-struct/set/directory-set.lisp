@@ -1,4 +1,4 @@
-(in-package set)
+(in-package #:set)
 
 (defclass <directory-set> (<numbered-set>)
   ((directory :initarg :dir :reader dir)

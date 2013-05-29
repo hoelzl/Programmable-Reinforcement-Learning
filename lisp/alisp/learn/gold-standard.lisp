@@ -1,4 +1,6 @@
-(defpackage alisp-gold-standard
+(in-package #:common-lisp-user)
+
+(defpackage #:alisp-gold-standard
   (:documentation "Defines the <alisp-gold-standard> reinforcement learning algorithm.
 
 Exports
@@ -6,23 +8,23 @@ Exports
 <alisp-gold-standard>
 make-alisp-gold-standard-learning-alg")
   (:export
-   <alisp-gold-standard>
-   make-alisp-gold-standard-learning-alg)
+   #:<alisp-gold-standard>
+   #:make-alisp-gold-standard-learning-alg)
   (:use 
-   cl
-   set
-   alisp-obs
-   utils)
+   #:common-lisp
+   #:utils
+   #:set
+   #:alisp-obs)
   (:import-from 
-   mdp
-   make-outcome
-   outcome-state
-   outcome-duration
-   outcome-reward)
+   #:mdp
+   #:make-outcome
+   #:outcome-state
+   #:outcome-duration
+   #:outcome-reward)
   )
 		
 
-(in-package alisp-gold-standard)
+(in-package #:alisp-gold-standard)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class def
@@ -53,7 +55,7 @@ Assumes for now that choice sets are integers, where n represents the set {0,...
 "))
 
 
-(defconstant *mpi-k* 8)
+(defconstant +mpi-k+ 8)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,7 +63,7 @@ Assumes for now that choice sets are integers, where n represents the set {0,...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod shared-initialize :after ((alg <alisp-gold-standard>) names &rest args)
-  (declare (ignore names))
+  (declare (ignore names args))
   (setf (state-set alg) (indexed-set:make-indexed-set #(dummy-terminal-state))
 	(counts alg) (make-array 1 :adjustable t :fill-pointer 1)
 	(prev-omega-seen alg) nil
@@ -126,7 +128,7 @@ Assumes for now that choice sets are integers, where n represents the set {0,...
   (let ((m (create-smdp alg)))
     
     (multiple-value-bind (pol val)
-	(dp:policy-iteration m :k *mpi-k* :discount (discount alg))
+	(dp:policy-iteration m :k +mpi-k+ :discount (discount alg))
       (declare (ignore pol))
       (list m (dp:q-from-v m val (discount alg))))))
 

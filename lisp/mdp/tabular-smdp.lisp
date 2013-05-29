@@ -1,4 +1,4 @@
-(in-package mdp)
+(in-package #:mdp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class
@@ -33,6 +33,7 @@ Create from an SMDP using tabular-smdp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod initialize-instance :after ((m <tabular-smdp>) &rest args &key smdp)
+  (declare (ignore args))
   (let* ((states (state-set smdp))
 	 (num-states (size states)))
     

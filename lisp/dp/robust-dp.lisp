@@ -1,12 +1,12 @@
-(defpackage robust-dp
+(defpackage #:robust-dp
   (:documentation "
 Algorithms for robust dynamic programming as described in the 2004 tech report by Nilim and El Ghaoui.
 - inf-horizon-rvi")
-  (:use common-lisp
-	lin-alg
-	utils
-	chi-square)
-  (:export inf-horizon-rvi))
+  (:use #:common-lisp
+	#:lin-alg
+	#:utils
+	#:chi-square)
+  (:export #:inf-horizon-rvi))
 
 
 (in-package robust-dp)
@@ -177,18 +177,26 @@ Algorithms for robust dynamic programming as described in the 2004 tech report b
 	   
 	 
 		  (h (l mu)
-		    (when (and (> l 0) (> mu v-max))
-		      (+ mu (* (1+ beta) (- l))
-			 (* l
-			    (loop
+		    (if (and (> l 0) (> mu v-max))
+                        (+ mu (* (1+ beta) (- l))
+                           (* l
+                              (loop
 				for x across freq-vector
 				for y across v
-				    
+                                
 				unless (= x 0)
-				sum (* x 
-				       (log (/ (* l x) (- mu y))))))))))
+                                  sum (* x 
+                                         (log (/ (* l x) (- mu y)))))))
+                        ;; TODO: Figure out the correct value in this
+                        ;; case.  (Originally the code contained a
+                        ;; WHEN, so that NIL would be returned if the
+                        ;; condition is false.  But since the result
+                        ;; of H is subtracted from a number this is
+                        ;; almost definitely wrong.  --tc
+                        (error "Bad computation in pessimistic backup."))))
       
-	       (declare (ignore #'sigma-grad))
+               ;; Ignoring SIGMA-GRAD seems wrong, since it is used in the loop. --tc
+	       ;;(declare (ignore #'sigma-grad))
 	       
 	       (if (or (= beta beta-max) (= v-max v-bar))
 		   v-bar
@@ -198,19 +206,17 @@ Algorithms for robust dynamic programming as described in the 2004 tech report b
 			  with mu+ = (let ((z (exp (- beta beta-max))))
 				       (/ (- v-max (* z v-bar)) (- 1 z)))
 			  ;initially (debug-print 1 t "~&beta-max = ~a beta = ~a mu- = ~a and mu+ = ~a" beta-max beta mu- mu+)
-						  
-			   
+						  			   
 			  for mu = (/ (+ mu+ mu-) 2)
 			  while (> (- mu+ mu-) (* delta (+ 1 mu- mu+)))
 			  while (> mu v-max)
 			  while (> (- (sigma-grad mu+) (sigma-grad mu-)) delta)
-	    
 
 			  do 
 			     ;(debug-print 1 t "~&mu- = ~a and mu+ = ~a" mu- mu+)
 			    (if (> (sigma-grad-sign mu) 0)
 				(setf mu+ mu)
-			      (setf mu- mu))
+                                (setf mu- mu))
 			  finally (return (sigma mu)))))))))))
 	    
 	    

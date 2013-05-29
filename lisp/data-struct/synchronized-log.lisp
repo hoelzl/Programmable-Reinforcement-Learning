@@ -3,24 +3,24 @@
 ;; programs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage synchronized-log
-  (:nicknames slog)
-  (:use common-lisp
-	utils
-	mp)
+(defpackage #:synchronized-log
+  (:nicknames #:slog)
+  (:use #:common-lisp
+	#:utils
+	#:mp)
   (:export 
-   <synchronized-log>
-   reset
-   add
-   set-stream
-   get-log
-   with-slogfile
-   make-filter
-   set-include-thread
-   watch
-   filter))
+   #:<synchronized-log>
+   #:reset
+   #:add
+   #:set-stream
+   #:get-log
+   #:with-slogfile
+   #:make-filter
+   #:set-include-thread
+   #:watch
+   #:filter))
    
-(in-package slog)
+(in-package #:slog)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class def

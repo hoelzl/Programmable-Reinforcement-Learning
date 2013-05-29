@@ -67,7 +67,7 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 (defmacro help (&optional (item nil item-p) (include-internals nil))
   "

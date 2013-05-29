@@ -1,4 +1,6 @@
-(defpackage learning-rate
+(in-package #:common-lisp-user)
+
+(defpackage #:learning-rate
   (:documentation "Package for learning-rates.  
 
 Types
@@ -10,16 +12,18 @@ Operations
 - reset-table
 - reset-counts
 ")
-  (:nicknames lrate)
-  (:use bucketed-counts
-	common-lisp)
-  (:export get-rate
-	   reset-table
-	   reset-counts
-	   [learning-rate]
-	   <learning-rate>))
+  (:use #:common-lisp
+        #:bucketed-counts)
 
-(in-package learning-rate)
+  (:nicknames #:lrate)
+
+  (:export #:get-rate
+	   #:reset-table
+	   #:reset-counts
+	   #:[learning-rate]
+	   #:<learning-rate>))
+
+(in-package #:learning-rate)
 
 
 (deftype [learning-rate] ()

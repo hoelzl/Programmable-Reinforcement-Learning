@@ -1,4 +1,6 @@
-(defpackage td-taxi-prog
+(in-package #:common-lisp-user)
+
+(defpackage #:td-taxi-prog
   (:documentation "td-taxi-prog.lisp -  Alisp program for Dietterrich's taxi domain
 Functions
 ---------
@@ -24,34 +26,34 @@ task-choice-exit
 
 ")
 
-  (:use td-taxi-env
-	common-lisp
-	utils
-	alisp-prog)
-  (:export td-taxi-prog
-	   N
-	   S
-	   E
-	   W
-	   P
-	   D
-	   loc
-	   task-choice
-	   task-choice-exit
-	   nav
-	   nav-choice
-	   nav-choice-exit
-	   nav-src
-	   nav-src-exit
-	   nav-dest
-	   nav-dest-exit
-	   get-pass
-	   put-pass))
+  (:use #:td-taxi-env
+	#:common-lisp
+	#:utils
+	#:alisp-prog)
+  (:export #:td-taxi-prog
+	   #:N
+	   #:S
+	   #:E
+	   #:W
+	   #:P
+	   #:D
+	   #:loc
+	   #:task-choice
+	   #:task-choice-exit
+	   #:nav
+	   #:nav-choice
+	   #:nav-choice-exit
+	   #:nav-src
+	   #:nav-src-exit
+	   #:nav-dest
+	   #:nav-dest-exit
+	   #:get-pass
+	   #:put-pass))
 
   
 
 
-(in-package td-taxi-prog)
+(in-package #:td-taxi-prog)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

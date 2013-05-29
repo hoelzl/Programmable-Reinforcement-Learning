@@ -1,4 +1,6 @@
-(defpackage decomposed-q-function
+(in-package #:common-lisp-user)
+
+(defpackage #:decomposed-q-function
   (:documentation "Package decomposed-q-function (dec-q-fn).
 
 A decomposed q-function is a sum of a set (which can vary with state) of other q-functions.
@@ -22,26 +24,26 @@ evaluate-component
 evaluate
 
 ")
-  (:nicknames dec-q-fn)
+  (:nicknames #:dec-q-fn)
   (:use
-   q-fn
-   cl
-   set
-   utils)
+   #:common-lisp
+   #:utils
+   #:set
+   #:q-fn)
   (:export
-   <decomposed-q-function>
-   <decomposed-tabular-q-function>
-   <decomposed-crl-q-function>
-   component-fn
-   set-component-fn
-   get-q-component
-   update-component
-   evaluate-component
+   #:<decomposed-q-function>
+   #:<decomposed-tabular-q-function>
+   #:<decomposed-crl-q-function>
+   #:component-fn
+   #:set-component-fn
+   #:get-q-component
+   #:update-component
+   #:evaluate-component
    
-   evaluate
+   #:evaluate
    ))
 
-(in-package dec-q-fn)
+(in-package #:dec-q-fn)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -137,7 +139,7 @@ The evaluation of the Q-component may result in an unknown-state-action error be
 						'unknown))))
 				  choices) nil))
 	 (mapping:mapping-undefined ()
-	   (format str "Component undefined in this Q-function." id)))))))
+	   (format str "Component ~A undefined in this Q-function." id)))))))
   
   
   

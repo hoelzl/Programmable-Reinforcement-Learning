@@ -3,7 +3,7 @@
 ;; examples of <td-taxi-env>s
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package td-taxi-env)
+(in-package #:td-taxi-env)
 
 (defun make-example-env1 ()
   "Create an example td-taxi-env with a 2x3 world with a wall at (0,1), in which the source is always (1,0) and the destination is either (0,2) or (1,1).  Moves are deterministic and costs are default (see <td-taxi-env>)"

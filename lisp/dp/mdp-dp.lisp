@@ -1,4 +1,4 @@
-(in-package dynamic-programming)
+(in-package #:dynamic-programming)
 
 
 (defmethod value-iteration ((m <mdp>) &key (epsilon .01) (verbose nil) (init-val) (discount 1.0))

@@ -1,10 +1,12 @@
-(defpackage package-utils
-  (:use common-lisp)
-  (:export export-from
-	   symbols
-	   external-symbols))
+(in-package #:common-lisp-user)
 
-(in-package package-utils)
+(defpackage #:package-utils
+  (:use #:common-lisp)
+  (:export #:export-from
+	   #:symbols
+	   #:external-symbols))
+
+(in-package #:package-utils)
 
 
 (defun symbols (&optional (p *package*))

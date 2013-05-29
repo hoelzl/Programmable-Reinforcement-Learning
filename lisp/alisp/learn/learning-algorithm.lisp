@@ -1,4 +1,4 @@
-(in-package alisp)
+(in-package #:alisp)
 
 (defclass <alisp-learning-algorithm> (<alisp-observer> <learning-algorithm>)
   ()
@@ -9,5 +9,6 @@
   ()
   (:documentation "An <alisp-model-learning-algorithm> implements a method for get-smdp."))
 
-(defgeneric get-smdp (alg)
-  (:documentation "get-smdp ALG.  Return the current SMDP estimate for this algorithm."))
+(defgeneric get-smdp (alg knowledge-state)
+  (:documentation "get-smdp ALG KNOWLEDGE-STATE.
+Return the current SMDP estimate for this algorithm and knowledge state."))

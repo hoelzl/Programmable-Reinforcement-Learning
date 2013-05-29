@@ -3,7 +3,7 @@
 ;; utilities for running experiments
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 (defmacro avg-over-trials (n &body body)
   "avg-over-trials N &res BODY.

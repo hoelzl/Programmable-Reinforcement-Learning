@@ -1,14 +1,16 @@
-(defpackage td-taxi-flat-lfa
+(in-package #:common-lisp-user)
+
+(defpackage #:td-taxi-flat-lfa
   (:documentation "td-taxi-flat-lfa.  Defines a simple linear approximation architecture for the flat Q-function in the taxi domain.")
-  (:use td-taxi-env
-	cl
-	grid-world
-	q-function
-	utils)
-  (:export make-taxi-featurizer)
+  (:use #:td-taxi-env
+	#:common-lisp
+	#:grid-world
+	#:q-function
+	#:utils)
+  (:export #:make-taxi-featurizer)
   )
 
-(in-package td-taxi-flat-lfa)
+(in-package #:td-taxi-flat-lfa)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

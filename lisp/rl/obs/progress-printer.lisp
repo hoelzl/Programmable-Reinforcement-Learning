@@ -1,17 +1,21 @@
-(defpackage progress-printer
+(in-package #:common-lisp-user)
+
+(defpackage #:progress-printer
   (:documentation "Package progress printer.  Defines <progress-printer>, an observer that prints progress of learning to a stream.
 
 Exports
 -------
 <progress-printer>
 make-progress-printer")
-  (:export make-progress-printer
-	   <progress-printer>)
-  (:use cl
-	rl-obs
-	utils))
+  (:use #:common-lisp
+	#:rl-obs
+	#:utils)
+  
+  (:export #:<progress-printer>
+           #:make-progress-printer
+	   #:finish-episode))
 
-(in-package progress-printer)
+(in-package #:progress-printer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class def

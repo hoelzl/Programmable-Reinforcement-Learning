@@ -1,4 +1,6 @@
-(defpackage temporally-decomposed-q
+(in-package #:common-lisp-user)
+
+(defpackage #:temporally-decomposed-q
   (:documentation "Package temporally-decomposed-q (temp-dec-q)
 
 Temporally (and threadwise) decomposed Q-learning algorithm for concurrent ALisp.
@@ -7,19 +9,19 @@ Types
 -----
 <temporally-decomposed-q-learner>")
   (:export
-   <temporally-decomposed-q-learner>)
+   #:<temporally-decomposed-q-learner>)
   (:nicknames temp-dec-q)
   (:use
-   cl
-   utils
-   mapping
-   set
-   circ-vec
-   calisp-q-fn
-   calisp-obs
-   policy))
+   #:common-lisp
+   #:utils
+   #:mapping
+   #:set
+   #:circ-vec
+   #:calisp-q-fn
+   #:calisp-obs
+   #:policy))
 
-(in-package temp-dec-q)
+(in-package #:temp-dec-q)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class def and accessors

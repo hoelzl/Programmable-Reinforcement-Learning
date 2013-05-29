@@ -1,4 +1,4 @@
-(in-package mdp)
+(in-package #:mdp)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -81,6 +81,7 @@ Child classes will often override some of the methods, so not all the above init
 								  (init-set nil) (print-progress nil)
 								  (key-fn (constantly 0))
 								  (max-key 0))
+  (declare (ignore args))
   
   (flet ((successors (s)
 	   (unless (terminal? m s)

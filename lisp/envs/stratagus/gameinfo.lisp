@@ -3,14 +3,14 @@
 ;; defines the structure that holds the parameters of the game
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage gameinfo
-  (:export gameinfo
-	   gameinfo-player-id
-	   gameinfo-length
-	   gameinfo-width
-	   make-gameinfo))
+(defpackage #:gameinfo
+  (:export #:gameinfo
+	   #:gameinfo-player-id
+	   #:gameinfo-length
+	   #:gameinfo-width
+	   #:make-gameinfo))
 
-(in-package gameinfo)
+(in-package #:gameinfo)
 
 (defstruct gameinfo
   player-id
@@ -18,4 +18,4 @@
   width)
 
 
-(in-package cl-user)
+(in-package #:cl-user)

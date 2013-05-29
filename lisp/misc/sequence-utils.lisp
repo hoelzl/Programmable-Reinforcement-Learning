@@ -1,8 +1,8 @@
-(in-package utils)
+(in-package #:utils)
 
-(defconstant *default-tail-length* 10)
+(defconstant +default-tail-length+ 10)
 
-(defun stail (s &optional (tail-length *default-tail-length*))
+(defun stail (s &optional (tail-length +default-tail-length+))
   "stail SEQ &optional (LENGTH 10).  Return last LENGTH elements of SEQ."
   (if (> (length s) tail-length)
       (subseq s (- (length s) tail-length))

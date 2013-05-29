@@ -3,7 +3,7 @@
 ;; Code for treating vectors as probability distributions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package prob)
+(in-package #:prob)
 
 
 (defmethod sample-space ((v vector))
@@ -39,6 +39,6 @@
 
 (defmethod is-valid-prob-dist ((v vector))
   (and (every (lambda (x) (>= x 0)) v)
-       (< (abs (- (reduce #'+ v) 1)) *prob-dist-sum-tol*)))
+       (< (abs (- (reduce #'+ v) 1)) +prob-dist-sum-tol+)))
 
       

@@ -1,13 +1,55 @@
-(defpackage reinforcement-learning
+(in-package #:common-lisp-user)
+
+(defpackage #:reinforcement-learning
   (:documentation "Internal package for (flat) reinforcement learning.
 ")
-  (:nicknames rl)
-  (:use common-lisp
-	utils
-	prob)
-)
+  (:nicknames #:rl)
+  (:use #:common-lisp
+	#:utils
+	#:prob
+        #:policy
+        #:mdp)
+  (:export #:*canonicalize-quickly*
+           #:*clone-quickly*
+           #:*hist*
+           #:<alisp-approx-q-function>
+           #:<learning-algorithm>
+           #:<on-policy-learning-algorithm>
+           #:<policy-learning-algorithm>
+           #:<q-learning-algorithm>
+           #:<rl-observer>
+           #:<value-learning-algorithm>
+           #:current-env-step #:get-policy
+           #:current-episode-step
+           #:debug-msg
+           #:debug-str
+           #:defmessage
+           #:evaluate
+           #:get-mdp
+           #:get-mdp-hist
+           #:get-policy-hist
+           #:get-q-fn
+           #:get-q-hist
+           #:get-value-fn
+           #:get-value-fn-hist
+           #:hist
+           #:inform-env-step
+           #:inform-finish-execution
+           #:inform-start-episode
+           #:inform-start-execution
+           #:io-interface
+           #:knowledge-state
+           #:learn
+           #:learn-in-env
+           #:make-q-learning-alg
+           #:no-choice
+           #:on-policy-learning
+           #:random
+           #:reset
+           #:set-debug-str
+           #:set-hist-collect))
 
-(defpackage rl-user
+(defpackage #:rl-user
   (:documentation "Package rl-user.  Package used when running rl algorithms in environments.
 
 Exported symbols
@@ -49,34 +91,27 @@ Other observers
 - gold-standard
 - stat-gatherer
 ")
-  (:use common-lisp
-	package-utils))
+  (:use #:common-lisp
+	#:package-utils
+        #:rl)
+  (:export #:debug-str
+           #:evaluate
+           #:get-mdp-hist
+           #:get-policy-hist
+           #:get-q-hist
+           #:get-value-fn-hist
+           #:hist
+           #:io-interface
+           #:learn
+           #:make-q-learning-alg
+           #:on-policy-learning
+           #:random
+           #:reset
+           #:set-debug-str
+           #:set-hist-collect))
 
-(in-package rl-user)
-
-(export-from 'reinforcement-learning
-	     "learn"
-	     "on-policy-learning"
-	     "evaluate"
-	     "io-interface"
-	     "random"
-	     "hist"
-	     "set-hist-collect"
-	     "get-policy-hist"
-	     "get-value-fn-hist"
-	     "get-q-hist"
-	     "get-mdp-hist"
-	     "make-q-learning-alg"
-	     "reset"
-	     "debug-str"
-	     "set-debug-str")
-
-	     
-
-(in-package cl-user)
-
-(defpackage rl-observer
-  (:nicknames rl-obs)
+(defpackage #:rl-observer
+  (:nicknames #:rl-obs)
   (:documentation "Package rl-observer.  Used when making new observers/learning algorithms/stats gatherers.
 
 Types
@@ -121,39 +156,31 @@ debug-str
 set-debug-str
 
 ")
-  (:use common-lisp
-	package-utils))
-
-(in-package rl-observer)
-
-(export-from 'reinforcement-learning
-	     "<rl-observer>"
-	     "<learning-algorithm>"
-	     "<on-policy-learning-algorithm>"
-	     "<q-learning-algorithm>"
-	     "<policy-learning-algorithm>"
-	     "<value-learning-algorithm>"
-	     "defmessage"
-	     "debug-msg"
-	     "inform-start-execution"
-	     "inform-finish-execution"
-	     "inform-start-episode"
-	     "inform-env-step"
-	     "reset"
-	     "knowledge-state"
-	     "get-q-fn"
-	     "get-policy"
-	     "get-mdp"
-	     "get-value-fn"
-	     "current-env-step"
-	     "current-episode-step"
-	     "debug-str"
-	     "set-debug-str"
-	     )
-
-(export-from 'policy
-	     "make-choice")
-
-
-(in-package cl-user)
+  (:use #:common-lisp
+	#:package-utils
+        #:policy
+        #:rl)
+  (:export #:<learning-algorithm>
+           #:<on-policy-learning-algorithm>
+           #:<policy-learning-algorithm>
+           #:<q-learning-algorithm>
+           #:<rl-observer>
+           #:<value-learning-algorithm>
+           #:current-env-step
+           #:current-episode-step
+           #:debug-msg
+           #:debug-str
+           #:defmessage
+           #:get-mdp
+           #:get-policy
+           #:get-q-fn
+           #:get-value-fn
+           #:inform-env-step
+           #:inform-finish-execution
+           #:inform-start-episode
+           #:inform-start-execution
+           #:knowledge-state
+           #:make-choice
+           #:reset
+           #:set-debug-str))
 	     

@@ -1,26 +1,28 @@
-(defpackage qe-taxi-prog
+(in-package #:common-lisp-user)
+
+(defpackage #:qe-taxi-prog
   (:documentation "td-taxi-prog.lisp -  Alisp program used in the qe-taxi domain
 Functions
 ---------
 qe-taxi-prog
 ")
 
-  (:use qe-taxi
-	common-lisp
-	utils
-	alisp-prog)
-  (:export qe-taxi-prog
-	   N
-	   S
-	   E
-	   W
-	   P
-	   D))
+  (:use #:qe-taxi
+	#:common-lisp
+	#:utils
+	#:alisp-prog)
+  (:export #:qe-taxi-prog
+	   #:N
+	   #:S
+	   #:E
+	   #:W
+	   #:P
+	   #:D))
 
   
 
 
-(in-package qe-taxi-prog)
+(in-package #:qe-taxi-prog)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,4 +1,6 @@
-(defpackage gold-standard
+(in-package #:common-lisp-user)
+
+(defpackage #:gold-standard
   (:documentation "Defines the <gold-standard> reinforcement learning algorithm.
 
 Exports
@@ -6,14 +8,15 @@ Exports
 <gold-standard>
 make-gold-standard-learning-algorithm")
   (:export
-   <gold-standard>
-   make-gold-standard-learning-algorithm)
+   #:<gold-standard>
+   #:make-gold-standard-learning-algorithm)
   (:use 
-   cl
-   rl-obs
-   utils))
+   #:common-lisp
+   #:utils
+   #:policy
+   #:rl-obs))
 
-(in-package gold-standard)
+(in-package #:gold-standard)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class def
@@ -47,7 +50,7 @@ Gold standard learning works as follows.  We assume rewards are deterministic fu
 
 
 
-(defconstant *mpi-k* 8)
+(defconstant +mpi-k+ 8)
 
 
 
@@ -62,8 +65,8 @@ Gold standard learning works as follows.  We assume rewards are deterministic fu
 	(actions alg) (make-array 0 :adjustable t)
 	(term alg) (make-array 0 :adjustable t)
 	(trans alg) (make-array '(0 0 0) :element-type 'fixnum)
-	(trans-mat alg) (make-array '(0 0 0) :element-type 'float)
-	(reward alg) (make-array '(0 0 0) :element-type 'float)
+	(trans-mat alg) (make-array '(0 0 0) :element-type 'float :initial-element 0.0)
+	(reward alg) (make-array '(0 0 0) :element-type 'float :initial-element 0.0)
 	(sa-counts alg) (make-array '(0 0) :element-type 'fixnum)))
 
 
@@ -136,7 +139,7 @@ Gold standard learning works as follows.  We assume rewards are deterministic fu
 
     
     (multiple-value-bind (pol val)
-	(dp:policy-iteration m :k *mpi-k* :discount (discount alg))
+	(dp:policy-iteration m :k +mpi-k+ :discount (discount alg))
       (declare (ignore pol))
       (list m (dp:q-from-v m val (discount alg))))))
 

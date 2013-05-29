@@ -3,7 +3,7 @@
 ;; binary operations for the underlying semiring of a potential set
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package pot-set)
+(in-package #:pot-set)
 
 (defstruct (operation (:conc-name op-) (:constructor make-op (identity func)))
   "Structure type operation.  Represents a binary operation on a semiring, used by the graphical model code.  To create, use make-op with arguments

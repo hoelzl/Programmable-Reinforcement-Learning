@@ -1,15 +1,14 @@
-
-(defpackage tactical-fc-env
+(defpackage #:tactical-fc-env
   (:documentation "The tactical-fc-env package.  Defines <tactical-fc-env>, for the 'footmen and catapults' tactical environment.  In this environment, the player starts with a large amount of resources, and the ability to produce footmen and catapults.  The goal is to destroy the enemy great hall, which is protected by some units.  A cost-of-living is charged per timestep, and a reward of hp-reward is given for each unit of damage done to the great hall.")
-  (:use s-env
-	cl
-	utils))
+  (:use #:s-env
+	#:cl
+	#:utils))
 
 
   
   
 
-(in-package tactical-fc-env)
+(in-package #:tactical-fc-env)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class

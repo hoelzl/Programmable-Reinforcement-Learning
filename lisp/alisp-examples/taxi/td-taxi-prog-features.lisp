@@ -1,40 +1,22 @@
-(defpackage td-taxi-prog-features
+(in-package #:common-lisp-user)
+
+(defpackage #:td-taxi-prog-features
   (:documentation "Package for features for td taxi domain.
 
 *featurizer*")
    
   (:use
-   cl
-   alisp-features
-   td-taxi-env
-   td-taxi-prog
-   gw
-   utils)
+   #:common-lisp
+   #:alisp-features
+   #:td-taxi-env
+   #:td-taxi-flat-lfa
+   #:td-taxi-prog
+   #:gw
+   #:utils)
   (:export
-   *featurizer*))
+   #:*featurizer*))
 
-(in-package td-taxi-prog-features)
-
-(defvar *featurizer*)
-
-(setq *featurizer*
-  (make-3partq-featurizer
-   ()
-   (nav-choice
-    (:qr-depends pos choice)
-    (:qc-depends pos choice taxi-dest)
-    (:qe-depends have-pass? dropping-off-pass? source-dest-dist))
-   (nav-src
-    (:qr-depends pos pass-src)
-    (:qe-depends source-dest-dist))
-   (nav-dest
-    (:qr-depends pos pass-dst)
-    (:qc-depends have-pass?)
-    (:qe-depends have-pass? source-dest-dist))
-   (task-choice
-    (:qr-depends pos have-pass? pass-src pass-dst choice)
-    (:qc-depends have-pass? pass-src pass-dst choice))))
-
+(in-package #:td-taxi-prog-features)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Definitions of the individual features
@@ -62,3 +44,21 @@
   (shortest-path-dist (env env-state) 
 		      (pass-source env-state) 
 		      (pass-dest env-state)))
+
+(defparameter *featurizer*
+  (make-3partq-featurizer
+   ()
+   (nav-choice
+    (:qr-depends pos choice)
+    (:qc-depends pos choice taxi-dest)
+    (:qe-depends have-pass? dropping-off-pass? source-dest-dist))
+   (nav-src
+    (:qr-depends pos pass-src)
+    (:qe-depends source-dest-dist))
+   (nav-dest
+    (:qr-depends pos pass-dst)
+    (:qc-depends have-pass?)
+    (:qe-depends have-pass? source-dest-dist))
+   (task-choice
+    (:qr-depends pos have-pass? pass-src pass-dst choice)
+    (:qc-depends have-pass? pass-src pass-dst choice))))

@@ -1,4 +1,6 @@
-(defpackage td-taxi-env
+(in-package #:common-lisp-user)
+
+(defpackage #:td-taxi-env
   (:documentation " td-taxi-env.lisp
 The taxi environment in Tom Dietterrich's MAXQ paper, in which there's
 a single passenger and taxi, and the episode terminates once the
@@ -41,33 +43,33 @@ at-source
 at-dest
 in-taxi
 ")
-  (:use common-lisp
-	utils
-	create-env
-	grid-world)
+  (:use #:common-lisp
+	#:utils
+	#:create-env
+	#:grid-world)
 
 
-  (:export <td-taxi-env>
-	   make-example-env1
-	   make-example-env2
-	   N
-	   S
-	   E
-	   W
-	   P 
-	   D
-	   F
-	   pass-loc
-	   taxi-pos
-	   pass-source
-	   pass-dest
-	   at-source
-	   env
-	   at-dest
-	   in-taxi
+  (:export #:<td-taxi-env>
+	   #:make-example-env1
+	   #:make-example-env2
+	   #:N
+	   #:S
+	   #:E
+	   #:W
+	   #:P 
+	   #:D
+	   #:F
+	   #:pass-loc
+	   #:taxi-pos
+	   #:pass-source
+	   #:pass-dest
+	   #:at-source
+	   #:env
+	   #:at-dest
+	   #:in-taxi
 	   ))
 
-(in-package td-taxi-env)
+(in-package #:td-taxi-env)
 
 
 

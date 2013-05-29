@@ -1,4 +1,6 @@
-(defpackage pot-set
+(in-package #:common-lisp-user)
+
+(defpackage #:pot-set
   (:documentation "Package pot-set - contains code for potential sets
 
 Types
@@ -36,39 +38,35 @@ not-used
 uninstantiated
 ")
    
-   
-  
   (:use 
-   cl
-   utils
-   inst-vars
-   prob
-   prod-set
-   set)
+   #:common-lisp
+   #:utils
+   #:inst-vars
+   #:prob
+   #:prod-set
+   #:set)
+  
   (:export
-   potential
-   tabular-potential
-   make-function-potential
+   #:potential
+   #:tabular-potential
+   #:make-function-potential
    
-   *times*
-   *plus*
-   *max*
-   *min*
+   #:*times*
+   #:*plus*
+   #:*max*
+   #:*min*
 
-   vars
-   eval-pot
-   multiply
-   multiply-and-sum-out
-   compose-potential
+   #:vars
+   #:eval-pot
+   #:multiply
+   #:multiply-and-sum-out
+   #:compose-potential
    
-   best-assignment
-   boltzmann-gm
-   min-deficiency-elim-order
+   #:best-assignment
+   #:boltzmann-gm
+   #:min-deficiency-elim-order
    
-   not-used
-   uninstantiated))
+   #:not-used
+   #:uninstantiated))
    
-
-
-
 (in-package cl-user)

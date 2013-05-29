@@ -1,5 +1,6 @@
+(in-package #:common-lisp-user)
 
-(defpackage ve-prog
+(defpackage #:ve-prog
   (:documentation "Package ve-prog.
 
 Types
@@ -14,28 +15,28 @@ wait
 
 ")
   (:export
-   <ve-prog>
-   footman
-   peasant
-   wait)
+   #:<ve-prog>
+   #:footman
+   #:peasant
+   #:wait)
       
-  (:use cl
-	set
-	utils
-	calisp-prog)
+  (:use #:common-lisp
+	#:set
+	#:utils
+	#:calisp-prog)
   (:import-from 
-   ve-env
-   train-footman
-   train-peas
-   footman
-   peasant
-   wait
-   gather
-   attack 
-   defend)
+   #:ve-env
+   #:train-footman
+   #:train-peas
+   #:footman
+   #:peasant
+   #:wait
+   #:gather
+   #:attack 
+   #:defend)
   )
 
-(in-package ve-prog)
+(in-package #:ve-prog)
 
 (defclass <ve-prog> (<calisp-program>)
   ())

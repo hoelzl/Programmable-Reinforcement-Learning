@@ -1,4 +1,4 @@
-(in-package fn-approx)
+(in-package #:fn-approx)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23,6 +23,7 @@ Initialization arguments from <linear-fn-approx>:
 "))
 
 (defmethod initialize-instance :after ((f <linear-fn-approx-with-bounds>) &rest args &key mins maxs)
+  (declare (ignore args))
   (if (slot-boundp f 'mins)
       (dotimes (i (length mins))
 	(orf (aref mins i) '-infty))

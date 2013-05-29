@@ -1,4 +1,6 @@
-(defpackage policy
+(in-package #:common-lisp-user)
+
+(defpackage #:policy
   (:documentation "Package policy (pol).  
 
 Types
@@ -38,37 +40,37 @@ unknown-state-or-action
 unknown-state
 ")
   (:use
-   common-lisp
-   prob
-   utils)
+   #:common-lisp
+   #:prob
+   #:utils)
    
   (:nicknames pol)
   (:export
-   [policy]
-   <policy>
-   <greedy-policy>
-   <random-policy>
-   <prompt-policy>
-   <tabular-policy>
-   <stochastic-policy>
+   #:[policy]
+   #:<policy>
+   #:<greedy-policy>
+   #:<random-policy>
+   #:<prompt-policy>
+   #:<tabular-policy>
+   #:<stochastic-policy>
    
-   make-random-policy
-   make-tabular-policy
-   policy-case
+   #:make-random-policy
+   #:make-tabular-policy
+   #:policy-case
    
-   make-choice
-   choice-dist
+   #:make-choice
+   #:choice-dist
    
-   print-advice
-   prompt-for-choice
+   #:print-advice
+   #:prompt-for-choice
    
-   choose-to-abort
-   unknown-state
-   unknown-state-action
+   #:choose-to-abort
+   #:unknown-state
+   #:unknown-state-action
    ))
   
 
-(in-package policy)
+(in-package #:policy)
 
 
 (deftype [policy] ()

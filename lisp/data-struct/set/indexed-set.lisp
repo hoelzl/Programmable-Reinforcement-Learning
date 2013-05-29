@@ -1,16 +1,18 @@
-(defpackage indexed-set
+(in-package #:common-lisp-user)
+
+(defpackage #:indexed-set
   (:documentation "An <indexed-set> is a type of <numbered-set> which also includes a hashtable mapping items to their number.  Used when the item-number operation needs to be fast.
 
 To create, use make-indexed-set.
 
 All the standard operations on <set>s apply to <indexed-set>s.  See the set package.")
-  (:use set
-	utils
-	common-lisp)
+  (:use #:set
+	#:utils
+	#:common-lisp)
   (:export
-   make-indexed-set))
+   #:make-indexed-set))
 
-(in-package indexed-set)
+(in-package #:indexed-set)
    
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

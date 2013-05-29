@@ -1,4 +1,6 @@
-(defpackage q-function
+(in-package #:common-lisp-user)
+
+(defpackage #:q-function
   (:documentation "Package q-function (q-fn).  Code and types related to Q-functions of MDPs.
 
 Types
@@ -56,39 +58,43 @@ choose-randomly
 ")
 
 
-  (:nicknames q-fn)
-  (:use common-lisp
-	utils
-	set
-	value-fn)
-  (:import-from policy
-		unknown-state
-		unknown-state-action)
-  (:export <q-function>
-	   <approx-q-function>
-	   <sum-q-function>
-	   <env-q-function>
-	   best-choice
-	   value
-	   boltzmann-dist
-	   evaluate
-	   update
-	   reset
-	   fn-approx
-	   featurizer
-	   choices
-	   featurize
-	   make-q-featurizer
-	   get-designated-q-feature
-	   print-approx-q-function-readably
-	   make-tabular-q-function
-	   sum-q-functions
-	   evaluate-comps
-	   unknown-state-action
-	   unknown-state
-	   first-choice
-	   use-default-val-0
-	   choose-randomly
+  (:nicknames #:q-fn)
+  (:use #:common-lisp
+	#:utils
+	#:set
+	#:value-fn
+        #:policy)
+  #+(or)
+  (:import-from #:policy
+                #:choices
+                #:print-advice
+		#:unknown-state
+		#:unknown-state-action)
+  (:export #:<q-function>
+	   #:<approx-q-function>
+	   #:<sum-q-function>
+	   #:<env-q-function>
+	   #:best-choice
+	   #:value
+	   #:boltzmann-dist
+	   #:evaluate
+	   #:update
+	   #:reset
+	   #:fn-approx
+	   #:featurizer
+	   #:choices
+	   #:featurize
+	   #:make-q-featurizer
+	   #:get-designated-q-feature
+	   #:print-approx-q-function-readably
+	   #:make-tabular-q-function
+	   #:sum-q-functions
+	   #:evaluate-comps
+	   #:unknown-state-action
+	   #:unknown-state
+	   #:first-choice
+	   #:use-default-val-0
+	   #:choose-randomly
 	   ))
 
 
@@ -156,7 +162,11 @@ The TEMPERATURE argument must be either a nonnegative real number or the symbol 
     (copy-into q1 q2)
     q2))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic for CHOICE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defgeneric choices (q-function choices))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; default methods for best choice and boltzmann
@@ -208,7 +218,7 @@ The TEMPERATURE argument must be either a nonnegative real number or the symbol 
      temp choices)))
 
 
-(defmethod policy:print-advice ((adv q-fn:<q-function>) omega choices str)
+(defmethod print-advice ((adv q-fn:<q-function>) omega choices str)
   (handler-bind ((q-fn:unknown-state-action 
 		  #'(lambda (c)
 		      (declare (ignore c))

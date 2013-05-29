@@ -1,17 +1,19 @@
-(defpackage rbe-linear-features
+(in-package #:common-lisp-user)
+
+(defpackage #:rbe-linear-features
   (:documentation "Linear features and Q-function for calisp resource balance program")
   (:use
-   cl
-   rbe-prog
-   calisp-features
-   calisp-q-function
-   rbe
-   set
-   utils)
+   #:common-lisp
+   #:rbe-prog
+   #:calisp-features
+   #:calisp-q-function
+   #:rbe
+   #:set
+   #:utils)
   (:export
-   make-rbe-crl-q-function))
+   #:make-rbe-crl-q-function))
 
-(in-package rbe-linear-features)
+(in-package #:rbe-linear-features)
 
 
 (defun make-rbe-crl-q-function (max-gold max-wood)

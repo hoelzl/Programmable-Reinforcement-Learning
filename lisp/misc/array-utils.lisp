@@ -4,7 +4,7 @@
 ;; general utilities for handling arrays
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 
 (defun eql-array (a1 a2)

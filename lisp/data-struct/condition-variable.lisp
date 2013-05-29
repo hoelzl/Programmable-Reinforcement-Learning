@@ -1,48 +1,48 @@
-(defpackage condition-variable
-  (:documentation "Package for condition variables.  Condition variables are a synchronization tool typically used to make a thread wait for some state that depends on another thread's actions.
+(defpackage #:condition-variable
+  (:documentation 
+   "Package for condition variables.  Condition variables are a synchronization tool typically used to make a thread wait for some state that depends on another thread's actions.
 
 Condition variables are always associated with a process lock, and all condition variable operations must be done while a process is holding the lock that is associated with the condition variable, i.e. (eq (process-lock-locker lock) *current-process*) (and this is asserted in each method.
 
 To use a condition variable, use these methods:
 
-(make-condition-variable process-lock)
+  (make-condition-variable process-lock)
     Creates a condition variable associated with the given process lock.  It is perfectly acceptable to associate multiple condition variables with the same lock.
 
-(wait condition-variable)
+  (wait condition-variable)
     Wait causes the current process to block (wait) on the condition variable.  The process gives up the lock while holding, but is guaranteed to have it again when it returns.  Wait returns true.
 
-(notify-all condition-variable)
+  (notify-all condition-variable)
     Notify-all causes all processes that are blocked on the condition variable to wake up and become able to be scheduled.  Notify-all does not release the lock, so no process that has just awoken will actually run until the calling process releases the lock and a woken process is able to acquire it.  It returns a list of all processes that were woken up, if any.  Otherwise, the empty list is returned.
 
-(notify condition-variable)
+  (notify condition-variable)
     Notify is like notify-all except that it only wakes up one (if any) process that is blocked on the condition variable.  Occasionally useful, but notify-all is more often useful, and easier to use safely.  If a process is woken up, it is returned.  Otherwise, nil is returned.
 
-(num-waiting condition-variable)
+  (num-waiting condition-variable)
     Returns the number of processes waiting on the condition variable.
 
-(get-waiting condition-variable)
-Returns a list of the processes waiting on this condition variable.
-
+  (get-waiting condition-variable)
+    Returns a list of the processes waiting on this condition variable.
 
 The code in this package currently only works with Allegro Lisp, Version 6.2 or later.")
 
 
-  (:nicknames cv)
-  (:use common-lisp 
-	mp
-	utils)
+  (:nicknames #:cv)
+  (:use #:common-lisp 
+	#:mp
+	#:utils)
   (:export 
-   <condition-variable>
-   make-condition-variable
-   remove-waiting-processes
-   wait
-   notify
-   notify-all
-   num-waiting
-   get-waiting))
+   #:<condition-variable>
+   #:make-condition-variable
+   #:remove-waiting-processes
+   #:wait
+   #:notify
+   #:notify-all
+   #:num-waiting
+   #:get-waiting))
    
 	
-(in-package condition-variable)
+(in-package #:condition-variable)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

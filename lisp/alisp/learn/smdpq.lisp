@@ -1,5 +1,7 @@
-(defpackage alisp-smdpq
-  (:nicknames asq)
+(in-package #:common-lisp-user)
+
+(defpackage #:alisp-smdpq
+  (:nicknames #:asq)
   (:documentation "Package alisp-smdpq.  The smdp q-learning algorithm, applied to alisp. 
 
 Types
@@ -8,15 +10,15 @@ Types
 See also alisp-user package for other operations on <alisp-learning-algorithm> objects
 ")
   (:export
-   <smdpq>
-   make-smdpq-alg)
-  (:use common-lisp
-	utils
-	policy
-	alisp-obs))
+   #:<smdpq>
+   #:make-smdpq-alg)
+  (:use #:common-lisp
+	#:utils
+	#:policy
+	#:alisp-obs))
 
 
-(in-package alisp-smdpq)
+(in-package #:alisp-smdpq)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

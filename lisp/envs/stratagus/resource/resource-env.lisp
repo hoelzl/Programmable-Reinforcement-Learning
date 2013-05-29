@@ -1,12 +1,12 @@
-(defpackage resource-env
-  (:use common-lisp
-	utils
-	stratagus-env
-        create-env
+(defpackage #:resource-env
+  (:use #:common-lisp
+	#:utils
+	#:stratagus-env
+        #:create-env
   )
-  (:export <resource-env>)
-           *target-gold*
-	   *target-wood*)
+  (:export #:<resource-env>
+           #:*target-gold*
+	   #:*target-wood*))
 	   
 	   
 (in-package resource-env)

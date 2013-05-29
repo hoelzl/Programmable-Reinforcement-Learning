@@ -3,7 +3,7 @@
 ;; utilities for converting to and from matlab format
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 (defun matlab-write (filename seq &optional overwrite)
   "matlab-write F S &OPTIONAL (OVERWRITE NIL).  Writes sequence S to file F in matlab-readable (ascii) form.  If OVERWRITE is true, then overwrite F if it already exists."

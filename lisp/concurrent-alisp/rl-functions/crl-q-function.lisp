@@ -1,5 +1,6 @@
+(in-package #:common-lisp-user)
 
-(defpackage calisp-q-function
+(defpackage #:calisp-q-function
   (:documentation
    "Package for defining CALisp Q-functions 
 
@@ -34,37 +35,37 @@ qc
 qe
 ")
    
-  (:nicknames calisp-q-fn)
+  (:nicknames #:calisp-q-fn)
   (:use
-   cl
-   crlq
-   dec-q-fn
-   calisp-features
-   utils)
+   #:common-lisp
+   #:crlq
+   #:dec-q-fn
+   #:calisp-features
+   #:utils)
   (:export
-   <calisp-crl-q-function>
-   <threadwise-q-function>
-   <temporal-q-function>
-   <threadwise-crl-q-function>
-   <temporal-crl-q-function>
-   def-feature-template
-   def-decomposed-feature-template
-   make-feature-template
-   make-decomposed-feature-template
-   make-feature
-   omega 
-   env-state
-   thread-states
-   threads-in-subtask
-   threads-at-label
-   make-calisp-feature
-   choosing-threads-at-label
-   bin-values
-   qr
-   qc
-   qe))
+   #:<calisp-crl-q-function>
+   #:<threadwise-q-function>
+   #:<temporal-q-function>
+   #:<threadwise-crl-q-function>
+   #:<temporal-crl-q-function>
+   #:def-feature-template
+   #:def-decomposed-feature-template
+   #:make-feature-template
+   #:make-decomposed-feature-template
+   #:make-feature
+   #:omega 
+   #:env-state
+   #:thread-states
+   #:threads-in-subtask
+   #:threads-at-label
+   #:make-calisp-feature
+   #:choosing-threads-at-label
+   #:bin-values
+   #:qr
+   #:qc
+   #:qe))
 
-(in-package calisp-q-function)
+(in-package #:calisp-q-function)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

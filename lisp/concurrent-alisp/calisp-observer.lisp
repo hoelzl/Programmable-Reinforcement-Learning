@@ -3,7 +3,9 @@
 ;; Defines the <calisp-observer> abstract class and some generic functions.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package calisp)
+(in-package #:common-lisp-user)
+
+(in-package #:calisp)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

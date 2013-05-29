@@ -1,15 +1,15 @@
-(defpackage test-bnet
-  (:use bnet
-	cl
-	prob
-	grid-world
-	utils
-	mdp-env
-	set
-	inst-vars
-	help))
+(defpackage #:test-bnet
+  (:use #:bnet
+	#:common-lisp
+	#:prob
+	#:grid-world
+	#:utils
+	#:mdp-env
+	#:set
+	#:inst-vars
+	#:help))
 
-(in-package test-bnet)
+(in-package #:test-bnet)
 
 
 
@@ -30,12 +30,12 @@
 (defun dist4 (x)
   (list (cons (reduce #'+ x) 1)))
 
-(setf desc1 
+(defparameter *desc1* 
   (make-2tbn-var-desc
    :id 'A :domain '(0 8 16) :init-slice-parents '(B) :init-dist #'dist1 
    :prev-slice-parents '(A) :curr-slice-parents nil :trans-dist #'dist2))
 
-(setf desc2
+(defparameter *desc2*
   (make-2tbn-var-desc
    :id 'B :domain '(0 1 2 8 9 10 16 17 18) :init-slice-parents () :init-dist #'dist3
    :prev-slice-parents '(B) :curr-slice-parents '(A) :trans-dist #'dist4))
@@ -47,9 +47,9 @@
 (defstruct qux
   oof)
 
-(setf 2tbn (make-instance '<2tbn> :state-descs (list desc1 desc2) :state-acc (make-vec-accessors 2)))
-(setf stbn (make-instance '<2tbn> :state-descs (list desc1 desc2) :state-acc (make-struct-accessors foo (bar baz))))
-(setf sa2tbn (make-instance '<2tbn> :state-descs (list desc1 desc2) 
+(defparameter *2tbn* (make-instance '<2tbn> :state-descs (list *desc1* *desc2*) :state-acc (make-vec-accessors 2)))
+(defparameter  *stbn* (make-instance '<2tbn> :state-descs (list *desc1* *desc2*) :state-acc (make-struct-accessors foo (bar baz))))
+(defparameter *sa2tbn* (make-instance '<2tbn> :state-descs (list *desc1* *desc2*) 
 			    :state-acc (make-struct-accessors qux ((oof array 2)))))
 
 

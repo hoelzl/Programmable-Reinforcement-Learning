@@ -1,4 +1,4 @@
-(in-package alisp)
+(in-package #:alisp)
 
 (defclass <alisp-progress-printer> (<alisp-observer> progress-printer:<progress-printer>)
   ())

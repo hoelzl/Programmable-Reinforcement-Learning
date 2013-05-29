@@ -3,7 +3,7 @@
 ;; Treating numbers as (constant) potentials
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package pot-set)
+(in-package #:pot-set)
 
 (defmethod vars ((pot number))
   nil)

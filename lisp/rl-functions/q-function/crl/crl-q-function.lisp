@@ -3,7 +3,9 @@
 ;; Implements <crl-q-function>, for coordinated relational linear Q-functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage crl-q-function
+(in-package #:common-lisp-user)
+
+(defpackage #:crl-q-function
   (:documentation "Package for coordinated relational linear Q-functions.
 See also the q-function package.
 
@@ -39,35 +41,33 @@ feature-vector
 evaluate
 ")
 
-
-
-  (:nicknames crlq)
-  (:use q-fn
-	cl
-	set
-	pot-set
-	utils)
+  (:nicknames #:crlq)
+  (:use #:common-lisp
+	#:utils
+	#:set
+	#:pot-set
+	#:q-fn)
   (:export
-   <crl-q-function>
-   make-feature
-   vars
-   func
-   set-temps
-   set-ids
-   choice-fn
-   set-choice-fn
-   ids
-   debug-mode
+   #:<crl-q-function>
+   #:make-feature
+   #:vars
+   #:func
+   #:set-temps
+   #:set-ids
+   #:choice-fn
+   #:set-choice-fn
+   #:ids
+   #:debug-mode
    
-   compose-feature
-   compose-feature-template
-   bin-values
+   #:compose-feature
+   #:compose-feature-template
+   #:bin-values
    
-   weights
-   evaluate
-   feature-vector))
+   #:weights
+   #:evaluate
+   #:feature-vector))
 
-(in-package crl-q-function)
+(in-package #:crl-q-function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; type def
@@ -228,7 +228,10 @@ U is a (joint choice)."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Other q-function methods
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  
+
+;;; Forward declaration for COMPOSE-FEATURE (defined in crl-features).
+(declaim (ftype (function (function t) t) compose-feature))
+
 (defun get-weighted-potentials (q omega)
   (apply #'nconc
 	 (map 'list

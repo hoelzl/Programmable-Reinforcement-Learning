@@ -1,4 +1,6 @@
-(defpackage threadwise-decomposed-q
+(in-package #:common-lisp-user)
+
+(defpackage #:threadwise-decomposed-q
   (:documentation "Package threadwise-decomposed-q (thread-dec-q)
 
 Threadwised decomposed Q-learning algorithm for concurrent ALisp.
@@ -9,19 +11,19 @@ Types
 ")
   
   (:export
-   <threadwise-decomposed-q-learner>)
-  (:nicknames thread-dec-q)
+   #:<threadwise-decomposed-q-learner>)
+  (:nicknames #:thread-dec-q)
   (:use
-   cl
-   utils
-   set
-   calisp-obs
-   policy
-   dec-q-fn)
+   #:common-lisp
+   #:utils
+   #:set
+   #:calisp-obs
+   #:policy
+   #:dec-q-fn)
   )
 
 
-(in-package thread-dec-q)
+(in-package #:thread-dec-q)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

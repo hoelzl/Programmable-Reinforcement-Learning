@@ -1,17 +1,17 @@
-(defpackage resource-prog
+(defpackage #:resource-prog
  (:documentation "resource-prog.lisp - Alisp program for resource-env.lisp domain
 Functions
 ---------
 resource-prog")
 
- (:use resource-env
-       stratagus-env
-       common-lisp
-       utils
-       calisp-prog)
- (:export <resource-prog>))
+ (:use #:resource-env
+       #:stratagus-env
+       #:common-lisp
+       #:utils
+       #:calisp-prog)
+ (:export #:<resource-prog>))
 
-(in-package resource-prog)
+(in-package #:resource-prog)
 
 ; CONSTANTS
 (defconstant *map-length* 32)

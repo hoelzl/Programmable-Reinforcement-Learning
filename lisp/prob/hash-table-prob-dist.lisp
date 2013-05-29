@@ -3,7 +3,7 @@
 ;; Code for treating hash tables as probability distributions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package prob)
+(in-package #:prob)
 
 (defmethod sample ((h hash-table))
   (loop
@@ -42,7 +42,7 @@
 	     when (< v 0) do (return nil)
 	     sum v)))
     (and tot-prob
-	 (< (abs (- tot-prob 1.0)) *prob-dist-sum-tol*))))
+	 (< (abs (- tot-prob 1.0)) +prob-dist-sum-tol+))))
     
 
 (defmethod map-prob-dist (f (h hash-table))

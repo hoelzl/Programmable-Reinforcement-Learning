@@ -1,5 +1,6 @@
+(in-package #:common-lisp-user)
 
-(defpackage cache
+(defpackage #:cache
   (:documentation "Functions to do with caches.
 
 Types
@@ -13,18 +14,20 @@ lookup
 reset
 reset-stats
 size")
-  (:use
-   utils
-   cl)
-  (:export
-   <fifo-cache>
-   add
-   size
-   reset-stats
-   reset
-  lookup))
 
-(in-package cache)
+  (:use
+   #:utils
+   #:common-lisp)
+
+  (:export
+   #:<fifo-cache>
+   #:add
+   #:size
+   #:reset-stats
+   #:reset
+   #:lookup))
+
+(in-package #:cache)
 
 (defclass <fifo-cache> ()
   ((v :type (simple-array * 1) :reader v :writer set-v)
@@ -44,6 +47,8 @@ Initargs
 (defvar *hits* 0)
 (defvar *misses* 0)
 
+(defgeneric reset (cache))
+
 (defmethod reset ((c <fifo-cache>))
   (fill (v c) nil)
   (setf (cache-ptr c) 0)
@@ -51,6 +56,7 @@ Initargs
 
 (defmethod initialize-instance :after ((c <fifo-cache>) &rest args 
 				       &key (size nil))
+  (declare (ignore args))
   (assert (integerp size))
   (set-v (make-array size) c))
 

@@ -1,4 +1,4 @@
-(in-package alisp)
+(in-package #:alisp)
 
 (defclass <alisp-approx-q-function> (q-function:<approx-q-function>)
   ()

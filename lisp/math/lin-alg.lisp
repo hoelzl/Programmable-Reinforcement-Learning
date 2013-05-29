@@ -5,12 +5,14 @@
 ;; functions to do with linear algebra
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Package info
-(defpackage lin-alg
-  (:use common-lisp)
-  (:export lp-dist dot-product))
+(in-package #:common-lisp-user)
 
-(in-package lin-alg)
+;; Package info
+(defpackage #:lin-alg
+  (:use #:common-lisp)
+  (:export #:lp-dist #:dot-product))
+
+(in-package #:lin-alg)
 
 
 (defgeneric lp-dist (a1 a2 &optional p)
@@ -61,6 +63,9 @@ Return the l^p distance between two arrays of reals.  P is the norm to use. Eith
 		      0
 		    (expt (abs (gethash k h2)) p)))))
    (/ 1 p)))
+
+(defgeneric dot-product (x y)
+  (:documentation "Return the dot product of X and Y."))
 
 ;; dot-product
 ;; return the dot product of two vectors

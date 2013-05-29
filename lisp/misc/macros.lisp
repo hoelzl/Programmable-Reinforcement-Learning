@@ -1,4 +1,4 @@
-(in-package utils)
+(in-package #:utils)
 
 
 (defmacro with-gensyms (syms &body body)
@@ -31,11 +31,11 @@
   `(while (not ,test) ,@body))
 
 
-(defmacro rand-fn-hist (f n &key (inc (ceiling n 100)) (test #'equalp))
-  "rand-fn-hist F N &key INC TEST calls the form F N times, printing a . for progress every INC steps, and displays (and returns) the results as a hash-table using TEST (default #'equalp)"
+(defmacro rand-fn-hist (f n &key (inc (ceiling n 100)) (test 'equalp))
+  "rand-fn-hist F N &key INC TEST calls the form F N times, printing a . for progress every INC steps, and displays (and returns) the results as a hash-table using TEST (default 'equalp)"
   `(loop
        with val = nil
-       with h = (make-hash-table :test ,test)
+       with h = (make-hash-table :test ',test)
 		
        for i from 1 to ,n
 		  

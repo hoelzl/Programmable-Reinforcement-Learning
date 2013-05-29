@@ -1,4 +1,4 @@
-(in-package alisp-hordq)
+(in-package #:alisp-hordq)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Type defs

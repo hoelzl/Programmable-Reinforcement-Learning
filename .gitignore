@@ -1,2 +1,4 @@
 *~
 *.fasl
+# Directory with test output
+lisp/rl-functions/policy/test/

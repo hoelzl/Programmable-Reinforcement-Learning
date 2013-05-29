@@ -3,7 +3,7 @@
 ;; code relating to sequences viewed as sets
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package set)
+(in-package #:set)
 
 (defmethod member? (item (s sequence))
   (some (lambda (x) (same x item)) s))

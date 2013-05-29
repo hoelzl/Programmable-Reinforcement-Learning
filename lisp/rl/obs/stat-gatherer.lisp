@@ -1,4 +1,6 @@
-(defpackage stat-gatherer
+(in-package #:common-lisp-user)
+
+(defpackage #:stat-gatherer
   (:documentation "Package for the <stat-gatherer> subclass of <rl-observer>.
 
 Exports
@@ -9,18 +11,18 @@ total-reward
 num-episodes-started
 num-episodes-finished
 num-env-steps")
-  (:use common-lisp
-	rl-obs
-	utils)
+  (:use #:common-lisp
+	#:rl-obs
+	#:utils)
   (:export
-   <stat-gatherer>
-   make-stat-gatherer
-   total-reward
-   num-episodes-started
-   num-episodes-finished
-   num-env-steps))
+   #:<stat-gatherer>
+   #:make-stat-gatherer
+   #:total-reward
+   #:num-episodes-started
+   #:num-episodes-finished
+   #:num-env-steps))
 
-(in-package stat-gatherer)
+(in-package #:stat-gatherer)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

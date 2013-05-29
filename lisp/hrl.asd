@@ -10,11 +10,11 @@
 			   (:file "macros")
 			   (:file "clone")
 			   (:file "same")
-			   (:file "canonicalize" :depends-on ("clone"))
+			   (:file "utils" :depends-on ("clone"))
+			   (:file "canonicalize" :depends-on ("clone" "utils"))
 			   (:file "hash-table-array" :depends-on ("canonicalize"))
 			   
 			   (:file "help")
-			   (:file "utils" :depends-on ("clone"))
 			   (:file "array-utils" :depends-on ("utils" "macros"))
 			   (:file "list-utils" :depends-on ("utils"))
 			   (:file "function-utils")
@@ -29,6 +29,7 @@
 			   #+concurrent-alisp
 			   (:file "threads" :depends-on ("utils"))))
 		 
+		 
 		 (:module "set" :pathname "data-struct/set/"
 			  :depends-on ("misc")
 			  :components ((:file "set")
@@ -42,6 +43,16 @@
 				       (:file "direct-product-set" :depends-on ("set"))
 				       (:file "var-set" :depends-on ("direct-product-set"))))
 		 
+		 
+		 (:module "prob" :in-order-to ((compile-op (load-op "misc")))
+			  :depends-on ("set")
+			  :components ((:file "probability-distribution")
+				       (:file "function-random-variable" :depends-on ("probability-distribution"))
+				       (:file "create-distributions" :depends-on ("probability-distribution"))
+				       (:file "vector-probability-distribution" :depends-on ("probability-distribution"))
+				       (:file "hash-table-prob-dist" :depends-on ("probability-distribution"))
+				       (:file "alist-probability-distribution" :depends-on ("probability-distribution"))))
+
 
 		 (:module "data-struct" :pathname "data-struct/"
 			  :depends-on ("misc" "prob" "set")
@@ -90,6 +101,30 @@
 				       (:file "linear-fn-approx")
 				       (:file "linear-fn-approx-with-bounds")))
 		 
+		 (:module "math" :pathname "math/" :depends-on ("misc")
+			  :components ((:file "lin-alg")
+				       (:file "chi-square")))
+
+		      
+		 (:module "mdp" :depends-on ("env" "data-struct" "math" "prob" "misc")
+			  :in-order-to ((compile-op (load-op "misc")))						   
+			  :components ((:file "mdp-pkg")
+				       (:file "smdp"
+					      :depends-on ("mdp-pkg"))
+				       (:file "mdp"
+					      :depends-on ("smdp"))
+				       (:file "mdp-env"
+					      :depends-on ("mdp"))
+				       (:file "2tbn-mdp-env"
+					      :depends-on ("mdp-env"))
+				       (:file "tabular-smdp"
+					      :depends-on ("smdp"))
+				       (:file "hierarchical-smdp"
+					      :depends-on ("smdp" "tabular-smdp"))
+				       (:file "tabular-mdp"
+					      :depends-on ("mdp"))))
+     
+		 
 		 (:module "rl-functions"
 			  :depends-on ("fn-approx" "misc" "data-struct" "prob" "math" "mdp")
 			  :components ((:module "value-function"
@@ -97,7 +132,14 @@
 							     (:file "tabular-value-function" :depends-on
 								    ("value-function"))))
 				       
-						
+				       (:module "policy"
+						:components ((:file "policy")
+							     
+							     (:file "random-policy" :depends-on ("policy"))
+							     (:file "tabular-policy" :depends-on ("policy"))
+							     (:file "prompt-policy" :depends-on ("policy"))
+							     ))
+				       
 				       (:module "q-function"
 						:depends-on ("value-function" "policy")
 						:components ((:file "q-function")
@@ -121,15 +163,7 @@
 							     (:file "env-q-function" :depends-on 
 								    ("approx-q-function"))
 							     ))
-				       
-				       (:module "policy"
-						:components ((:file "policy")
-							     
-							     (:file "random-policy" :depends-on ("policy"))
-							     (:file "tabular-policy" :depends-on ("policy"))
-							     (:file "prompt-policy" :depends-on ("policy"))
-							     ))
-				       
+
 				       (:module "policy2" :depends-on ("q-function" "policy")
 						:pathname "policy/"
 						:components ((:file "greedy-policy")
@@ -141,39 +175,6 @@
 						:components ((:file "learning-rate")
 							     (:file "polynomial-learning-rate" 
 								    :depends-on ("learning-rate"))))))
-		 
-		 (:module "math" :pathname "math/" :depends-on ("misc")
-			  :components ((:file "lin-alg")
-				       (:file "chi-square")))
-		 
-		 (:module "prob" :in-order-to ((compile-op (load-op "misc")))
-			  :depends-on ("set")
-			  :components ((:file "probability-distribution")
-				       (:file "function-random-variable" :depends-on ("probability-distribution"))
-				       (:file "create-distributions" :depends-on ("probability-distribution"))
-				       (:file "vector-probability-distribution" :depends-on ("probability-distribution"))
-				       (:file "hash-table-prob-dist" :depends-on ("probability-distribution"))
-				       (:file "alist-probability-distribution" :depends-on ("probability-distribution"))))
-		 
-		      
-		 (:module "mdp" :depends-on ("env" "data-struct" "math" "prob" "misc")
-			  :in-order-to ((compile-op (load-op "misc")))						   
-			  :components ((:file "mdp-pkg")
-				       (:file "smdp"
-					      :depends-on ("mdp-pkg"))
-				       (:file "mdp"
-					      :depends-on ("smdp"))
-				       (:file "mdp-env"
-					      :depends-on ("mdp"))
-				       (:file "2tbn-mdp-env"
-					      :depends-on ("mdp-env"))
-				       (:file "tabular-smdp"
-					      :depends-on ("smdp"))
-				       (:file "hierarchical-smdp"
-					      :depends-on ("smdp" "tabular-smdp"))
-				       (:file "tabular-mdp"
-					      :depends-on ("mdp"))))
-     
 		 (:module "dp" :depends-on ("mdp" "data-struct" "misc" "math")
 			  :components ((:file "dp")
 				       (:file "mdp-dp" :depends-on ("dp"))
@@ -186,9 +187,7 @@
 			  :components ((:file "reinforcement-learning")
 				       (:file "rl-observer" :depends-on ("reinforcement-learning"))
 				       (:file "rl-control" :depends-on ("rl-observer" "reinforcement-learning"))
-				       (:file "rl-user" :depends-on ("reinforcement-learning" "rl-observer" 
-											      "rl-control" "obs"))
-				       (:module "obs"
+                                       (:module "obs"
 						:depends-on ("rl-observer")
 						:components ((:file "progress-printer")
 							     (:file "stat-gatherer")
@@ -199,8 +198,10 @@
 							     (:file "q-learning" :depends-on ("learning-algorithm"))
 							     (:file "approximate-policy-iteration"
 								    :depends-on ("learning-algorithm"))
-							     (:file "gold-standard" :depends-on ("learning-algorithm"))
-							     ))))
+							     (:file "gold-standard" :depends-on ("learning-algorithm"))))
+                                       (:file "rl-user" :depends-on ("reinforcement-learning" "rl-observer" 
+											      "rl-control" "obs"))
+))
 		 
 		 (:module "boltzmann-exploration" :depends-on ("rl" "rl-functions" "prob")
 			  :pathname "rl-functions/policy/exp-pol/"

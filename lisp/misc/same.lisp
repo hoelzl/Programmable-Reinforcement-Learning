@@ -6,7 +6,7 @@
 ;; equalp is good enough.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 (defgeneric same (x y)
   (:documentation "generic function same X Y.  Return T if X and Y are the 'same'.  For numbers, strings, and symbols, just calls equal.  For arrays and cons, recursively descends.  For all other types, calls equalp by default.  Can define methods for other compound object types.")

@@ -5,7 +5,7 @@
 ;; are more suited to sparse representations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package dp)
+(in-package #:dp)
 
 
 

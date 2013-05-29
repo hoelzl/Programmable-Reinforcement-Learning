@@ -1,4 +1,4 @@
-(in-package exploration-policy)
+(in-package #:exploration-policy)
 
 (defclass <epsilon-boltzmann-exp-pol> (<boltzmann-exp-pol>)
   ((epsilon-decay-fn :type function :reader epsilon-decay-fn :initarg :epsilon-decay-fn))

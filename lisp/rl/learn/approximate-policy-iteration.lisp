@@ -1,4 +1,6 @@
-(defpackage approximate-policy-iteration
+(in-package #:common-lisp-user)
+
+(defpackage #:approximate-policy-iteration
   (:documentation "Package approximate-policy-iteration (api).  Defines the <approx-pol-it> learning algorithm.  
 
 Approximate policy iteration is an on-policy Q-learning algorithm.  At periodic intervals, the Q-function is saved, and the exploration policy acts greedily with respect to the most recent saved Q-function.  The algorithm is closely related to 'optimistic policy iteration' and SARSA.
@@ -7,14 +9,15 @@ Exports
 -------
 <approx-pol-it>")
   (:export 
-   <approx-pol-it>)
-  (:use 
-   rl-obs
-   cl
-   utils)
-  (:nicknames api))
+   #:<approx-pol-it>)
+  (:use
+   #:common-lisp
+   #:utils
+   #:policy
+   #:rl)
+  (:nicknames #:api))
 
-(in-package api)
+(in-package #:api)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class def

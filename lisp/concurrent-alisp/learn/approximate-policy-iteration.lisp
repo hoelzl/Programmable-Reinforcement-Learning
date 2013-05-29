@@ -1,4 +1,4 @@
-(defpackage calisp-approximate-policy-iteration
+(defpackage #:calisp-approximate-policy-iteration
   (:documentation "Package calisp-approximate-policy-iteration (capi).  Defines the <approx-pol-it> learning algorithm (not to be confused with the algorithm of the same name in the api package, which is for flat RL).
 
 Approximate policy iteration is an on-policy SMDP Q-learning algorithm.  At periodic intervals, the Q-function is saved, and the exploration policy acts greedily with respect to the most recent saved Q-function.  The algorithm is closely related to 'optimistic policy iteration' and SARSA.
@@ -7,14 +7,14 @@ Exports
 -------
 <approx-pol-it>")
   (:export 
-   <approx-pol-it>)
+   #:<approx-pol-it>)
   (:use 
-   calisp-obs
-   cl
-   utils)
-  (:nicknames capi))
+   #:calisp-obs
+   #:common-lisp
+   #:utils)
+  (:nicknames #:capi))
 
-(in-package capi)
+(in-package #:capi)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class def

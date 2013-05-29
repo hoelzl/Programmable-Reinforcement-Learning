@@ -3,7 +3,7 @@
 ;; code that allows definition of features for function approximation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package alisp)
+(in-package #:alisp)
 
 
 (defmacro use-alisp-state-bindings (omega &rest body)
@@ -29,14 +29,18 @@ stack-contains-frame NAME.  Does the stack contain a frame named NAME?"
 	      (apply #'stack-var-val ,omega ,args))
 	    (stack-contains-frame (,name)
 	      (stack-contains-frame ,omega ,name)))
+       (declare (ignorable #'stack-var-val #'stack-contains-frame))
     
        (let ((env-state (js-env-state ,omega))
 	     (label (program-counter-label (js-pc ,omega))))
 	 (declare (ignorable env-state label))
 	 ,@body))))
 
-
-(defmacro make-feature ((omega u) &rest args)
+;;; Change the definition of DEF-FEATURE to expand into a defun so
+;;; that the SBCL compiler doesn't complain about undefinied
+;;; functions.
+#+(or)
+(defmacro old-make-feature ((omega u) &rest args)
   "make-feature (STATE-VAR-NAME CHOICE-VAR-NAME) [DOC-STRING] &rest BODY
 
 STATE-VAR-NAME (unevaluated) - a symbol
@@ -60,11 +64,48 @@ Return a function of two arguments named STATE-VAR-NAME and CHOICE-VAR-NAME that
        ,@body))
    ))
 
-(defmacro def-feature (name (omega u) &rest args)
+(defun expand-make-feature (omega u args)
+  (condlet
+      (((stringp (first args)) (doc-string (first args)) (body (rest args)))
+       (t (doc-string "") (body args)))
+    (values 
+     ;; arglist
+     `(,omega ,u)
+     ;; body
+     `(,doc-string
+       (declare (ignorable ,u))
+       (use-alisp-state-bindings
+        ,omega
+        ,@body)))))
+
+(defmacro make-feature ((omega u) &rest args)
+  "make-feature (STATE-VAR-NAME CHOICE-VAR-NAME) [DOC-STRING] &rest BODY
+
+STATE-VAR-NAME (unevaluated) - a symbol
+CHOICE-VAR-NAME (unevaluated) - a symbol
+DOC-STRING (unevaluated) - a string.  Defaults to empty string.
+BODY (unevaluated) - list of forms.
+
+Return a function of two arguments named STATE-VAR-NAME and CHOICE-VAR-NAME that evaluates BODY with a set of additional lexical bindings in effect (see use-alisp-state-bindings)."
+
+  (multiple-value-bind (arglist body)
+      (expand-make-feature omega u args)
+    `(lambda ,arglist ,@body)))
+
+#+(or)
+(defmacro old-def-feature (name (omega u) &rest args)
   "def-feature NAME (STATE-VAR-NAME CHOICE-VAR-NAME) [DOC-STRING] &rest BODY
 
 Like defun, except certain lexical bindings are available within BODY.  See make-feature for details."
   `(setf (fdefinition ',name) (make-feature (,omega ,u) ,@args)))
+
+(defmacro def-feature (name (omega u) &rest args)
+  "def-feature NAME (STATE-VAR-NAME CHOICE-VAR-NAME) [DOC-STRING] &rest BODY
+
+Like defun, except certain lexical bindings are available within BODY.  See make-feature for details."
+  (multiple-value-bind (arglist body)
+      (expand-make-feature omega u args)
+    `(defun ,name ,arglist ,@body)))
 
 
 (defmacro make-3partq-featurizer (options &rest defs)

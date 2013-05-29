@@ -1,17 +1,17 @@
-(defpackage footman-prog
+(defpackage #:footman-prog
  (:documentation "footman-prog.lisp - Alisp program for footman-env.lisp domain
 Functions
 ---------
 footman-prog")
 
- (:use footman-env
-       stratagus-env
-       common-lisp
-       utils
-       alisp-prog)
- (:export footman-prog))
+ (:use #:footman-env
+       #:stratagus-env
+       #:common-lisp
+       #:utils
+       #:alisp-prog)
+ (:export #:footman-prog))
 
-(in-package footman-prog)
+(in-package #:footman-prog)
 
 (defsubroutine choose-to-attack (u enemy cmd-stack)
   (with-choice attack-choice (atk enemy) 

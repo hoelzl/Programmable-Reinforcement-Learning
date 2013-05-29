@@ -1,4 +1,6 @@
-(defpackage qe-taxi
+(in-package #:common-lisp-user)
+
+(defpackage #:qe-taxi
   (:documentation "Package for taxi environments.
 
 Creating taxi environments
@@ -34,46 +36,46 @@ term
 nonterm
 ")
 
-  (:use bnet
-	cl
-	prob
-	grid-world
-	utils
-	set
-	prod-set
-	inst-vars)
+  (:use #:bnet
+	#:common-lisp
+	#:prob
+	#:grid-world
+	#:utils
+	#:set
+	#:prod-set
+	#:inst-vars)
   (:export 
    ;; creation
-   make-taxi-2tbn
-   make-qe-taxi-smdp
-   taxi-init-dist
+   #:make-taxi-2tbn
+   #:make-qe-taxi-smdp
+   #:taxi-init-dist
 
    ;; accessing state
-   taxi-env-state-pos
-   taxi-env-state-pass-change
-   taxi-env-state-src
-   taxi-env-state-dest
-   taxi-env-state-generosity
-   taxi-env-state-pass-in-taxi
-   taxi-env-state-term
-   taxi-env-state-traffic
-   taxi-env-state-n
-   taxi-term
+   #:taxi-env-state-pos
+   #:taxi-env-state-pass-change
+   #:taxi-env-state-src
+   #:taxi-env-state-dest
+   #:taxi-env-state-generosity
+   #:taxi-env-state-pass-in-taxi
+   #:taxi-env-state-term
+   #:taxi-env-state-traffic
+   #:taxi-env-state-n
+   #:taxi-term
    
    ;; actions
-   N S W E P D
+   #:N #:S #:W #:E #:P #:D
    
    ;; symbols in state rep
-   dropoff
-   unchanged
-   empty
-   term
-   nonterm
+   #:dropoff
+   #:unchanged
+   #:empty
+   #:term
+   #:nonterm
    ))
    
    
 
-(in-package qe-taxi)
+(in-package #:qe-taxi)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

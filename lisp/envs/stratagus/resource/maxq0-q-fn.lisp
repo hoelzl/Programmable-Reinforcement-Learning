@@ -1,4 +1,4 @@
-(defpackage maxq0-q-function
+(defpackage #:maxq0-q-function
   (:documentation
    "Package for defining MAXQ0 Q-functions and associated feature templates for concurrent ALisp programs.
 Types
@@ -6,12 +6,12 @@ Types
 <maxq0-q-function>
 ") 
   (:use
-   utils
-   calisp)
+   #:utils
+   #:calisp)
   (:export
-   <maxq0-q-function>))
+   #:<maxq0-q-function>))
 
-(in-package maxq0-q-function)
+(in-package #:maxq0-q-function)
 
 (defclass <maxq0-q-function> (<calisp-approx-q-function>)
   ((linear-fn-approx :initform (make-instance 'fn-approx:<linear-fn-approx>))   

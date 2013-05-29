@@ -1,4 +1,4 @@
-(defpackage q-learning-alg
+(defpackage #:q-learning-alg
   (:documentation "
 Package q-learning-alg (aka ql-alg).  Defines <q-learning-alg>, an abstract class representing any object that maintains and updates an estimate of a Q-function given a stream of samples.  Subclasses implement algorithms like Q-learning and prioritized sweeping.
 
@@ -7,14 +7,14 @@ Subclasses must implement
 - observe
 - get-q-fn
 ")
-  (:nicknames ql-alg)
-  (:use common-lisp)
-  (:export <q-learning-alg>
-	   reset
-	   observe
-	   get-q-fn))
+  (:nicknames #:ql-alg)
+  (:use #:common-lisp)
+  (:export #:<q-learning-alg>
+	   #:reset
+	   #:observe
+	   #:get-q-fn))
 
-(in-package q-learning-alg)
+(in-package #:q-learning-alg)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

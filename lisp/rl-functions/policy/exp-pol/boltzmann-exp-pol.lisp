@@ -1,4 +1,4 @@
-(in-package exploration-policy)
+(in-package #:exploration-policy)
 
 (defclass <boltzmann-exp-pol> (<exp-pol>)
   ((alg :initarg :q-learning-alg :reader alg :type rl-obs:<q-learning-algorithm>)

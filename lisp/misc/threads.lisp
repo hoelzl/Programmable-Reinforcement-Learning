@@ -4,31 +4,33 @@
 ;; Functions for dealing with the Allegro multiprocessing system
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(in-package #:common-lisp-user)
+
 ;; Package info
-(defpackage threads
-  (:use common-lisp
-	mp
-	utils)
-  (:export establish-bindings
-	   kill-proc
+(defpackage #:threads
+  (:use #:common-lisp
+	#:mp
+	#:utils)
+  (:export #:establish-bindings
+	   #:kill-proc
 	   
-	   process-reset
-	   process-name
-	   process-preset
-	   process-enable
-	   process-unlock
-	   process-wait
-	   make-process-lock
-	   process-lock
-	   process-lock-locker
-	   make-process
-	   process-kill
-	   *current-process*
-	   *all-processes*
-	   with-process-lock
+	   #:process-reset
+	   #:process-name
+	   #:process-preset
+	   #:process-enable
+	   #:process-unlock
+	   #:process-wait
+	   #:make-process-lock
+	   #:process-lock
+	   #:process-lock-locker
+	   #:make-process
+	   #:process-kill
+	   #:*current-process*
+	   #:*all-processes*
+	   #:with-process-lock
 	   ))
 
-(in-package threads)
+(in-package #:threads)
 
 
 

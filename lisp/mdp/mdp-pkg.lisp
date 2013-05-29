@@ -1,42 +1,43 @@
-(defpackage mdp
+(in-package #:common-lisp-user)
 
-  (:use common-lisp
-	set
-	prob
-	utils)
-  (:export <mdp>
-	   <smdp>
-	   <tabular-mdp> 
-	   <tabular-smdp>
-	   <hierarchical-smdp>
-	   <hierarchical-tabular-smdp>
-	   make-tabular-mdp
-	   tabular-smdp
-	   sparsify-smdp
-	   trans-prob
-	   smdp-trans-dist
-	   trans-dist
-	   reward
-	   transition-matrix
-	   reward-matrix
-	   state-set
-	   num-states
-	   avail-actions
-	   sparsify
-	   action-set
-	   term-pred
-	   terminal?
-	   trans-vec
-	   term-vec
-	   num-avail-actions-vec
-	   level
-	   level-vec
-	   make-outcome
-	   outcome-state
-	   outcome-reward
-	   outcome-duration
-	   outcome-p)
-    (:documentation "Code relating to Markov Decision Processes.
+(defpackage #:mdp
+  (:use #:common-lisp
+	#:set
+	#:prob
+	#:utils)
+  (:export #:<mdp>
+	   #:<smdp>
+	   #:<tabular-mdp> 
+	   #:<tabular-smdp>
+	   #:<hierarchical-smdp>
+	   #:<hierarchical-tabular-smdp>
+	   #:make-tabular-mdp
+	   #:tabular-smdp
+	   #:sparsify-smdp
+	   #:trans-prob
+	   #:smdp-trans-dist
+	   #:trans-dist
+	   #:reward
+	   #:transition-matrix
+	   #:reward-matrix
+	   #:state-set
+	   #:num-states
+	   #:avail-actions
+	   #:sparsify
+	   #:action-set
+	   #:term-pred
+	   #:terminal?
+	   #:trans-vec
+	   #:term-vec
+	   #:num-avail-actions-vec
+	   #:level
+	   #:level-vec
+	   #:make-outcome
+	   #:outcome-state
+	   #:outcome-reward
+	   #:outcome-duration
+	   #:outcome-p)
+  (:documentation "Code relating to Markov Decision Processes.
 
 Types
 -----
@@ -89,5 +90,5 @@ outcome-p
 "))
 
 
-(in-package cl-user)
+(in-package #:cl-user)
 	   

@@ -1,4 +1,6 @@
-(defpackage value-function
+(in-package #:common-lisp-user)
+
+(defpackage #:value-function
   (:documentation "Package for value functions.
 
 Types
@@ -13,14 +15,16 @@ make-tabular-value-fn
 Operations
 ----------
 value")
-  (:nicknames value-fn)
-  (:use common-lisp)
+  (:nicknames #:value-fn)
+  (:use #:common-lisp
+        #:lin-alg)
   (:export 
-   <value-fn>
-   make-tabular-value-fn
-   value))
+   #:<value-fn>
+   #:<tabular-value-function>
+   #:make-tabular-value-fn
+   #:value))
 
-(in-package value-function)
+(in-package #:value-function)
 
 
 (defclass <value-fn> () 

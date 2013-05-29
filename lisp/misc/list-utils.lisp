@@ -4,7 +4,7 @@
 ;; general utilities for handling lists
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package utils)
+(in-package #:utils)
 
 (defun length-exceeds (list n)
   "length-exceeds LIST N.  Check if the length of the list exceeds N, in time proportional to min(|LIST|,N). "

@@ -1,10 +1,37 @@
-(defpackage env
-  (:documentation "Internal package for environments.  Externally used packages are env-user and create-env.")
-  (:use common-lisp
-	utils)
-  )
+(in-package #:common-lisp-user)
 
-(defpackage env-user
+(defpackage #:env
+  (:documentation "Internal package for environments.  Externally used packages are env-user and create-env.")
+
+  (:use #:common-lisp
+	#:utils)
+
+  (:export
+   #:<env>
+   #:<fully-observable-env>
+   #:at-terminal-state
+   #:avail-actions
+   #:canonicalize
+   #:current-effectors
+   #:do-action
+   #:effectors
+   #:get-last-percept
+   #:get-state
+   #:io-interface
+   #:is-terminal-state
+   #:print-object
+   #:reset get-actions
+   #:reset-to-state
+   #:same
+   #:sample-init
+   #:sample-init-percept
+   #:sample-next
+   #:sample-percept
+   #:set-last-percept
+   #:set-state
+   #:uncanonicalize))
+
+(defpackage #:env-user
   (:documentation "Package used when interacting with an environment.
 
 Types
@@ -28,29 +55,26 @@ Operations for <fully-observable-env>s
 --------------------------------------
 - get-state
 ")
-  (:use common-lisp
-	package-utils))
 
-(in-package env-user)
+  (:use #:common-lisp
+	#:package-utils
+        #:env)
 
-(export-from 'env
-	     "<env>"
-	     "<fully-observable-env>"
-	     "do-action"
-	     "reset"
-	     "reset-to-state"
-	     "at-terminal-state"
-	     "get-actions"
-	     "avail-actions"
-	     "io-interface"
-	     "get-last-percept"
-	     "get-state"
-	     "current-effectors")
+  (:export
+   #:<env>
+   #:<fully-observable-env>
+   #:at-terminal-state
+   #:avail-actions
+   #:current-effectors
+   #:do-action
+   #:get-actions
+   #:get-last-percept
+   #:get-state
+   #:io-interface
+   #:reset
+   #:reset-to-state))
 
-
-(in-package cl-user)
-
-(defpackage create-env
+(defpackage #:create-env
   (:documentation "Package used when making new types of environments.  
 
 Types
@@ -88,35 +112,30 @@ get-state
 set-state.  Warning - if you need to use set-state, and the environment is not fully observable, make sure to call set-last-percept as well, otherwise the overall state of the object could be inconsistent.
 set-last-percept.
 ")
-  (:use common-lisp
-	package-utils))
 
-(in-package create-env)
-(export-from 'env
-	     "<env>"
-	     "<fully-observable-env>"
-	     "sample-next"
-	     "do-action"
-	     "sample-init"
-	     "reset"
-	     "sample-percept"
-	     "sample-init-percept"
-	     "is-terminal-state"
-	     "at-terminal-state"
-	     "avail-actions"
-	     "io-interface"
-	     "print-object"
-	     "canonicalize"
-	     "same"
-	     "effectors"
-	     "uncanonicalize"
-	     "get-last-percept"
-	     "set-last-percept"
-	     "get-state"
-	     "set-state"
-	     )
+  (:use #:common-lisp
+	#:package-utils
+        #:env)
 
-(in-package cl-user)
-  
-
-
+  (:export
+   #:<env>
+   #:<fully-observable-env>
+   #:at-terminal-state
+   #:avail-actions
+   #:canonicalize
+   #:do-action
+   #:effectors
+   #:get-last-percept
+   #:get-state
+   #:io-interface
+   #:is-terminal-state
+   #:print-object
+   #:reset
+   #:same
+   #:sample-init
+   #:sample-init-percept
+   #:sample-next
+   #:sample-percept
+   #:set-last-percept
+   #:set-state
+   #:uncanonicalize))

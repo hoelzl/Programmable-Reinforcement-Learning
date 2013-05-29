@@ -1,4 +1,4 @@
-(in-package q-function)
+(in-package #:q-function)
 
 (defclass <sum-q-function> (<q-function>)
   ((q-fns :type list

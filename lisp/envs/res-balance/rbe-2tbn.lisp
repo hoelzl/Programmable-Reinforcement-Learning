@@ -1,4 +1,6 @@
-(defpackage resource-balance-env
+(in-package #:common-lisp-user)
+
+(defpackage #:resource-balance-env
   (:documentation "Package for the resource balance environment
 
 Creation
@@ -48,62 +50,62 @@ carrying-wood
 carrying-gold
 gathering
 ")
-  (:nicknames rbe)
-  (:use bnet
-	cl
-	prob
-	create-env
-	utils
-	set
-	prod-set
-	inst-vars)
+  (:nicknames #:rbe)
+  (:use #:bnet
+	#:common-lisp
+	#:prob
+	#:create-env
+	#:utils
+	#:set
+	#:prod-set
+	#:inst-vars)
   (:import-from 
-   grid-world
-   N S E W
-   result-legal
-   rot-clockwise
-   rot-counterclockwise
-   dimensions
-   shortest-path-dist)
+   #:grid-world
+   #:N #:S #:E #:W
+   #:result-legal
+   #:rot-clockwise
+   #:rot-counterclockwise
+   #:dimensions
+   #:shortest-path-dist)
 		
   (:export
-   make-rbe-2tbn
-   make-rbe-env
-   N S E W P D R
-   make-rbe-env-state
-   pos 
-   status
-   gold
-   wood
-   max-gold
-   max-wood
-   world-map
-   num-peas
-   base-loc
-   forest-locs
-   mine-locs
-   collision-cost
-   cost-of-living
-   dropoff-reward
+   #:make-rbe-2tbn
+   #:make-rbe-env
+   #:N S E W P D R
+   #:make-rbe-env-state
+   #:pos 
+   #:status
+   #:gold
+   #:wood
+   #:max-gold
+   #:max-wood
+   #:world-map
+   #:num-peas
+   #:base-loc
+   #:forest-locs
+   #:mine-locs
+   #:collision-cost
+   #:cost-of-living
+   #:dropoff-reward
    
-   result-legal
-   shortest-path-dist
+   #:result-legal
+   #:shortest-path-dist
    
-   num-peas 
-   grid-world
-   dimensions
+   #:num-peas 
+   #:grid-world
+   #:dimensions
    
-   empty-handed
-   dropoff-gold
-   dropoff-wood
-   carrying-wood
-   carrying-gold
-   gathering
+   #:empty-handed
+   #:dropoff-gold
+   #:dropoff-wood
+   #:carrying-wood
+   #:carrying-gold
+   #:gathering
    ))
    
    
 
-(in-package rbe)
+(in-package #:rbe)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

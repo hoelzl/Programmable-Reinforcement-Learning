@@ -3,15 +3,17 @@
 ;; will hold some simple debugging examples for mdp code
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defpackage mdp-test-envs
-  (:use common-lisp
-	mdp
-	maze-mdp
-	utils)
-  (:export *test-mdp-1*
-	   *test-mdp-2*))
+(in-package #:common-lisp-user)
 
-(in-package mdp-test-envs)
+(defpackage #:mdp-test-envs
+  (:use #:common-lisp
+	#:mdp
+	#:maze-mdp
+	#:utils)
+  (:export #:*test-mdp-1*
+	   #:*test-mdp-2*))
+
+(in-package #:mdp-test-envs)
 
 
 
@@ -69,11 +71,3 @@
 
 (in-package common-lisp-user)	      
    
-
-
-
-
-
-
-
-

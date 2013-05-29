@@ -1,4 +1,6 @@
-(defpackage alisp-exit-distribution
+(in-package #:common-lisp-user)
+
+(defpackage #:alisp-exit-distribution
   (:documentation "Package for exit distributions in ALisp.
 
 Types
@@ -13,18 +15,20 @@ exit-dist
 Operations for <cond-prob-dist>
 ")
 
-  (:nicknames aed)
-  (:export
-   <hash-exit-distribution>
-   <array-exit-distribution>
-   update-exit-dist
-   exit-dist)
+  (:nicknames #:aed)
+
   (:use
-   cl
-   prob
-   utils))
+   #:common-lisp
+   #:prob
+   #:utils)
+
+  (:export
+   #:<hash-exit-distribution>
+   #:<array-exit-distribution>
+   #:update-exit-dist
+   #:exit-dist))
    
-(in-package aed)
+(in-package #:aed)
 
 (defclass <hash-exit-distribution> (<cond-prob-dist>)
   ((featurizer :reader featurizer :initarg :featurizer :type function

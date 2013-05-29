@@ -3,7 +3,7 @@
 ;; contains functions that provide various ways for users to run alisp programs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(in-package alisp)
+(in-package #:alisp)
 
 
 (defun io-interface (part-prog env &optional (advisors nil) (algs nil))
@@ -54,7 +54,10 @@ Run this partial program in the environment in a mode where events in the progra
     (run r)))
 
 
-
+;;; Forward declaration for MAKE-ALISP-PROGRESS-PRINTER (defined in
+;;; obs/progress-printer.lisp).
+(declaim (ftype (function (t t  &key (:exec-notify t) (:str t)) t)
+                make-alisp-progress-printer))
 
 (defun evaluate (part-prog env policies &key (num-steps nil) (step-print-inc 100)   (num-trials 1))
   "evaluate PART-PROG ENV POLICIES &key (NUM-TRIALS 1) (NUM-STEPS nil) (STEP-PRINT-INC 100) 

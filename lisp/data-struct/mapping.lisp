@@ -1,4 +1,6 @@
-(defpackage mapping
+(in-package #:common-lisp-user)
+
+(defpackage #:mapping
   (:documentation "Package mapping.  Abstracts different types of mappings.
 
 Types
@@ -20,28 +22,26 @@ Conditions
 mapping-undefined
 ")
 
-
-
   (:use 
-   cl
-   utils
-   set)
+   #:common-lisp
+   #:utils
+   #:set)
   (:export
-   evaluate
-   evaluate-mv
-   defined?
-   set-value
-   do-entries
-   make-undefined
+   #:evaluate
+   #:evaluate-mv
+   #:defined?
+   #:set-value
+   #:do-entries
+   #:make-undefined
    
-   [mapping]
-   [changeable-mapping]
+   #:[mapping]
+   #:[changeable-mapping]
    
-   mapping-undefined)
+   #:mapping-undefined)
   )
 
 
-(in-package mapping)
+(in-package #:mapping)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

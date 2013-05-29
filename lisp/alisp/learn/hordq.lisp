@@ -1,5 +1,7 @@
-(defpackage alisp-hordq
-  (:nicknames ahq)
+(in-package #:common-lisp-user)
+
+(defpackage #:alisp-hordq
+  (:nicknames #:ahq)
   (:documentation "Package alisp-hordq.  Hierarchically optimal recursively decomposed Q-learning for ALisp.
 
 Types
@@ -11,27 +13,27 @@ Types
 Also see the alisp-user package for other operations on <alisp-learning-algorithm>s
 ")
   (:export
-   <hordq>
-   <rordq>
-   <holyq>)
+   #:<hordq>
+   #:<rordq>
+   #:<holyq>)
   
   (:use 
-   common-lisp
-   utils
-   policy
-   prob
-   aed
-   alisp-obs)
+   #:common-lisp
+   #:utils
+   #:policy
+   #:prob
+   #:aed
+   #:alisp-obs)
   (:import-from
-   q-fn
-   unknown-state-action
-   choose-randomly
-   sum-q-functions
-   choices
-   best-choice))
+   #:q-fn
+   #:unknown-state-action
+   #:choose-randomly
+   #:sum-q-functions
+   #:choices
+   #:best-choice))
    
 
-(in-package alisp-hordq)
+(in-package #:alisp-hordq)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Type defs

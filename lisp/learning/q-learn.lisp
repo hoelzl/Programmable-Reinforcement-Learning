@@ -1,4 +1,4 @@
-(defpackage q-learn
+(defpackage #:q-learn
   (:documentation "
 Package q-learn.  Defines <q-learn>, a subclass of <q-learning-alg> that implements the standard Q-Learning algorithm.  Assumes states (resp actions) are integers between 0 and num-states - 1.
 
@@ -7,15 +7,15 @@ Operations inherited from <q-learning-alg>
 - observe.  Increment the appropriate count
 - get-q-fn.  Compute q using modified policy iteration and return it (as a NSxNA array).")
   
-  (:use common-lisp
-	learning-rate
-	q-learning-alg)
-  (:export reset
-	   observe
-	   get-q-fn
-	   <q-learn>))
+  (:use #:common-lisp
+	#:learning-rate
+	#:q-learning-alg)
+  (:export #:reset
+	   #:observe
+	   #:get-q-fn
+	   #:<q-learn>))
 
-(in-package q-learn)
+(in-package #:q-learn)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -46,7 +46,7 @@ Operations inherited from <q-learning-alg>
 
 
 (defmethod initialize-instance :after ((qa <q-learn>) &rest args)
-  )
+  (declare (ignore args)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
