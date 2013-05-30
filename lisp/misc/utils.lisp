@@ -25,7 +25,8 @@
   #+lucid (lcl:arglist fn)
   #+sbcl (sb-introspect:function-lambda-list fn)
   #+ccl (ccl:arglist fn)
-  #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl ccl)
+  #+ecl (ext:function-lambda-list fn)
+  #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl ccl ecl)
   (error 'not-implemented :proc (list 'arglist fn))) 
 
 

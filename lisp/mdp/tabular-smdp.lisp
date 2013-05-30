@@ -7,11 +7,11 @@
 
 (defclass <tabular-smdp> (<smdp>)
   ((termination-vector 
-    :type (array boolean 1)
+    :type (vector boolean)
     :writer set-term-vec
     :reader term-vec)
    (num-avail-actions-vector
-    :type (array fixnum 1)
+    :type (vector fixnum)
     :writer set-num-avail-actions-vec
     :reader num-avail-actions-vec)
    (original-smdp
@@ -69,7 +69,7 @@ Create from an SMDP using tabular-smdp
       (set-num-avail-actions-vec
        (coerce
         (mapset 'vector (lambda (s) (size (avail-actions smdp s))) states)
-        '(array fixnum 1))
+        '(vector fixnum))
        m)
     
       ;; transition model
