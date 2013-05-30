@@ -37,14 +37,14 @@
 
 (defparameter *featurizer* (td-taxi-flat-lfa:make-taxi-featurizer *env*))
 (defparameter *lq*
-  (make-instance 'q-fn:<env-q-function> :env *env* :env-name 'env :featurizer *featurizer*
-		 :featurizer-name 'featurizer
+  (make-instance 'q-fn:<env-q-function> :env *env* :env-name '*env* :featurizer *featurizer*
+		 :featurizer-name '*featurizer*
 		 :fn-approx (make-instance 'fn-approx:<linear-fn-approx> :dim 7)))
 
-(defparameter *q-learner* (make-instance '<q-learning> :env *env* :lrate .01 :discount 1))
-(defparameter *lfa-q-learner* (make-instance '<q-learning> :lrate .01 :discount 1 :q-fn *lq* :hist-out-dir "test/temp"))
+(defparameter *q-learner* (make-instance '<q-learning> :env *env* :lrate .01 :discount 1.0))
+(defparameter *lfa-q-learner* (make-instance '<q-learning> :lrate .01 :discount 1.0 :q-fn *lq* :hist-out-dir "test/temp"))
 (defparameter *api-learner* (make-instance 'api:<approx-pol-it> :env *env* :pol-imp-int 100 :pol-switch 500))
-(defparameter *f* nil)
+(defparameter *f* t)
 ;(with-outfile (*f* "scratch/test-gs.out")
 (defparameter *gs-learner* (make-gold-standard-learning-algorithm :debug-str *f*))
 (defparameter *env-obs* (env-observer:make-env-observer *f*))
@@ -67,11 +67,9 @@
 (format t "~&Q-learning algorithm learning curve is~&~W"
 	(setf *q-rews* (evaluate-alg *q-learner*)))
 
-(break "Pos1")
 (format t "~&Linearly approximated Q-learning learning curve is~&~W"
 	(setf *lq-rews* (evaluate-alg *lfa-q-learner*)))
 
-(break "Pos2")
 (format t "~&Gold standard algorithm learning curve is~&~W"
  	  (setf *gs-rews* (evaluate-alg *gs-learner*)))
 

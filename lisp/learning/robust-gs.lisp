@@ -8,6 +8,7 @@ Operations inherited from <q-learning-alg>
 - get-q-fn.  Compute q using robust dynamic programming and return it (as a NSxNA array).")
   
   (:use #:common-lisp
+        #:utils
 	#:q-learning-alg
 	#:robust-dp)
   (:export #:reset
@@ -24,13 +25,16 @@ Operations inherited from <q-learning-alg>
 
 (defclass <robust-gs> (<q-learning-alg>)
   ((reward-matrix :initarg :rew
+                  :initform (required-initarg :rew)
 		  :type array
 		  :reader rew)
    (num-states :initarg :num-states
+               :initform (required-initarg :num-states)
 	       :reader num-states
 	       :type fixnum)
    (num-actions :type fixnum
 		:initarg :num-actions
+                :initform (required-initarg :num-actions)
 		:reader num-actions)
    (discount :type float
 	     :initarg :discount
@@ -38,7 +42,7 @@ Operations inherited from <q-learning-alg>
 	     :reader discount)
    (counts :type array
 	   :reader counts)
-   (successors :type array
+   (successors :type (or null array)
 	       :initarg :successors
 	       :initform nil
 	       :reader successors)

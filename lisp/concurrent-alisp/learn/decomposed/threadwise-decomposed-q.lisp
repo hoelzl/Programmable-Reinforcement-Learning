@@ -35,13 +35,17 @@ Types
    (prev-u :accessor prev-u)
    (prev-s :accessor prev-s)
    (rewards :type list :accessor rewards)
-   (reward-decomposer :type function :reader reward-decomposer :initarg :reward-decomposer)
+   (reward-decomposer :type function :reader reward-decomposer
+                      :initarg :reward-decomposer
+                      :initform (required-initarg :reward-decomposer))
    (q-function :type <decomposed-q-function>
-	       :initarg :q-function :reader q-fn :writer set-q-fn)
+	       :initarg :q-function
+               :initform (required-initarg :q-function)
+               :reader q-fn :writer set-q-fn)
    (initq :accessor initq)
    (root-thread-id :initarg :root-thread-id :initform 'calisp-prog:root-thread :reader root-thread-id)
    (discount :type float :initform 1.0 :reader discount :initarg :discount)
-   (total-discount :accessor total-discount :type float)
+   (total-discount :accessor total-discount :type float :initform 1.0)
    (newly-spawned-threads :accessor newly-spawned-threads :type list)
    (learning-rate :reader lrate :initarg :lrate :initform .02))
   (:documentation "Class <threadwise-decomposed-q-learner> (<calisp-learning-algorithm> <q-learning-algorithm>)

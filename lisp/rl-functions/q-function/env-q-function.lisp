@@ -6,7 +6,7 @@
 
 
 (defclass <env-q-function> (<approx-q-function>)
-  ((env :type env-user:<env>
+  ((env :type (or null env-user:<env>)
 	:reader env
 	:writer set-env
 	:initarg :env)

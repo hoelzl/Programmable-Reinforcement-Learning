@@ -68,8 +68,9 @@ Constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defclass <grid-world> ()
   ((wmap :initarg :world-map
-	      :type array
-	      :reader wmap)
+         :initform (required-initarg :world-map)
+         :type array
+         :reader wmap)
    (legality-test :type function
 		  :initarg :legality-test
 		  :initform #'identity

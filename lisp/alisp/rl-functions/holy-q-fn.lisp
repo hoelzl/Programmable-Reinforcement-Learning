@@ -5,8 +5,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass <holy-q-function> (<q-function>)
-  ((qr :type <q-function> :reader qr :initarg :qr)
-   (qc :type <q-function> :reader qc :initarg :qc)
+  ((qr :type <q-function> :reader qr :initarg :qr :initform (required-initarg :qr))
+   (qc :type <q-function> :reader qc :initarg :qc :initform (required-initarg :qc))
    (pe :reader pe :initarg :pe)
    (cache :reader cache :initarg :cache)
    (top-pred :type function :reader top-pred :documentation "Predicate that's true iff a state is at the top level, so has no exit distribution." :initform #'top-level-state? :initarg :top-pred))

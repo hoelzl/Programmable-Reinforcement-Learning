@@ -51,7 +51,9 @@ evaluate
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass <decomposed-q-function> (<q-function>)
-  ((component-fn :type function :reader component-fn :initarg :component-fn :writer set-component-fn)
+  ((component-fn :type function :reader component-fn
+                 :initarg :component-fn :initform (required-initarg :component-fn)
+                 :writer set-component-fn)
    (q-function-table :accessor q-fn-table :initform (make-hash-table :test #'equal)))
   (:documentation "Represents a q-function which works as follows.  At a state omega, a 'component function' is first applied to omega and returns a set of component ids.  Next, each id is looked up in an #'equal hash-table to return a q-function object.  Finally, the resulting q-function objects are applied to the given omega, u and added together."))
 

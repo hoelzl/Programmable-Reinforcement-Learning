@@ -10,6 +10,7 @@
   ((params :type vector)
    (dim :type fixnum
 	:initarg :dim
+        :initform (required-initarg :dim)
 	:reader dim))
   (:documentation "Class for linear function approximation
 

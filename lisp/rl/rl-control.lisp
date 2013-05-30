@@ -18,7 +18,8 @@
    
    (env :type env-user:<env> 
 	:reader env 
-	:initarg :env)
+	:initarg :env
+        :initform (required-initarg :env))
    
    (observers :reader obs
 	      :writer set-obs
@@ -26,21 +27,22 @@
    
    (policy :reader policy
 	   :type policy:[policy]
-	   :initarg :policy)
+	   :initarg :policy
+           :initform (required-initarg :policy))
    
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    ;; params of current run
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    
    (num-steps
-    :type fixnum
+    :type (or null fixnum)
     :reader num-steps
     :writer set-num-steps
     :initarg :num-steps
     :initform nil)
    
    (num-episodes
-    :type fixnum
+    :type (or null fixnum)
     :reader num-ep
     :writer set-num-ep
     :initarg :num-episodes
@@ -51,11 +53,11 @@
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    
    (elapsed-steps
-    :type fixnum
+    :type (or null fixnum)
     :accessor rlc-elapsed-steps)
    
    (elapsed-episodes
-    :type fixnum
+    :type (or null fixnum)
     :accessor rlc-elapsed-episodes)
    )
   

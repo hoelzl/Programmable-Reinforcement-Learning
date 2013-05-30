@@ -24,7 +24,8 @@
   #+lispworks (lw:function-lambda-list fn)
   #+lucid (lcl:arglist fn)
   #+sbcl (sb-introspect:function-lambda-list fn)
-  #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl)
+  #+ccl (ccl:arglist fn)
+  #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl ccl)
   (error 'not-implemented :proc (list 'arglist fn))) 
 
 
@@ -445,7 +446,7 @@ The macro is useful to protect against situations when the standard semantics of
 
 (defun required-initarg (&optional name)
   (if name
-      (error "The initarg ~W is missing." name)
+      (error "The initarg ~S is missing." name)
       (error "A required initarg is missing.")))
 
 (in-package cl-user)

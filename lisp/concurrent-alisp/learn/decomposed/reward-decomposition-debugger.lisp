@@ -25,8 +25,10 @@ Types
 (defclass <reward-decomposition-debugger> (<calisp-observer>)
   ((prev-omega :accessor prev-omega)
    (prev-s :accessor prev-s)
-   (reward-decomposer :type function :reader reward-decomposer :initarg :reward-decomposer)
-   (output-stream :type stream :initarg :str :reader str :initform t)
+   (reward-decomposer :type function :reader reward-decomposer
+                      :initarg :reward-decomposer
+                      :initform (required-initarg :reward-decomposer))
+   (output-stream :type (or (eql t) stream) :initarg :str :reader str :initform t)
    )
   (:documentation "Class <reward-decomposition-debugger> (<calisp-observer>)
 

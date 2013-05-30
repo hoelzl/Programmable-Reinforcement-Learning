@@ -43,6 +43,7 @@ NEW-VALUES list of values"
   ((2tbn :initarg :2tbn
 	 :reader 2tbn)
    (num-pass :initarg :num-pass
+             :initform (required-initarg :num-pass)
 	     :reader num-pass
 	     :type fixnum)))
 

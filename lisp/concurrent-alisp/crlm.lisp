@@ -20,12 +20,14 @@
    (env
     :type env-user:<env>
     :reader env
-    :initarg :env)
+    :initarg :env
+    :initform (required-initarg :enf))
    
    (partial-program
     :type <calisp-program>
     :reader part-prog
-    :initarg :part-prog)
+    :initarg :part-prog
+    :initform (required-initarg :part-prog))
    
    (observers
     :reader observers
@@ -36,12 +38,13 @@
     :reader debugging-observers
     :writer set-debugging-observers
     :initarg :debugging-observers
-    :initform nil)
+    :initform '())
    
    (policy
     :type policy:[policy]
     :reader policy
-    :initarg :policy)
+    :initarg :policy
+    :initform (required-initarg :policy))
    
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    ;; parameters of current run
@@ -65,11 +68,13 @@
    
    (elapsed-steps
     :type fixnum
-    :accessor crlm-elapsed-steps)
+    :accessor crlm-elapsed-steps
+    :initform 0)
    
    (elapsed-episodes
     :type fixnum
-    :accessor crlm-elapsed-episodes)
+    :accessor crlm-elapsed-episodes
+    :initform 0)
    
    (joint-state
     :reader joint-state
@@ -88,7 +93,8 @@
    (num-running-threads 
     :type fixnum
     :reader num-running-threads
-    :accessor crlm-num-running-threads)
+    :accessor crlm-num-running-threads
+    :initform 0)
 
    (process-thread-ids 
     :documentation "maps lisp processes of each thread in the partial program to an ID"
@@ -121,7 +127,8 @@
    
    (reassign-list
     :documentation "list of effector-thread pairs that represent reassignments that must happen at the beginning of the next env step."
-    :type list :accessor reassign-list)
+    :type list :accessor reassign-list
+    :initform '())
    
    
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

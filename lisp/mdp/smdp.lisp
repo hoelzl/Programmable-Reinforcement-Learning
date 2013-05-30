@@ -23,16 +23,16 @@
 (defclass <smdp> ()
   ((state-set :initarg :state-set
 	      :writer set-state-set
-	      :type [numbered-set]
+	      :type (or null [numbered-set])
 	      :reader state-set)
    (action-set :initarg :action-set
-	       :type [set]
+	       :type (or null [set])
 	       :reader action-set
 	       :documentation "If instantiated, holds the set of actions possible in this SMDP.")
    (trans-dist-fn :initarg :trans-dist
-	       :type [cond-prob-dist]
-	       :reader trans-dist-fn
-	       :documentation "If instantiated, holds the transition distribution.")
+                  :type (or null [cond-prob-dist])
+                  :reader trans-dist-fn
+                  :documentation "If instantiated, holds the transition distribution.")
    (avail-actions :initarg :avail-actions
 		  :type (or null function)
 		  :reader avail-actions-fn

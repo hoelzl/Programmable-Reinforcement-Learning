@@ -27,25 +27,25 @@
   (
    (rewards :type array
             :initarg :rewards
-            :initform #()
+            :initform (required-initarg :rewards)
             :reader rewards)
    (cost-of-living :type integer
 		   :initarg :col
-                   :initform 0
+                   :initform (required-initarg :cost-of-living)
 		   :reader col)
    (action-set :reader action-set
 	       :initarg :action-set)
    (move-success-prob :type float
 		      :initarg :msp
-                      :initform 0.0
+                      :initform 0.9
 		      :reader msp)
    (term :type array
 	 :initarg :term
-         :initform #()
+         :initform (required-initarg :term)
 	 :reader term)
    (collision-cost :type float
 		   :initarg :col-cost
-                   :initform 0.0
+                   :initform 1.0
 		   :reader col-cost)))
 
 

@@ -20,14 +20,17 @@
 
 
 (defclass <hierarchical-tabular-smdp> (<hierarchical-smdp> <tabular-smdp>)
-  ((level-vector :reader level-vec :writer set-level-vec :type (simple-array * 1)))
+  ((level-vector :reader level-vec :writer set-level-vec :type (simple-array * 1)
+                 :initarg :level-vector :initform (required-initarg :level-vector)))
   (:documentation "Combines hierarchical and tabular smdps.  Level information is stored in a vector.  Used internally by hierarchical DP algorithms."))
 
 
 (defmethod tabular-smdp ((smdp <hierarchical-smdp>))
-  (let ((m (make-instance '<hierarchical-tabular-smdp> :smdp smdp)))
-    (set-level-vec (mapset 'vector (lambda (s) (level smdp s)) (state-set smdp)) m)
-    m))
+  (make-instance '<hierarchical-tabular-smdp> 
+                 :smdp smdp
+                 :level-vector (mapset 'vector
+                                       (lambda (s) (level smdp s))
+                                       (state-set smdp))))
 
 (defmethod level ((smdp <hierarchical-tabular-smdp>) i)
   (aref (level-vec smdp) i))

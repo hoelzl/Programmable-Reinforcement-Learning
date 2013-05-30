@@ -27,14 +27,13 @@ make-q-learning-alg
 	     :initarg :discount
 	     :initform 1.0
 	     :reader discount)
-   (learning-rate :type lrate:<learning-rate>
+   (learning-rate :type lrate:[learning-rate]
 		  :initarg :lrate
 		  :initform .01
 		  :reader lrate)
    (q-function :type q-fn:<q-function>
 	       :reader q-fn
 	       :initarg :q-fn
-	       :initform nil
 	       :writer set-q-fn)
    (init-q-function :type q-fn:<q-function>
 		    :reader init-q-fn
@@ -56,7 +55,7 @@ When asked for its knowledge state, a <q-learning> object returns the currently 
 
 (defmethod initialize-instance :after ((alg <q-learning>) &rest args &key env)
   (declare (ignore args))
-  (unless (q-fn alg)
+  (unless (slot-boundp alg 'q-function)
     (set-q-fn (make-instance 'q-fn:<env-q-function> :env env) alg))
   (set-init-q-fn (clone (q-fn alg)) alg))
 

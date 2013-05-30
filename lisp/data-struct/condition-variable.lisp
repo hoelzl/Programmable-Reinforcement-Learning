@@ -53,6 +53,7 @@ The code in this package currently only works with Allegro Lisp, Version 6.2 or 
   ((lock
     :type     process-lock
     :initarg  :lock
+    :initform (required-initarg :lock)
     :reader   cv-lock)
    (waiting-processes
     :type     list

@@ -5,7 +5,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass <2tbn-mdp> (mdp:<mdp>)
-  ((2tbn :initarg :2tbn :reader 2tbn :type bnet:<2tbn>))
+  ((2tbn :type bnet:<2tbn>
+         :initarg :2tbn :initform (required-initarg :2tbn)
+         :reader 2tbn))
   (:documentation "Represents an MDP described by a 2TBN.  Usually, we're more interested in a corresponding <mdp-env> object, which can be created using make-2tbn-mdp-env.  The mdp itself can then be retrieved using the mdp method of the env object."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

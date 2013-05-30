@@ -12,6 +12,7 @@ make-2tbn-mdp-env - create a <mdp-env> based on a 2TBN
 
 ")
   (:use #:common-lisp
+        #:utils
 	#:create-env)
   (:export 
    #:mdp
@@ -28,8 +29,10 @@ make-2tbn-mdp-env - create a <mdp-env> based on a 2TBN
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defclass <mdp-env> (<fully-observable-env>)
   ((m :initarg :mdp
+      :initform (required-initarg :mdp)
       :reader mdp)
    (init-prob-dist :initarg :init-dist
+                   :initform (required-initarg :mdp)
 		   :reader init-dist
 		   :type prob:<prob-dist>))
   (:documentation "Class <mdp-env> 

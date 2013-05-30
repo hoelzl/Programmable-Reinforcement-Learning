@@ -20,7 +20,8 @@
 (defclass <numbered-set-dist> (<prob-dist>)
   ((numbered-set :type [numbered-set]
 		 :reader s
-		 :initarg :set))
+		 :initarg :set
+                 :initform (required-initarg :set)))
   (:documentation "Represents a uniform distribution over a numbered set (maybe later allow arbitrary pf's on the set)"))
 
 (defun make-unif-dist-over-set (s)

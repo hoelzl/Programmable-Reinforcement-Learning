@@ -336,20 +336,6 @@
 		
 		 (:module "test" :depends-on ("envs" "misc")
 			  :components ((:file "mdp-test-envs")))))
-	
-				       
-
-
-
-
-
-
-     
-     
-
-(in-package cl-user)
-
-
 
 
 ;; Local variables:

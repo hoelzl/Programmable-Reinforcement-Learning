@@ -115,7 +115,8 @@ To create a 2tbn, call (make-instance '<2tbn> ...) with the following initargs
 (defclass <2tbn-cond-dist> (<prob-dist>)
   ((2tbn :initarg :2tbn :reader 2tbn)
    (cached-sample-space :accessor cached-sample-space 
-			:initform 'not-cached :type [set])
+			:initform 'not-cached
+                        :type (or (eql 'not-cached) [set]))
    (prev-s :initarg :prev-s :reader prev-s)
    (prev-a :initarg :prev-a :reader prev-a)))
 

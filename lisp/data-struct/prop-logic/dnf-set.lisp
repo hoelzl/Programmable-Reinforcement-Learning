@@ -9,10 +9,12 @@
   ((formula :type [formula]
 	    :reader formula
 	    :initarg :formula
+            :initform (required-initarg :formula)
 	    :writer set-formula)
    (propositions :type [numbered-set]
 		 :reader props
 		 :initarg :props
+                 :initform (required-initarg :props)
 		 :writer set-props))
   (:documentation "<dnf-set>.  Represents the set of satisfying assignments of a DNF formula. Create using make-dnf-set.
 

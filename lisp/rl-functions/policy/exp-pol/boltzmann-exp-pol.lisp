@@ -1,8 +1,10 @@
 (in-package #:exploration-policy)
 
 (defclass <boltzmann-exp-pol> (<exp-pol>)
-  ((alg :initarg :q-learning-alg :reader alg :type rl-obs:<q-learning-algorithm>)
-   (temperature-function :initarg :temp-fn :reader temp-fn))
+  ((alg :initarg :q-learning-alg :initform (required-initarg :q-learning-alg)
+        :reader alg :type rl-obs:<q-learning-algorithm>)
+   (temperature-function :initarg :temp-fn :initform (required-initarg :temp-fn)
+                         :reader temp-fn))
   (:documentation "A subclass of <exp-pol> for Boltzmann exploration based on a Q-function.  
 
 Required initargs

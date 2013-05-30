@@ -12,12 +12,15 @@
 
 (defclass <tabular-q-function> (<q-function>)
   ((state-set :initarg :state-set
+              :initform (required-initarg :state-set)
 	      :reader state-set
 	      :type [numbered-set])
    (action-sets :initarg :action-sets
+                :initform (required-initarg :action-sets)
 		:reader action-sets
 		:type (simple-array [numbered-set] 1))
    (table :initarg :table
+          :initform (required-initarg :table)
 	  :reader table
 	  :type (simple-array float 1)))
   (:documentation "A <tabular-q-function> has initargs

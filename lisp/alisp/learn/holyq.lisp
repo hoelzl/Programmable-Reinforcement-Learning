@@ -17,7 +17,7 @@
   ((choice-stack 
     :type list
     :reader choice-stack
-    :initform nil
+    :initform '()
     :accessor holyq-choice-stack)
    (pe :reader pe :writer set-pe :initarg :pe) ;; replaces qe
    (init-pe :reader init-pe :writer set-init-pe)
@@ -31,7 +31,7 @@
    (q :reader q :writer set-q)
    (learning-rate :reader lrate :initform .02
 		  :initarg :lrate
-		  :type lrate:<learning-rate>))
+		  :type lrate:[learning-rate]))
   
   (:documentation "Class <holyq>.  Does hierarchical q-learning, using the 2.5-part decomposition Q = Qr + Qc + PeV
 

@@ -38,10 +38,10 @@
 		 :featurizer-name 'featurizer
 		 :fn-approx (make-instance 'fn-approx:<linear-fn-approx> :dim 7)))
 
-(defparameter *q-learner* (make-instance '<q-learning> :env *env* :lrate .01 :discount 1))
-(defparameter *lfa-q-learner* (make-instance '<q-learning> :env *env* :lrate .01 :discount 1 :q-fn *lq*))
+(defparameter *q-learner* (make-instance '<q-learning> :env *env* :lrate .01 :discount 1.0))
+(defparameter *lfa-q-learner* (make-instance '<q-learning> :env *env* :lrate .01 :discount 1.0 :q-fn *lq*))
 (defparameter *api-learner* (make-instance 'api:<approx-pol-it> :env *env* :pol-imp-int 100 :pol-switch 500))
-(defparameter *f* nil)
+(defparameter *f* t)
 ;(with-outfile (*f* "scratch/test-gs.out")
 (defparameter *gs-learner* (gold-standard:make-gold-standard-learning-algorithm :debug-str *f*))
 (defparameter *env-obs* (env-observer:make-env-observer *f*))

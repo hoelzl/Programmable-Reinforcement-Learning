@@ -14,18 +14,22 @@
   ((transition-matrix
     :type (simple-array float 3)
     :initarg :transition-matrix
+    :initform (required-initarg :transition-matrix)
     :reader transition-matrix)
    (reward-matrix
     :type (simple-array float 3)
     :initarg :reward-matrix
+    :initform (required-initarg :reward-matrix)
     :reader reward-matrix)
    (termination-vector
     :type (simple-array boolean 1)
     :initarg :termination-vector
+    :initform (required-initarg :termination-vector)
     :reader termination-vector)
    (indexing-required
     :type boolean
     :initarg :index
+    :initform (required-initarg :index)
     :reader index))
 
   (:documentation "A tabular mdp is one in which the transition, reward, and termination functions are represented using arrays.   Indexing is done using the numbering of the state and action sets.
@@ -58,7 +62,7 @@ FRESH.  nil by default.  If true, then the created MDP will make copies of the p
 		    (if fresh (clone it) it)
 		    (make-array num-states :element-type 'boolean :initial-element nil)))
 	 (rews (make-rew-matrix reward-matrix num-states num-actions fresh))
-	 (ind (or state-set action-set)))
+	 (ind (and (or state-set action-set) t)))
 
     (make-instance '<tabular-mdp>
       :state-set states :action-set actions :termination-vector term :index ind

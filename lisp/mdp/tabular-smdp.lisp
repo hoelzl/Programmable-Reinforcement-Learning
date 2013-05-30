@@ -17,6 +17,7 @@
    (original-smdp
     :type <smdp>
     :initarg :smdp
+    :initform (required-initarg :smdp)
     :reader smdp)
    (smdp-trans
     :reader trans-vec
@@ -65,8 +66,10 @@ Create from an SMDP using tabular-smdp
       ;; available actions
       ;; note that action a1 done at s1 and a2 done at s2 might end up having the same name
       ;; in the new scheme.  This doesn't affect the final answer.
-      (set-num-avail-actions-vec 
-       (mapset 'vector (lambda (s) (size (avail-actions smdp s))) states)
+      (set-num-avail-actions-vec
+       (coerce
+        (mapset 'vector (lambda (s) (size (avail-actions smdp s))) states)
+        '(array fixnum 1))
        m)
     
       ;; transition model

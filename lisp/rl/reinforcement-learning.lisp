@@ -19,7 +19,7 @@
            #:<q-learning-algorithm>
            #:<rl-observer>
            #:<value-learning-algorithm>
-           #:current-env-step #:get-policy
+           #:current-env-step
            #:current-episode-step
            #:debug-msg
            #:debug-str
@@ -27,6 +27,7 @@
            #:evaluate
            #:get-mdp
            #:get-mdp-hist
+           #:get-policy
            #:get-policy-hist
            #:get-q-fn
            #:get-q-hist
@@ -173,7 +174,9 @@ set-debug-str
            #:defmessage
            #:get-mdp
            #:get-policy
+           #:get-policy-hist
            #:get-q-fn
+           #:get-q-hist
            #:get-value-fn
            #:inform-env-step
            #:inform-finish-execution

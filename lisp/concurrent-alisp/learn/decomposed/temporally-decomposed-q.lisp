@@ -37,12 +37,15 @@ Types
    (exit-points :type list :accessor exit-points)
    (newly-spawned :type list :accessor newly-spawned)
    
-   (q-function :type dec-q-fn:<decomposed-q-function> :reader q-fn :writer set-q-fn :initarg :q-function)
+   (q-function :type dec-q-fn:<decomposed-q-function>
+               :reader q-fn :writer set-q-fn
+               :initarg :q-function :initform (required-initarg :q-fn))
    (init-q-function :type dec-q-fn:<decomposed-q-function> :accessor initq)
    
    (root-thread-id :initarg :root-thread-id :initform 'calisp-prog:root-thread :reader root-thread-id)
    
-   (reward-decomposer :type function :reader reward-decomposer :initarg :reward-decomposer)
+   (reward-decomposer :type function :reader reward-decomposer
+                      :initarg :reward-decomposer :initform (required-initarg :reward-decomposer))
    (learning-rate :reader lrate :initarg :lrate :initform .02)
    )
   (:documentation "Class <temporally-decomposed-q-learner> (<calisp-learning-algorithm> <q-learning-algorithm>)

@@ -1,7 +1,8 @@
 (in-package #:exploration-policy)
 
 (defclass <epsilon-boltzmann-exp-pol> (<boltzmann-exp-pol>)
-  ((epsilon-decay-fn :type function :reader epsilon-decay-fn :initarg :epsilon-decay-fn))
+  ((epsilon-decay-fn :type function :reader epsilon-decay-fn
+                     :initarg :epsilon-decay-fn :initform (required-initarg :epsilon-decay-fn)))
   (:documentation "A subclass of <boltzmann-exp-pol> that combines it with epsilon-greedy exploration.
 
 Required initargs

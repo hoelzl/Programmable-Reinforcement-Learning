@@ -13,7 +13,7 @@
 	 (let ((a (make-array '(2 3) :initial-element 'road)))
 	   (setf (aref a 0 1) 'wall)
 	   a)))
-    (make-instance '<td-taxi-env> :world-map wm :ps pass-source :pd pass-dest :msp 1)))
+    (make-instance '<td-taxi-env> :world-map wm :ps pass-source :pd pass-dest :msp 1.0)))
 
 (defun make-example-env2 ()
   "Create an example td-taxi-env with a 6x6 world in which the source is always (0,0) and the destination is either (0,5) or (5,0).  Move-success-prob is .95 and costs are default (see <td-taxi-env>)"

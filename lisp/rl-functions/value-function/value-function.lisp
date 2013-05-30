@@ -17,6 +17,7 @@ Operations
 value")
   (:nicknames #:value-fn)
   (:use #:common-lisp
+        #:utils
         #:lin-alg)
   (:export 
    #:<value-fn>

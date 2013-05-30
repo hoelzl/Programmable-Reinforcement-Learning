@@ -7,9 +7,11 @@
 
 (defclass <tabular-policy> (<policy>)
   ((state-set :initarg :state-set
+              :initform (required-initarg :state-set)
 	      :reader state-set
 	      :type set:[numbered-set])
    (table :initarg :table
+          :initform (required-initarg :table)
 	  :reader table
 	  :type array))
   (:documentation "A <tabular-policy> has initargs

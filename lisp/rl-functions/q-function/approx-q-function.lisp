@@ -123,13 +123,14 @@ Get the designated feature.  FEATURE-DESIGNATOR can be one of
   
   (if (functionp f)
       (let ((l (get-lambda-list f)))
-        ;; SBCL returns lambda-list '() for some functions that take
-        ;; an arbitrary number of arguments, e.g., (constantly 1).
-        ;; This hack fixes that until I find a better solution. --tc
+        ;; SBCL and CCL return lambda-list '() for some functions that
+        ;; take an arbitrary number of arguments, e.g., (constantly
+        ;; 1).  This hack fixes that until I find a better
+        ;; solution. --tc
         (if (null l)
-            #+sbcl
+            #+(or sbcl ccl)
             (lambda (s a) (declare (ignore a)) (funcall f s))
-            #-sbcl
+            #-(or sbcl ccl)
             (error  "Lambda list ~a for q-feature has length 0" l)
             (case (length l)
               (1 (lambda (s a) (declare (ignore a)) (funcall f s)))

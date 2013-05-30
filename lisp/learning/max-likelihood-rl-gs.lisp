@@ -1,6 +1,6 @@
 (defpackage #:max-likelihood-rl-gs
   (:documentation "
-Package max-likelihood-rl-gs (mle-rl-gs).  Defines <mle-gs>, a subclass of <q-learning-alg> that implements the ``gold-standard'' algorithm that maintains a maximum-likelihood estimate of the transition matrices (the reward function is assumed known) and performs dynamic programming on them to compute the Q-function.  Assumes states (resp actions) are integers between 0 and num-states - 1.
+Package max-likelihood-rl-gs (mle-rl-gs).  Defines <mle-gs>, a subclass of <q-learning-alg> that implements the ``gold-standard'' algorithm that maintains a maximum-likelihood estimate of the transition matrices (the reward function is assumed known) and performs dynamic programming on them to compute the Q-function.  Assumes states (resp actions) are integers between 0 and num-mle-states - 1.
 
 Operations inherited from <q-learning-alg>
 - reset.   Reset the counts to be all 0
@@ -9,7 +9,9 @@ Operations inherited from <q-learning-alg>
   
   (:nicknames #:mle-rl-gs)
   (:use #:common-lisp
-	#:q-learning-alg
+        #:utils
+        #:q-learning-alg
+        #:mdp
 	#+(or) #:tabular-mdp ;; It seems that tabular MDPs are now defined in the MDP package. --tc
 	#:dp)
   (:export #:reset
@@ -26,13 +28,16 @@ Operations inherited from <q-learning-alg>
 
 (defclass <mle-gs> (<q-learning-alg>)
   ((reward-matrix :initarg :rew
+                  :initform (required-initarg :rew)
 		  :type array
 		  :reader rew)
-   (num-states :initarg :num-states
-	       :reader num-states
+   (num-mle-states :initarg :num-mle-states
+               :initform (required-initarg :num-mle-states)
+	       :reader num-mle-states
 	       :type fixnum)
    (num-actions :type fixnum
 		:initarg :num-actions
+                :initform (required-initarg :num-actions)
 		:reader num-actions)
    (discount :type float
 	     :initarg :discount
@@ -43,7 +48,7 @@ Operations inherited from <q-learning-alg>
    (pol :type array
 	:reader pol
 	:writer set-pol)
-   (successors :type array
+   (successors :type (or null array)
 	       :initarg :successors
 	       :reader successors
 	       :initform nil)
@@ -54,7 +59,7 @@ Operations inherited from <q-learning-alg>
 	 :reader term)
    )
   (:documentation "The <mle-gs> class.  Inherits from <q-learning-alg>.  Initargs
-:num-states
+:num-mle-states
 :num-actions
 :rew (reward matrix represented as NSxNA array)
 :discount (optional, default 1.0)
@@ -62,7 +67,7 @@ Operations inherited from <q-learning-alg>
 :term (optional, default is no terminal states)"))
 
 
-(defmethod initialize-instance :after ((qa <mle-gs>) &rest args &aux (ns (num-states qa)))
+(defmethod initialize-instance :after ((qa <mle-gs>) &rest args &aux (ns (num-mle-states qa)))
   (declare (ignore args))
   (unless (slot-boundp qa 'term)
     (setf (slot-value qa 'term) (make-array ns :element-type 'boolean :initial-element nil)))
@@ -115,7 +120,7 @@ Operations inherited from <q-learning-alg>
 
 (defun get-mle-trans (qa counts)
   (loop
-      with ns = (num-states qa)
+      with ns = (num-mle-states qa)
       with na = (num-actions qa)
       with succ = (successors qa)
       with term = (term qa)

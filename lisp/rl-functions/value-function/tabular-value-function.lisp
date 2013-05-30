@@ -7,9 +7,11 @@
 
 (defclass <tabular-value-fn> (<value-fn>)
   ((vals :initarg :vals
+         :initform (required-initarg :vals)
 	 :reader vals
 	 :type (simple-array float 1))
    (state-set :initarg :state-set
+              :initform (required-initarg :state-set)
 	      :reader state-set
 	      :type set:[numbered-set]
 	      ))

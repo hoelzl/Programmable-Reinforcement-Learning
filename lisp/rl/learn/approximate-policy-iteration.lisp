@@ -29,7 +29,7 @@ Exports
 	     :initarg :discount
 	     :initform 1.0
 	     :reader discount)
-   (learning-rate :type lrate:<learning-rate>
+   (learning-rate :type lrate:[learning-rate]
 		  :initarg :lrate
 		  :initform .01
 		  :reader lrate)
@@ -50,7 +50,7 @@ Exports
 		:reader term-policy
 		:writer set-term-policy
 		:initarg :term-policy)
-   (term-policy-switch-threshold :type fixnum
+   (term-policy-switch-threshold :type (or null fixnum)
 				 :reader pol-switch
 				 :initform nil
 				 :initarg :pol-switch)

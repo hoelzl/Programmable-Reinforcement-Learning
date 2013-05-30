@@ -22,12 +22,12 @@ make-progress-printer")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass <progress-printer> (<rl-observer>)
-  ((elapsed-steps :type fixnum :accessor elapsed-steps)
-   (elapsed-episodes :type fixnum :accessor elapsed-episodes)
+  ((elapsed-steps :type fixnum :initform 0 :accessor elapsed-steps)
+   (elapsed-episodes :type fixnum :initform 0 :accessor elapsed-episodes)
    (step-print-inc :initarg :step-inc :initform nil :reader step-inc)
    (episode-print-inc :initarg :episode-inc :initform nil :reader episode-inc)
    (notify-start-finish-execution :initarg :exec-notify :initform nil :reader exec-notify)
-   (output-stream :type stream :initarg :str :reader str :initform t))
+   (output-stream :type (or (eql t) stream) :initarg :str :reader str :initform t))
   (:documentation "Subclass of <observer> that is used to print progress of run to a stream.
 
 Initargs

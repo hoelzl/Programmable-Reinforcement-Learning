@@ -18,7 +18,7 @@
   ((output-stream :initarg :str
 		  :reader str
 		  :initform t
-		  :type stream)
+		  :type (or (eql t) stream))
    (choice-label-stack :initform nil
 		       :accessor choice-label-stack))
   (:documentation "Class <alisp-io-int-observer> is used by the ALisp io-interface, and just prints out what happens in the ALisp program to the stream."))

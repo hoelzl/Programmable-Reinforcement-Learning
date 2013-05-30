@@ -19,12 +19,14 @@
    (env
     :type env-user:<env>
     :reader env
-    :initarg :env)
+    :initarg :env
+    :initform (required-initarg :env))
    
    (partial-program
-    :type <alisp-program>
+    :type [alisp-program]
     :reader part-prog
-    :initarg :part-prog)
+    :initarg :part-prog
+    :initform (required-initarg :part-prog))
    
    (observers
     :reader observers
@@ -34,20 +36,21 @@
    (policy
     :type policy:[policy]
     :reader policy
-    :initarg :policy)
+    :initarg :policy
+    :initform (required-initarg :policy))
    
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    ;; parameters of current run
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    
    (num-steps
-    :type fixnum
+    :type (or null fixnum)
     :reader num-steps
     :initarg :num-steps
     :initform nil)
    
    (num-episodes
-    :type fixnum
+    :type (or null fixnum)
     :reader num-episodes
     :initarg :num-episodes
     :initform nil)
@@ -58,11 +61,13 @@
    
    (elapsed-steps
     :type fixnum
-    :accessor rlm-elapsed-steps)
+    :accessor rlm-elapsed-steps
+    :initform 0)
    
    (elapsed-episodes
     :type fixnum
-    :accessor rlm-elapsed-episodes)
+    :accessor rlm-elapsed-episodes
+    :initform 0)
    
    (joint-state
     :reader joint-state

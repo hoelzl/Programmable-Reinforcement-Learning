@@ -15,7 +15,7 @@ alisp-obs")
 	#:utils
 	#:prob
         #:policy
-	#:rl-obs)
+	#:rl-observer)
   (:import-from
    #:q-fn
    #:<q-function>
@@ -121,6 +121,7 @@ alisp-hordq
 ")
   (:use #:common-lisp
 	#:package-utils
+        #:rl-obs
         #:alisp)
   (:export 
    #:*canonicalize-quickly*

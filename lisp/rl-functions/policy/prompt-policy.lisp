@@ -11,7 +11,8 @@
 
 (defclass <prompt-policy> (<policy>)
   ((advisors :type list :reader advisors :initarg :advisors)
-   (choice-fn :type function :reader choice-fn :initarg :choice-fn)
+   (choice-fn :type function :reader choice-fn
+              :initarg :choice-fn :initform (required-initarg :choice-fn))
    (io-specifier :initarg :io-specifier :reader io-specifier))
   
   (:documentation "A <prompt-policy> is one which makes choices by asking the user.  It also has a list of 'advisors', which can print their advice before the user enters a choice.

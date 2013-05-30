@@ -17,7 +17,7 @@ make-env-observer")
 (in-package #:env-observer)
   
 (defclass <env-observer> (<rl-observer>)
-  ((output-stream :type stream
+  ((output-stream :type (or (eql t) stream)
 		  :reader str
 		  :initarg :str
 		  :writer set-output-stream
@@ -31,7 +31,8 @@ make-env-observer")
 	:accessor eps
 	:initform 0)
    (steps :type fixnum
-	  :accessor steps))
+	  :accessor steps
+          :initform 0))
   (:documentation "Subclass of <alisp-observer> whose sole function is to show what happens in the environment as a result of running an ALisp program.  Create instances using make-env-observer"))
 
 

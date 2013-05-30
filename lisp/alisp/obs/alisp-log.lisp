@@ -13,7 +13,7 @@
 
 (defclass <alisp-log> (<alisp-observer>)
   ((output-stream
-    :type stream
+    :type (or (eql :str) (eql t) stream)
     :reader str
     :initarg :str))
   (:documentation "Class <alisp-log>.  Has a single required initialization argument :str for the output stream.  Implements all the methods from <learning-algorithm>, and in each case just prints the information about the message to the stream."))

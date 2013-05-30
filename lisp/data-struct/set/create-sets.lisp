@@ -11,13 +11,15 @@
 
 (defclass <image-set> (<numbered-set>)
   ((f :initarg :f
+      :initform (required-initarg :f)
       :reader f
       :type function)
    (f-inv :initarg :f-inv
 	  :reader f-inv
 	  :initform nil
-	  :type function)
+	  :type (or null function))
    (s :initarg :s
+      :initform (required-initarg :s)
       :reader s
       :type [set])))
 

@@ -10,7 +10,6 @@
   ((params :type hash-table
 	   :writer set-params
 	   :initarg :params
-	   :initform nil
 	   :documentation "hash table holding parameters")
    (test :type function
 	 :initform #'equalp
@@ -33,8 +32,9 @@
 
 (defmethod initialize-instance :after ((fa <tabular-fn-approx>) &rest args)
   (declare (ignore args))
-  (set-params (or (params fa) (make-hash-table :test (test fa))) fa)
-  (set-test (hash-table-test (params fa)) fa))
+  (if (slot-boundp fa 'params)
+      (set-test (coerce (hash-table-test (params fa)) 'function) fa)
+      (set-params (make-hash-table :test (test fa)) fa)))
 
 
 

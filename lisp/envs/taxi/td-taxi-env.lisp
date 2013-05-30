@@ -95,11 +95,11 @@ in-taxi
 	      :reader init-fuel)
    (fuel-decrease-prob :type float
 		       :initarg :fp
-		       :initform 0
+		       :initform 0.0
 		       :reader fuel-decrease-prob)
    (change-dest-prob :type float
 		     :initarg :cd
-		     :initform 0
+		     :initform 0.0
 		     :reader change-dest-prob)
    (move-success-prob :type float
 		      :initarg :msp

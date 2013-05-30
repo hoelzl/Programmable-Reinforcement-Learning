@@ -8,15 +8,15 @@
   ((a :type single-float
       :initarg :a
       :reader a
-      :initform 0)
+      :initform 0e0)
    (b :type single-float
       :initarg :b
       :reader b
-      :initform 1)
+      :initform 1e0)
    (n :type single-float
       :initarg :n
       :reader n
-      :initform 1))
+      :initform 1e0))
   (:documentation "Class <polynomial-learning-rate>.  
 
 Initargs

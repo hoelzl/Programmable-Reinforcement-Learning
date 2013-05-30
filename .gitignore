@@ -1,5 +1,7 @@
 *~
 *.d*fsl
 *.fasl
-# Directory with test output
+# Directories with test output
 lisp/rl-functions/policy/test/
+lisp/rl-functions/q-function/test/
+lisp/test/test/

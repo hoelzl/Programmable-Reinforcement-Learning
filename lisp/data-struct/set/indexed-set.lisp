@@ -22,10 +22,12 @@ All the standard operations on <set>s apply to <indexed-set>s.  See the set pack
 (defclass <indexed-set> (<numbered-set>)
   ((s :type [numbered-set]
       :accessor s
-      :initarg :s)
+      :initarg :s
+      :initform (required-initarg :s))
    (hta :type hta:hash-table-array
 	:reader hta
 	:initarg :hta
+        :initform (required-initarg :hta)
 	:writer set-hta))
   (:documentation "An <indexed-set> consists of a [numbered-set] together with an #'equalp hashtable that maps set elements to their numbers.  Allows the item-number operation to be hashtable lookup, which is basically O(1). The remaining operations are forwarded to the underlying set."))
 

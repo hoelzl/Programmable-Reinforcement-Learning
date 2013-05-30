@@ -8,7 +8,8 @@
 (defclass <greedy-policy> (<policy>)
   ((q-function :type q-fn:<q-function>
 	       :reader q-function
-	       :initarg :q-function)
+	       :initarg :q-function
+               :initform (required-initarg :q-function))
    (random-choice :initform t
 		  :reader random-choice
 		  :initarg :random-choice))

@@ -30,8 +30,11 @@ See also alisp-user package for other operations on <alisp-learning-algorithm> o
   ((prev-omega :accessor prev-omega)
    (prev-u :accessor prev-u)
    (total-reward :accessor rew)
-   (q-function :reader q-fn :type q-fn:<q-function> :initarg :q-fn :writer set-q-fn)
-   (init-q-function :reader init-q-fn :type q-fn:<q-function> :writer set-init-q-fn)
+   (q-function :type q-fn:<q-function>
+               :initarg :q-fn :initform (required-initarg :q-fn)
+               :reader q-fn :writer set-q-fn)
+   (init-q-function :type q-fn:<q-function> 
+                    :reader init-q-fn :writer set-init-q-fn)
    (discount :reader disc :initarg :disc :initform 1.0)
    (total-discount :accessor total-disc)
    (learning-rate :reader lrate :initarg :lrate))

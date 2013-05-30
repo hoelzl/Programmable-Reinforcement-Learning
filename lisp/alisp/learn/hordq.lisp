@@ -81,13 +81,13 @@ Also see the alisp-user package for other operations on <alisp-learning-algorith
   ((choice-stack 
     :type list
     :reader choice-stack
-    :initform nil
+    :initform '()
     :accessor hordq-choice-stack)
    (active-exit-points 
     :type list
     :reader active-exit-pts
     :accessor hordq-active-exit-pts
-    :initform nil
+    :initform '()
     :documentation "Holds choices that we've exited, but whose Qe value has not yet been updated.")
    (discount
     :reader discount
@@ -102,7 +102,7 @@ Also see the alisp-user package for other operations on <alisp-learning-algorith
    (q :reader q :writer set-q)
    (learning-rate :reader lrate :initform .02
 		  :initarg :lrate
-		  :type lrate:<learning-rate>))
+		  :type lrate:[learning-rate]))
   (:documentation "Class <hordq>.  Does hierarchical q-learning, using the 3-part decomposition Q = Qr + Qc + Qe.
 
 Initargs

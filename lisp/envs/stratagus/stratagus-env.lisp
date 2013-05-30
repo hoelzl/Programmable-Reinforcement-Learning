@@ -28,7 +28,10 @@
 	      :initform 0)
    (world        :writer set-world
 		 :reader world
-                 :type array)
+                 ;; FIXME: Can only be NIL because of the
+                 ;; commented-out statement in INITIALIZE-INSTANCE
+                 ;; below. --tc
+                 :type (or null array))
    (player-id    :writer set-pid
 		 :reader pid
 		 :type fixnum))

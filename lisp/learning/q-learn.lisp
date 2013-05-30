@@ -8,6 +8,7 @@ Operations inherited from <q-learning-alg>
 - get-q-fn.  Compute q using modified policy iteration and return it (as a NSxNA array).")
   
   (:use #:common-lisp
+        #:utils
 	#:learning-rate
 	#:q-learning-alg)
   (:export #:reset
@@ -25,16 +26,19 @@ Operations inherited from <q-learning-alg>
 (defclass <q-learn> (<q-learning-alg>)
   ((num-actions :type fixnum
 		:initarg :num-actions
+                :initform (required-initarg :num-actions)
 		:reader num-actions)
    (discount :type float
 	     :initarg :discount
 	     :initform 1.0
 	     :reader discount)
-   (learning-rate :type <learning-rate>
+   (learning-rate :type [learning-rate]
 		  :initarg :l-rate
+                  :initform 0.01
 		  :reader l-rate)
    (q-fn :type fn-approx:<fn-approx>
 	 :initarg :fn-approx
+         :initform (required-initarg :fn-approx)
 	 :reader q-fn)
    )
   (:documentation "The <q-learn> class.  Inherits from <q-learning-alg>.  Initargs
