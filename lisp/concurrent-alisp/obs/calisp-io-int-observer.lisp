@@ -21,8 +21,8 @@ new run happens).")
 
 
 (defclass <calisp-io-int-observer> (<calisp-observer>)
-  ((output-stream :initarg :str
-		  :reader str
+  ((output-stream :initarg :stream
+		  :reader outstream
 		  :initform *standard-output*
 		  :type stream)
    (print-states :initarg :print-states :initform nil :reader print-states)
@@ -33,7 +33,7 @@ Used by the concurrent ALisp io-interface, and just prints out what happens when
 program to the stream.
 
 Initargs
-:str - output stream
+:stream - output stream
 :print-states - whether to print out the states at each step.  Nil by default."))
 
 
@@ -42,49 +42,49 @@ Initargs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod inform-start-execution ((obs <calisp-io-int-observer>))
-  (format (str obs) "~&Starting execution.")
+  (format (outstream obs) "~&Starting execution.")
   (setf *hist* (make-array 10 :adjustable t :fill-pointer 0)))
 
 (defmethod inform-finish-execution ((obs <calisp-io-int-observer>))
-  (format (str obs) "~&~%Execution complete."))
+  (format (outstream obs) "~&~%Execution complete."))
 
 (defmethod inform-start-episode ((obs <calisp-io-int-observer>) s)
   (setf (choice-label-stack obs) nil)
-  (format (str obs) "~&~%Beginning new episode in state ~&~a." s))
+  (format (outstream obs) "~&~%Beginning new episode in state ~&~a." s))
 
 (defmethod inform-env-step ((obs <calisp-io-int-observer>) a r s2 term)
-  (format (str obs)
+  (format (outstream obs)
           "~&~%Action ~A was done in the environment, yielding reward ~A.  " a r)
-  (format (str obs) "New state is ~&~A.  " s2)
-  (when term (format (str obs) "The episode has terminated.")))
+  (format (outstream obs) "New state is ~&~A.  " s2)
+  (when term (format (outstream obs) "The episode has terminated.")))
 
 (defmethod inform-part-prog-terminated ((obs <calisp-io-int-observer>))
   (unless (y-or-n-p "~&~%The partial program has terminated.  Start a new episode? ")
     (error 'crlm-last-step-reached)))
 
 (defmethod inform-calisp-step ((obs <calisp-io-int-observer>) omega u)
-  (let ((str (str obs)))
-    (format str "~&~%")
+  (let ((outstream (outstream obs)))
+    (format outstream "~&~%")
     (when (print-states obs)
-      (format str "At ")
-      (pprint-calisp-state str omega))
-    (format str "Made choice ~A." u)))
+      (format outstream "At ")
+      (pprint-calisp-state outstream omega))
+    (format outstream "Made choice ~A." u)))
 
 (defmethod inform-spawn-thread ((obs <calisp-io-int-observer>) id current-thread effectors)
   (declare (ignore effectors))
-  (format (str obs) "~&Thread ~A spawning a thread with ID ~A."
+  (format (outstream obs) "~&Thread ~A spawning a thread with ID ~A."
 	  current-thread id))
 
 (defmethod inform-reassign ((obs <calisp-io-int-observer>) effectors src dest)
-  (format (str obs) "~&Effectors ~A were reassigned from thread ~A to thread ~A."
+  (format (outstream obs) "~&Effectors ~A were reassigned from thread ~A to thread ~A."
 	  effectors src dest))
 
 (defmethod inform-end-choice-block ((obs <calisp-io-int-observer>) id omega)
   (declare (ignore omega))
-  (format (str obs) "~&Thread ~A exiting choice block." id))
+  (format (outstream obs) "~&Thread ~A exiting choice block." id))
 
 (defmethod inform-die-thread ((obs <calisp-io-int-observer>) current-thread)
-  (format (str obs) "~&Thread ~A about to die." current-thread))
+  (format (outstream obs) "~&Thread ~A about to die." current-thread))
   
 
 

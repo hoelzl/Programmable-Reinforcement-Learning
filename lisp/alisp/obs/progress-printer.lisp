@@ -7,8 +7,8 @@
 See class <progress-printer> for details."))
 
 
-(defun make-alisp-progress-printer (step-inc ep-inc &key (exec-notify nil) (str t))
-  "make-alisp-progress-printer STEP-INC EP-INC &key (exec-notify nil) (STR t)
+(defun make-alisp-progress-printer (step-inc ep-inc &key (exec-notify nil) (stream t))
+  "make-alisp-progress-printer STEP-INC EP-INC &key (exec-notify nil) (STREAM t)
 See <progress-printer> for details."
   (make-instance '<alisp-progress-printer>
-    :step-inc step-inc :episode-inc ep-inc :str str :exec-notify exec-notify))
+    :step-inc step-inc :episode-inc ep-inc :stream stream :exec-notify exec-notify))

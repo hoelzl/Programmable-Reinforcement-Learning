@@ -48,7 +48,7 @@ Use reset and add to modify the log in a thread-safe way.  The accessor method g
 return the log (but this is not thread-safe.
 
 Initargs
-:str - if non-nil, a stream to which each entry will also be sent when it is added "))
+:stream - if non-nil, a stream to which each entry will also be sent when it is added "))
 
 
 (defmethod initialize-instance :after ((sl <synchronized-log>) &rest args)

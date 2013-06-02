@@ -63,7 +63,7 @@ beforehand - if you want them to start from scratch, call reset on them first."
 
 ;;; Forward declaration for MAKE-ALISP-PROGRESS-PRINTER (defined in
 ;;; obs/progress-printer.lisp).
-(declaim (ftype (function (t t  &key (:exec-notify t) (:str t)) t)
+(declaim (ftype (function (t t  &key (:exec-notify t) (:stream t)) t)
                 make-alisp-progress-printer))
 
 (defun evaluate (part-prog env policies &key (num-steps nil) (step-print-inc 100)   (num-trials 1))

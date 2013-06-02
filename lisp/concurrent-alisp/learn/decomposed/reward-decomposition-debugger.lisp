@@ -28,7 +28,7 @@ Types
    (reward-decomposer :type function :reader reward-decomposer
                       :initarg :reward-decomposer
                       :initform (required-initarg :reward-decomposer))
-   (output-stream :type (or (eql t) stream) :initarg :str :reader str :initform t)
+   (output-stream :type (or (eql t) stream) :initarg :stream :reader outstream :initform t)
    )
   (:documentation "Class <reward-decomposition-debugger> (<calisp-observer>)
 
@@ -40,7 +40,7 @@ Initargs
 REWARD-DECOMPOSER: A function that takes in five arguments : omega, s, a, r, s2, and returns a
                    reward decomposition, i.e., an association list from the threads of omega to
                    real-valued rewards which add up to r.
-STR: - The output stream.  Defaults to t."))
+STREAM:            The output stream.  Defaults to t."))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,10 +61,10 @@ STR: - The output stream.  Defaults to t."))
   (when (slot-boundp alg 'prev-omega)
     (let ((rewards (funcall (reward-decomposer alg) (prev-omega alg) (prev-s alg) a r s2)))
       (assert (= r (reduce #'+ rewards :key #'cdr)) ()
-              #. (str "Rewards ~A don't add up to ~A in reward decomposition for "
+              #.(str "Rewards ~A don't add up to ~A in reward decomposition for "
                       "doing ~A in ~A and getting to ~A.")
               rewards r a (prev-s alg) s2)
-      (format (str alg) "~&Total reward ~a decomposed as ~a" r rewards))))
+      (format (outstream alg) "~&Total reward ~A decomposed as ~A" r rewards))))
 
 
 
