@@ -37,25 +37,41 @@
 
 (defparameter *featurizer* (td-taxi-flat-lfa:make-taxi-featurizer *env*))
 (defparameter *lq*
-  (make-instance 'q-fn:<env-q-function> :env *env* :env-name '*env* :featurizer *featurizer*
-		 :featurizer-name '*featurizer*
-		 :fn-approx (make-instance 'fn-approx:<linear-fn-approx> :dim 7)))
+  (make-instance 'q-fn:<env-q-function>
+    :env *env* :env-name '*env* :featurizer *featurizer*
+    :featurizer-name '*featurizer*
+    :fn-approx (make-instance 'fn-approx:<linear-fn-approx> :dim 7)))
 
-(defparameter *q-learner* (make-instance '<q-learning> :env *env* :lrate .01 :discount 1.0))
-(defparameter *lfa-q-learner* (make-instance '<q-learning> :lrate .01 :discount 1.0 :q-fn *lq* :hist-out-dir "test/temp"))
-(defparameter *api-learner* (make-instance 'api:<approx-pol-it> :env *env* :pol-imp-int 100 :pol-switch 500))
+(defparameter *q-learner*
+  (make-instance '<q-learning> :env *env* :lrate .01 :discount 1.0))
+
+(defparameter *lfa-q-learner*
+  (make-instance '<q-learning> :lrate .01 :discount 1.0 :q-fn *lq* :hist-out-dir "test/temp"))
+
+(defparameter *api-learner*
+  (make-instance 'api:<approx-pol-it> :env *env* :pol-imp-int 100 :pol-switch 500))
+
 (defparameter *f* t)
 ;(with-outfile (*f* "scratch/test-gs.out")
-(defparameter *gs-learner* (make-gold-standard-learning-algorithm :debug-str *f*))
+
+(defparameter *gs-learner*
+  (make-gold-standard-learning-algorithm :debug-str *f*))
+
 (defparameter *env-obs* (env-observer:make-env-observer *f*))
-(learn *env* 'random (list *q-learner* *lfa-q-learner* *gs-learner*) *num-steps-learning*
+
+(learn *env* 'random (list *q-learner* *lfa-q-learner* *gs-learner*)
+       *num-steps-learning*
        :hist-length *hist-length* :ep-print-inc 10 :step-print-inc 100)
+
 ; (on-policy-learning e *api-learner* *num-steps-learning*
 ; 		    :hist-length *hist-length* :ep-print-inc 100 :step-print-inc 100)
 
 (defparameter *qh* (get-q-hist *q-learner*))
+
 (defparameter *lqh* (get-q-hist *lfa-q-learner*))
+
 (defparameter *gh* (get-q-hist *gs-learner*))
+
 ; (defparameter *ah* (get-q-hist *api-learner*))
       
 
@@ -76,8 +92,4 @@
 ; (format t "~&Approximate policy iteration learning curve is~&~W"
 ;	(setf *api-rews* (evaluate-alg *api-learner*)))
 
-
 (reset *lfa-q-learner*)
-
-(in-package #:common-lisp-user)    
-

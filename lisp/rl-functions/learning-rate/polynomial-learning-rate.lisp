@@ -45,13 +45,3 @@ value is #'identity."))
   "Inverse polynomial decay function.  1/(a+b*t^n)"
   (declare (ignore bucket))
   (/ 1 (+ (a lr) (* (b lr) (expt count (n lr))))))
-
-
-
-(in-package cl-user)
-
-	    
-	   
-   
-
-

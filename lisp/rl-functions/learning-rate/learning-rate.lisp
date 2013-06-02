@@ -48,9 +48,3 @@ Operations
 ;; reset is a noop for constant learning rates
 (defmethod reset-table ((lrate number)))
 (defmethod reset-counts ((lrate number)))
-
-
-
-
-(in-package cl-user)
-	   

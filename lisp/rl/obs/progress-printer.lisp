@@ -61,26 +61,25 @@ See <progress-printer> for details."
   (setf (elapsed-episodes obs) 0
 	(elapsed-steps obs) 0)
   (when (exec-notify obs)
-    (format (outstream obs) "~&Execution begun~%~%"))
+    (force-format (outstream obs) "~&Execution begun~%~%"))
   (when (episode-inc obs)
-    (format (outstream obs) "~&Episode 0")))
+    (force-format (outstream obs) "~&Episode 0")))
 
 (defmethod inform-finish-execution ((obs <progress-printer>))
   (when (exec-notify obs)
-    (format (outstream obs) "~&Execution finished.")))
+    (force-format (outstream obs) "~&Execution finished.")))
 
 (defun finish-episode (obs)
   (let ((inc (episode-inc obs))
 	(eps (incf (elapsed-episodes obs))))
     (when (and inc (eql 0 (mod eps inc)))
-      (format (outstream obs) "~&Episode ~a" eps)
-      )))
+      (force-format (outstream obs) "~&Episode ~a" eps))))
 
 (defmethod inform-env-step ((obs <progress-printer>) a r s2 term)
   (declare (ignore s2 a r))
   (let ((inc (step-inc obs))
 	(steps (incf (elapsed-steps obs))))
     (when (and inc (eql 0 (mod steps inc)))
-      (format (outstream obs) ".")))
+      (force-format (outstream obs) ".")))
   (when term (finish-episode obs)))
       
