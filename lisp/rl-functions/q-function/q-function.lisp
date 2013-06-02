@@ -1,7 +1,8 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:q-function
-  (:documentation "Package q-function (q-fn).  Code and types related to Q-functions of MDPs.
+  (:documentation "Package q-function (q-fn)
+Code and types related to Q-functions of MDPs.
 
 Types
 -----
@@ -103,58 +104,77 @@ choose-randomly
 
 (defclass <q-function> (<value-fn>)
   ()
-  (:documentation "Represents the Q-function (action-value function) in a sequential decision process.  
-"))
+  (:documentation "Abstract class <q-function> (<value-fn>)
+Represents the Q-function (action-value function) in a sequential decision process."))
 
 
-  
-
+;;; TODO: import SET package to get rit of explicit package prefixes. --tc
 (defgeneric best-choice (q-fn omega)
-  (:documentation "maximizing-choice Q-FUNCTION STATE.  Return two values - the choice that maximizes the q-function at this state, and the Q-value of that choice.  Choices whose evaluation results in a 'unknown-state-action condition are ignored.  If all choices are unknown, then best-choice itself should signal an error of type unknown-state-action.  An around method at the top level provides the restarts first-choice and random-choice for this case, which return the first choice or a random choice, and assume the Q-value is 0.  If the state itself is unknown, signals an error of type 'unknown-state")
+  (:documentation "best-choice Q-FUNCTION STATE
+Return two values - the choice that maximizes the q-function at this state, and the Q-value of
+that choice.  Choices whose evaluation results in a 'unknown-state-action condition are ignored.
+If all choices are unknown, then best-choice itself should signal an error of type
+unknown-state-action.  An around method at the top level provides the restarts first-choice and
+random-choice for this case, which return the first choice or a random choice, and assume the
+Q-value is 0.  If the state itself is unknown, signals an error of type 'unknown-state")
   (:method :around (q-fn omega)
-	   (let ((ch (choices q-fn omega)))
-	     (restart-case (call-next-method)
-	       (first-choice ()
-		 (values (set:item 0 ch) 0))
-	       (random-choice ()
-		 (values (set:item (random (set:size ch)) ch) 0))))))
+    (let ((ch (choices q-fn omega)))
+      (restart-case (call-next-method)
+        (first-choice ()
+          (values (set:item 0 ch) 0))
+        (random-choice ()
+          (values (set:item (random (set:size ch)) ch) 0))))))
 	
 
 (defgeneric evaluate (q-fn omega u)
-  (:documentation "evaluate Q-FN OMEGA U.  Evaluate a Q-function on a state and action.   Might signal an error of type unknown-state-action.  The top-level around method provides a use-value restart, in case higher-level code wants to provide a default value.")
+  (:documentation "evaluate Q-FN STATE ACTION
+Evaluate a Q-function on a STATE and ACTION.  Might signal an error of type
+unknown-state-action.  The top-level around method provides a use-value restart, in case
+higher-level code wants to provide a default value.")
   (:method :around (q-fn omega u)
-	   (declare (ignore q-fn omega u))
-	   (restart-case (call-next-method)
-	     (use-value (val)
-		 :report "Provide a value to use this time as the Q-value."
-		 :interactive (lambda () 
-				(format t "~&Enter a Q-value.  ")
-				(list (read)))
-	       val))))
+    (declare (ignore q-fn omega u))
+    (restart-case (call-next-method)
+      (use-value (val)
+        :report "Provide a value to use this time as the Q-value."
+        :interactive (lambda () 
+                       (format t "~&Enter a Q-value.  ")
+                       (list (read)))
+        val))))
 				      
 
 (defgeneric boltzmann-dist (q-fn omega temp)
-  (:documentation "boltzmann-dist Q-FUNCTION OMEGA TEMPERATURE.  Return an object of type [prob-dist], which represents the Boltzmann distribution over actions assuming the given temperature (where the ``energy'' of an action is its negative Q-value.   Might signal an error of type unknown-state-action.
+  (:documentation "boltzmann-dist Q-FUNCTION STATE TEMPERATURE
+Return an object of type [prob-dist], which represents the Boltzmann distribution over actions
+assuming the given temperature (where the ``energy'' of an action is its negative Q-value.
+Might signal an error of type unknown-state-action.
 
-The TEMPERATURE argument must be either a nonnegative real number or the symbol 'infty (from the utils package).  A temperature of 0 will return some distribution over the maximizing choices.  A temperature of 'infty represents the uniform distribution over all choices."))
+The TEMPERATURE argument must be either a nonnegative real number or the symbol 'infty (from the
+utils package).  A temperature of 0 will return some distribution over the maximizing choices.
+A temperature of 'infty represents the uniform distribution over all choices."))
 
 ;; todo, this probably doesn't belong at the top level
 (defgeneric update (q-fn omega u target eta)
-  (:documentation "update Q OMEGA U TARGET STEP-SIZE.  Make the Q-value at OMEGA,U be a bit ``closer'' to TARGET."))
+  (:documentation "update Q STATE ACTION TARGET STEP-SIZE
+Make the Q-value at STATE, ACTION be a bit ``closer'' to TARGET."))
 
 (defgeneric reset (q-fn &optional theta)
-  (:documentation "reset Q &optional THETA.  Reset the parameters of the Q-function.  The new values of the parameters may be optionally provided using THETA."))
+  (:documentation "reset Q &optional THETA
+Reset the parameters of the Q-function.  The new values of the parameters may be optionally
+provided using THETA."))
 
+;;; TODO: Check whether the new Q-function supports the operations mentioned in the comment and
+;;; remove the "should". --tc.
 (defgeneric sum-q-functions (q-fn &rest q-fns)
-  (:documentation "sum-q-functions q-fn &rest q-fns.  Return a new <q-function> object that is the sum of the individual Q-functions.  The new Q-function need not support update, but it should support reset, evaluate, best-choice, clone, and boltzmann-dist."))
-  
+  (:documentation "sum-q-functions Q-FN &rest Q-FNS
+Return a new <q-function> object that is the sum of the individual Q-functions.  The new
+Q-function need not support update, but it should support reset, evaluate, best-choice, clone,
+and boltzmann-dist."))
 
 (defmethod value ((q-fn <q-function>) omega)
   (multiple-value-bind (u val)
       (best-choice q-fn omega)
     (declare (ignore u))
     val))
-
 
 (defmethod clone ((q1 <q-function>))
   ;; should this go higher in the class hierarchy?
@@ -163,17 +183,20 @@ The TEMPERATURE argument must be either a nonnegative real number or the symbol 
     q2))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generic for CHOICE
+;; Generic for CHOICES
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgeneric choices (q-function choices))
+;;; TODO: The name of the second parameter was 'choices'.  This seems to be wrong, it should
+;;; probably be 'omega' or 'state'.  Changed, but verify that this is correct. --tc
+(defgeneric choices (q-function state)
+  (:documentation "choices Q-FUNCTION STATE
+Return the set of possible choices for Q-FUNCTION in STATE."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; default methods for best choice and boltzmann
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod best-choice ((q-fn <q-function>) omega)
-
   (let ((choices (choices q-fn omega)))
     (let ((known-choices (make-array (size choices) :fill-pointer 0))
 	  (vals (make-array (size choices) :fill-pointer 0))
@@ -186,9 +209,8 @@ The TEMPERATURE argument must be either a nonnegative real number or the symbol 
 	(multiple-value-setq (ch done?)
 	  (funcall iter))
 	(unless done?
-	  
-	  ;; evaluate this choice, and add it to the known-choices unless
-	  ;; the q-value was unknown
+	  ;; evaluate this choice, and add it to the known-choices unless the q-value was
+	  ;; unknown
 	  (handler-case
 	      (let ((val (evaluate q-fn omega ch)))
 		(vector-push ch known-choices)
@@ -197,48 +219,45 @@ The TEMPERATURE argument must be either a nonnegative real number or the symbol 
       
       (if (= (length vals) 0)
 	  (error 'q-fn:unknown-state-action :state omega :action 'all-actions :q-fn q-fn)
-	
-	(multiple-value-bind (best val)
-	    (argmax vals)
-	  (values (aref known-choices best) val))))))
-
-
+          (multiple-value-bind (best val)
+              (argmax vals)
+            (values (aref known-choices best) val))))))
 
 (defmethod boltzmann-dist ((q-fn <q-function>) omega temp)
-  "boltzmann-dist Q-FN OMEGA CHOICES TEMP.  Return the boltzmann distribution (represented as a vector).  For now, a default value of 0 is used for unknown state-actions (e.g. when doing function approximation), which is probably a bad idea in general."
+  "boltzmann-dist Q-FN OMEGA CHOICES TEMP
+Return the boltzmann distribution (represented as a vector).  For now, a default value of 0 is
+used for unknown state-actions (e.g. when doing function approximation), which is probably a bad
+idea in general."
   (let ((choices (choices q-fn omega)))
     (prob:make-boltzmann-dist
      (mapset 'vector #'(lambda (choice) 
 			 (handler-case 
 			     (evaluate q-fn omega choice)
-			   (unknown-state-action ()
-			     (warn "Using default value 0 for unknown state-action in Boltzmann exploration.  This part of the code probably needs to be changed.")
+			   (unknown-state-action () 
+			     (warn #. (str "Using default value 0 for unknown state-action in "
+                                           "Boltzmann exploration.  This part of the code "
+                                           "probably needs to be changed."))
 			     0)))
 	     choices)
      temp choices)))
 
-
 (defmethod print-advice ((adv q-fn:<q-function>) omega choices str)
   (handler-bind ((q-fn:unknown-state-action 
-		  #'(lambda (c)
-		      (declare (ignore c))
-		      (use-value 'unknown))))
+                   #'(lambda (c)
+                       (declare (ignore c))
+                       (use-value 'unknown))))
     (format str "~&Q-values ~a"
 	    (let ((q-vals (make-array 0 :fill-pointer 0 :adjustable t)))
-	    
 	      (set:do-elements (u choices q-vals)
 		(vector-push-extend (cons u 
 					  (let ((val
-						 (q-fn:evaluate adv omega u)))
+                                                  (q-fn:evaluate adv omega u)))
 					    (if (numberp val)
 						(round-decimal val 2)
-					      val)))
+                                                val)))
 				    q-vals))))
     (handler-case (format str "~&Recommended choice is ~a" (q-fn:best-choice adv omega))
       (q-fn:unknown-state-action () (format str "~&Unable to determine best choice.")))))
-
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -249,15 +268,18 @@ The TEMPERATURE argument must be either a nonnegative real number or the symbol 
   ((state :initarg :state :reader state)
    (action :initarg :action :reader action)
    (q-fn :initarg :q-fn :reader q-fn))
-  (:documentation "Signalled whenever a Q-function sees a state-action pair that it doesn't recognize.  The use-value restart may be provided, in case higher level code wants to provide a default value.")
+  (:documentation "Condition unknown-state-action (error)
+Signalled whenever a Q-function sees a state-action pair that it doesn't recognize.  The
+use-value restart may be provided, in case higher level code wants to provide a default value.")
   (:report (lambda (c s) 
-	     (format s "Unknown state-action pair (~a . ~a) for q-function ~a." 
+	     (format s "Unknown state-action pair (~A . ~A) for q-function ~A." 
 		     (state c) (action c) (q-fn c)))))
 
 (define-condition unknown-state (error)
   ((state :initarg :state :reader state)
    (q-fn :initarg :q-fn :reader q-fn))
-  (:documentation "Signalled whenever a Q-function sees a state that it doesn't recognize.")
+  (:documentation "Condition unknown-state (error)
+Signalled whenever a Q-function sees a state that it doesn't recognize.")
   (:report (lambda (c s)
 	     (format s "Unknown state ~a for q-function ~a."
 		     (state c) (q-fn c)))))
@@ -281,4 +303,3 @@ The TEMPERATURE argument must be either a nonnegative real number or the symbol 
 (defun choose-randomly (c)
   (declare (ignore c))
   (invoke-restart 'random-choice))
-

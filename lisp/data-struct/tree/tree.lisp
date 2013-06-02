@@ -1,7 +1,8 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:tree
-  (:documentation "Package containing a simple implementation of trees in which nodes and edges can be labelled.
+  (:documentation "Package tree
+Package containing a simple implementation of trees in which nodes and edges can be labelled.
 
 
 Node constructor and accessors
@@ -184,7 +185,8 @@ Is TREE an inconsistent tree.  Checks
 3. Are there any undirected cycles?
 4. If is-root, then is TREE the root node (i.e. not having a parent?)
 
-If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-root, 'incorrect-parent-edge, 'incorrect-child-edge"
+If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-root,
+'incorrect-parent-edge, 'incorrect-child-edge"
 
   (let ((nodes-seen nil))
 
@@ -216,7 +218,7 @@ If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-
 	     
 	     ;; call recursively on children
 	     (dolist (e (child-edges n))
-		(check-recursively (head e) n)))))
+               (check-recursively (head e) n)))))
     
       ;; if required, ensure that node is root, i.e. par is nil
       (when is-root (make-sure-that (not (parent-edge node)) 'not-root))
@@ -231,8 +233,10 @@ If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-
 	     
 
 (defun add-new-child (node edge-label child-label &optional (position nil))
-  "add-new-child NODE EDGE-LABEL CHILD-LABEL &optional POSITION.  Create a new edge whose tail is NODE and whose head is a newly created node (which is returned).  POSITION is a nonnegative integer and defaults to the current number of children of NODE.  The new child will be the POSITIONth (starting from the left, counting from 0) child of NODE."
-
+  "add-new-child NODE EDGE-LABEL CHILD-LABEL &optional POSITION
+Create a new edge whose tail is NODE and whose head is a newly created node (which is returned).
+POSITION is a nonnegative integer and defaults to the current number of children of NODE.  The
+new child will be the POSITIONth (starting from the left, counting from 0) child of NODE."
 
   (let* ((child (make-node :node-label child-label))
 	 (edge (make-edge node child edge-label)))
@@ -254,7 +258,10 @@ If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-
 
 
 (defun get-ancestor (node i)
-  "get-ancestor NODE I.  Return the Ith ancestor of NODE (where the 0th ancestor is NODE, the first ancestor is its parent, and so on).    Might throw a 'nonexistent-ancestor exception if not enough ancestors exist."
+  "get-ancestor NODE I
+Return the Ith ancestor of NODE (where the 0th ancestor is NODE, the first ancestor is its
+parent, and so on).  Might throw a 'nonexistent-ancestor exception if not enough ancestors
+exist."
   (do ((current node (get-parent current))
        (l 0 (incf l)))
       ((>= l i) current)
@@ -264,32 +271,39 @@ If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-
 (defun get-parent (node)
   "get-parent NODE.  Return the parent of NODE or nil if it doesn't have one."
   (awhen (parent-edge node)
-	 (tail it)))
+    (tail it)))
 
 (defun get-descendant (node label-seq &key (key #'identity))
-  "get-descendant NODE LABEL-SEQ &key (KEY #'identity).  Starting from NODE, follow a path towards the leaves with labels LABEL-SEQ and return the resulting node.  Return nil if there's no such path.  KEY is applied to the edge labels before comparison."
+  "get-descendant NODE LABEL-SEQ &key (KEY #'identity)
+Starting from NODE, follow a path towards the leaves with labels LABEL-SEQ and return the
+resulting node.  Return nil if there's no such path.  KEY is applied to the edge labels before
+comparison."
   (loop
-      with current = node
-      for l in label-seq
-      for e = (get-child-edge-by-label current l :key key)
+    with current = node
+    for l in label-seq
+    for e = (get-child-edge-by-label current l :key key)
 	      
-      unless e 
+    unless e 
       do (return nil)
 	 
-      do (setf current (head e))
-      finally (return current)))
+    do (setf current (head e))
+    finally (return current)))
 
 (defun depth (node)
-  "depth NODE.  How many generations of ancestors does this node have
-  (0 for root)."
+  "depth NODE
+How many generations of ancestors does this node have (0 for root)."
   (do ((current node (get-parent current))
        (i -1 (incf i)))
       ((null current) i)))
 	       
 
 (defun get-child-edge-by-label (node label &key (key #'identity))
-  "get-child-edge-by-label NODE LABEL &key KEY.  Return child edge with this label (tested using #'equal), or nil if there isn't one.  KEY is applied to edge labels before comparison."
-  (find label (child-edges node) :key (lambda (x) (funcall key (edge-label x))) :test #'equal))
+  "get-child-edge-by-label NODE LABEL &key KEY
+Return child edge with this label (tested using #'equal), or nil if there isn't one.  KEY is
+applied to edge labels before comparison."
+  (find label (child-edges node)
+        :key (lambda (x) (funcall key (edge-label x)))
+        :test #'equal))
 
 (defun get-root (tree)
   "get-root TREE.  Return the root node of TREE."
@@ -297,27 +311,35 @@ If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-
   tree)
 
 (defun add-subtree (node edge-label tree &optional (position nil))
-  "add-subtree NODE EDGE-LABEL TREE (POSITION nil).  Create a new outgoing edge from NODE with the given label.  Make the head of this edge be the root of TREE, and make the parent edge of the root be NODE.  POSITION is a nonnegative integer or nil - if it is nil it defaults to the current number of children of NODE.  The new child will be the POSITIONth (starting from the left) child of NODE."
+  "add-subtree NODE EDGE-LABEL TREE (POSITION nil)
+Create a new outgoing edge from NODE with the given label.  Make the head of this edge be the
+root of TREE, and make the parent edge of the root be NODE.  POSITION is a nonnegative integer
+or nil - if it is nil it defaults to the current number of children of NODE.  The new child will
+be the POSITIONth (starting from the left) child of NODE."
   (let* ((root (get-root tree))
 	 (edge (make-edge node root edge-label))
 	 (p-edge (parent-edge root)))
     (assert (null p-edge) ()
-      "Can't add a subtree with root ~a that already has a parent ~a"
-      root (tail p-edge))
+            "Can't add a subtree with root ~a that already has a parent ~a"
+            root (tail p-edge))
     (setf (child-edges node) (insert-at-position (child-edges node) edge position))
     (setf (parent-edge root) edge))
   (values))
 
 
 (defun remove-subtree-below (node edge)
-  "remove-subtree-below NODE OUTGOING-EDGE.  Has the effect of 'cutting' OUTGOING-EDGE.  Remove OUTGOING-EDGE from the list of child edges of NODE.  Also, set the PARENT-EDGE of the head of OUTGOING-EDGE to nil.  Finally, return the now disconnected subtree."
+  "remove-subtree-below NODE OUTGOING-EDGE
+Has the effect of 'cutting' OUTGOING-EDGE.  Remove OUTGOING-EDGE from the list of child edges of
+NODE.  Also, set the PARENT-EDGE of the head of OUTGOING-EDGE to nil.  Finally, return the now
+disconnected subtree."
   (deletef (child-edges node) edge)
   (let ((subtree-root (head edge)))
     (setf (parent-edge subtree-root) nil)
     subtree-root))
 
 (defun remove-subtree (node)
-  "remove-subtree NODE.  Remove the subtree headed by NODE from its containing tree and return it."
+  "remove-subtree NODE
+Remove the subtree headed by NODE from its containing tree and return it."
   (let ((e (parent-edge node)))
     (remove-subtree-below (tail e) e)))
 
@@ -334,7 +356,9 @@ If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun postorder-iterator (tree)
-  "postorder-iterator TREE. Return an iterator over the nodes of TREE, i.e. a function of no arguments which returns two values, NEXT-NODE and DONE."
+  "postorder-iterator TREE
+Return an iterator over the nodes of TREE, i.e. a function of no arguments which returns two
+values, NEXT-NODE and DONE."
   (let ((stack1 (list (list (get-root tree))))
 	(stack2 nil))
     (lambda ()
@@ -345,27 +369,31 @@ If the tree is consistent, returns nil.  Otherwise, returns one of 'cycle, 'not-
       (pop stack1)
       (if stack2
 	  (values (pop stack2) nil)
-	(values nil t)))))
+          (values nil t)))))
 	
 
 (defmacro do-postorder ((var tree &optional result-form num-var) &rest body)
   "do-postorder (VAR TREE &optional RESULT-FORM NUM-VAR) &rest BODY.
-Repeatedly execute BODY with VAR bound to the successive nodes of tree in postorder.  Finally return RET-VAL."
+Repeatedly execute BODY with VAR bound to the successive nodes of tree in postorder.  Finally
+return RET-VAL."
   `(do-iterator (postorder-iterator ,tree) (,var ,result-form ,num-var) ,@body))
 
 (defgeneric map-postorder (result-type fn tree)
-  (:documentation "map-postorder RESULT-TYPE FN TREE.  Iterate over the nodes of TREE in postorder and apply FN to each one, collecting the results into an object of type RESULT-TYPE (which is either 'list or 'vector).")
+  (:documentation "map-postorder RESULT-TYPE FN TREE
+Iterate over the nodes of TREE in postorder and apply FN to each one, collecting the results
+into an object of type RESULT-TYPE (which is either 'list or 'vector).")
   (:method ((result-type (eql 'list)) fn tree)
-	   (map-iterator-to-list fn (postorder-iterator tree)))
+    (map-iterator-to-list fn (postorder-iterator tree)))
   (:method ((result-type (eql 'vector)) fn tree)
-	   (let ((v (make-array (num-nodes tree))))
-	     (do-postorder (x tree v i)
-	       (setf (aref v i) (funcall fn x))))))
-
+    (let ((v (make-array (num-nodes tree))))
+      (do-postorder (x tree v i)
+                    (setf (aref v i) (funcall fn x))))))
 
 
 (defun preorder-iterator (tree)
-  "preorder-iterator TREE.  Return an iterator over the nodes of TREE, i.e. a function of no arguments which returns two values, NEXT-NODE and DONE."
+  "preorder-iterator TREE
+Return an iterator over the nodes of TREE, i.e. a function of no arguments which returns two
+values, NEXT-NODE and DONE."
   (let ((stack nil))
     (push (list (get-root tree)) stack)
     (lambda ()
@@ -374,62 +402,61 @@ Repeatedly execute BODY with VAR bound to the successive nodes of tree in postor
 	    (when (null (car stack))
 	      (pop stack))
 	    (awhen (children next)
-		   (push it stack))
+              (push it stack))
 	    (values next nil))
-	(values nil t)))))
+          (values nil t)))))
 
 (defmacro do-preorder ((var tree &optional result-form num-var) &rest body)
   "do-preorder (VAR TREE &optional RESULT-FORM NUM-VAR) &rest BODY.
-Repeatedly execute BODY with VAR bound to the successive nodes of tree in preorder.  Finally return RET-VAL."
+Repeatedly execute BODY with VAR bound to the successive nodes of tree in preorder.  Finally
+return RET-VAL."
   `(do-iterator (preorder-iterator ,tree) (,var ,result-form ,num-var) ,@body))
 
 (defgeneric map-preorder (result-type fn tree)
-  (:documentation "map-preorder RESULT-TYPE FN TREE.  Iterate over the nodes of TREE in preorder and apply FN to each one, collecting the results into an object of type RESULT-TYPE (which is either 'list or 'vector).")
+  (:documentation "map-preorder RESULT-TYPE FN TREE
+Iterate over the nodes of TREE in preorder and apply FN to each one, collecting the results into
+an object of type RESULT-TYPE (which is either 'list or 'vector).")
   (:method ((result-type (eql 'list)) fn tree)
-	   (map-iterator-to-list fn (preorder-iterator tree)))
+    (map-iterator-to-list fn (preorder-iterator tree)))
   (:method ((result-type (eql 'vector)) fn tree)
-	   (let ((v (make-array (num-nodes tree))))
-	     (do-preorder (x tree v i)
-	       (setf (aref v i) (funcall fn x))))))
+    (let ((v (make-array (num-nodes tree))))
+      (do-preorder (x tree v i)
+                   (setf (aref v i) (funcall fn x))))))
 	   
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; copying
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun copy-subtree-below (edge)
-  "copy-subtree EDGE.  Return a copy of the subtree consisting of the head node of edge and its descendants.  A copy of the subtree is made, so it can be modified without affecting the original.  Also, the parent node of the root of the new subtree is set to nil"
+  "copy-subtree EDGE
+Return a copy of the subtree consisting of the head node of edge and its descendants.  A copy of
+the subtree is made, so it can be modified without affecting the original.  Also, the parent
+node of the root of the new subtree is set to nil"
   (copy-subtree (head edge)))
 
 
 (defun copy-subtree (node)
-  "copy-subtree TREE.  Return a fresh copy of tree which can be modified without affecting the old one.  The parent of TREE The node and edge labels are copied using clone.  Note that even if TREE is a subtree, i.e., if its root has some other node as its parent, the returned TREE's root will not have a parent."
-  
+  "copy-subtree TREE 
+Return a fresh copy of tree which can be modified without affecting the old one.  The parent of
+TREE The node and edge labels are copied using clone.  Note that even if TREE is a subtree,
+i.e., if its root has some other node as its parent, the returned TREE's root will not have a
+parent."  
   (labels
       ((copy-tree-rec (node par par-edge-label)
 	 (let ((new-node (make-node :node-label (clone (node-label node)))))
 	   (when par
 	     (setf (parent-edge new-node)
-	       (make-edge par new-node (clone par-edge-label))))
+                   (make-edge par new-node (clone par-edge-label))))
 	   (setf (child-edges new-node)
-	     (mapcar
-	      (lambda (e)
-		(let ((new-child (copy-tree-rec (head e) new-node
-						(edge-label e))))
-		  (parent-edge new-child)))
-	      (child-edges node)))
+                 (mapcar
+                  (lambda (e)
+                    (let ((new-child (copy-tree-rec (head e) new-node
+                                                    (edge-label e))))
+                      (parent-edge new-child)))
+                  (child-edges node)))
 	   new-node)))
-    
     (copy-tree-rec node nil nil)))
-				    
-    
-
-
-
-
-  
-  
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -485,7 +512,7 @@ Move current node up tree."
       (aif (get-parent *current-node*)
 	   (setf *current-node* it)
 	   (warn "Node ~a does not have a parent." (node-label *current-node*)))
-    (warn "*current-node* is nil."))
+      (warn "*current-node* is nil."))
   *current-node*)
 
 (defun move-child (i)
@@ -494,10 +521,10 @@ Move to child I of current node."
   (if *current-node*
       (handler-case 
 	  (setf *current-node*
-	    (get-child *current-node* i))
+                (get-child *current-node* i))
 	(nonexistent-child ()
 	  (warn "Child ~a does not exist" i)))
-    (warn "*current-node* is nil"))
+      (warn "*current-node* is nil"))
   *current-node*)
 
 (defun print-current-node ()
@@ -514,30 +541,30 @@ Move to child I of current node."
 
   (let ((prob (is-inconsistent-tree node nil)))
     (assert (not prob) ()
-      "Cannot print tree rooted at ~a as it is not consistent for reason ~a"
-      node prob))
+            "Cannot print tree rooted at ~a as it is not consistent for reason ~a"
+            node prob))
   (let ((nodes-seen nil)
 	(printed-last-time t))
     (labels
 	((print-tree-rec (node level)
 	   (assert (not (member node nodes-seen)) ()
-	     "Cycle : node ~a seen twice" (node-label node))
+                   "Cycle : node ~a seen twice" (node-label node))
 	   (push node nodes-seen)
 	   
 	   (if (aand max-depth (< it level))
 	       (when printed-last-time
 		 (setf printed-last-time nil)
 		 (format str "~&~v@T..." level))
-	     (progn
-	       (setf printed-last-time t)
+               (progn
+                 (setf printed-last-time t)
 		 
-	       ;; print node at right level, and possibly a * after it
-	       (format str "~&~v@T~a~:[~; *~]" level 
-		       (node-label node) (eq node *current-node*))
+                 ;; print node at right level, and possibly a * after it
+                 (format str "~&~v@T~a~:[~; *~]" level 
+                         (node-label node) (eq node *current-node*))
 	   
-	       ;; recurse
-	       (dolist (e (child-edges node))
-		 (print-tree-rec (head e) (1+ level)))))))
+                 ;; recurse
+                 (dolist (e (child-edges node))
+                   (print-tree-rec (head e) (1+ level)))))))
     
       (print-tree-rec node 0)
       (values))))

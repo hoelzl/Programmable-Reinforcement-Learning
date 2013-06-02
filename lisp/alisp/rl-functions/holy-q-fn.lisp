@@ -4,13 +4,21 @@
 ;; class def
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(eval-now
+  (defvar *holy-top-pred-doc*
+    "top-pred HOLY-Q-FUNCTION
+Predicate that's true iff a state is at the top level, so has no exit distribution."))
+
 (defclass <holy-q-function> (<q-function>)
   ((qr :type <q-function> :reader qr :initarg :qr :initform (required-initarg :qr))
    (qc :type <q-function> :reader qc :initarg :qc :initform (required-initarg :qc))
    (pe :reader pe :initarg :pe)
    (cache :reader cache :initarg :cache)
-   (top-pred :type function :reader top-pred :documentation "Predicate that's true iff a state is at the top level, so has no exit distribution." :initform #'top-level-state? :initarg :top-pred))
-  (:documentation "Hierarchically Optimal Yet Local Q-functions.  A Q-function representation based on the decomposition Q = Qr + Qc + Pe * V.  Use make-holy-q-fn to create."))
+   (top-pred :type function :reader top-pred :documentation #.*holy-top-pred-doc*
+             :initarg :top-pred :initform #'top-level-state?))
+  (:documentation "Class <holy-q-function>
+Hierarchically Optimal Yet Local Q-functions.  A Q-function representation based on the
+decomposition Q = Qr + Qc + Pe * V.  Use make-holy-q-fn to create."))
 
 
 (defparameter *default-cache-size* 20)
@@ -20,30 +28,27 @@
 			  :size cache-size :test #'same)))
 
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; implemented operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; TODO: Fix package imports to avoid prefixes. --tc
+
 (defmethod q-fn:evaluate ((q-fn <holy-q-function>) omega u)
-  ;; TODO - quite inefficient and should be memoized in case
-  ;; multiple calls are being made for different OMEGA and U 
+  ;; TODO - quite inefficient and should be memoized in case multiple calls are being made for
+  ;; different OMEGA and U
   (handler-case
       (+ 
        (q-fn:evaluate (qr q-fn) omega u)
        (q-fn:evaluate (qc q-fn) omega u)
        (if (funcall (top-pred q-fn) omega)
 	   0
-	 (expectation
-	  (cond-dist (pe q-fn) (cons omega u))
-	  (lambda (omega2) (q-fn:value q-fn omega2)))))
+           (expectation
+            (cond-dist (pe q-fn) (cons omega u))
+            (lambda (omega2) (q-fn:value q-fn omega2)))))
     (unknown-state-action ()
       (error 'unknown-state-action :state omega :action u :q-fn q-fn))))
-	
 
-  
-  
 
 (defmethod q-fn:reset ((q-fn <holy-q-function>) &optional (params nil params-supplied))
   (declare (ignore params))
@@ -60,13 +65,10 @@
 	(cache:lookup omega c)
       (if pres
 	  val
-	(let ((v (call-next-method)))
-	  (progn
-	    (cache:add omega v c)
-	    v))))))
-
-
-
+          (let ((v (call-next-method)))
+            (progn
+              (cache:add omega v c)
+              v))))))
 
 (defmethod clone ((q-fn <holy-q-function>))
   (make-instance '<holy-q-function>
@@ -82,7 +84,8 @@
   (js-choices omega))
 
 (defun evaluate-holy-q-comps (q omega u)
-  "evaluate-holy-q-comps Q OMEGA U.  Return 3 values - 1) Qr(omega, u) 2) Qc(omega, u) 3) Pe(_|omega, u)"
+  "evaluate-holy-q-comps Q OMEGA U
+Return 3 values - 1) Qr(omega, u) 2) Qc(omega, u) 3) Pe(_|omega, u)"
   (values
    (q-fn:evaluate (qr q) omega u)
    (q-fn:evaluate (qc q) omega u)
@@ -97,31 +100,32 @@
 
 (defmethod policy:print-advice ((q <holy-q-function>) omega choices str)
   (handler-bind ((q-fn:unknown-state-action 
-		  #'(lambda (c)
-		      (declare (ignore c))
-		      (use-value 'unknown))))
+                   #'(lambda (c)
+                       (declare (ignore c))
+                       (use-value 'unknown))))
     (set:do-elements (u choices)
-      (format str "~&Choice ~a.  Q = ~a  " u (round-decimal (q-fn:evaluate q omega u) *rounding*))
-      (format str "Qr = ~a  " (round-decimal (q-fn:evaluate (qr q) omega u) *rounding*))
-      (format str "Qc = ~a  Pe*V = " (round-decimal (q-fn:evaluate (qc q) omega u) *rounding*))
+      (format str "~&Choice ~a.  Q = ~a  "
+              u (round-decimal (q-fn:evaluate q omega u) *rounding*))
+      (format str "Qr = ~a  "
+              (round-decimal (q-fn:evaluate (qr q) omega u) *rounding*))
+      (format str "Qc = ~a  Pe*V = "
+              (round-decimal (q-fn:evaluate (qc q) omega u) *rounding*))
       (let ((d (cond-dist (pe q) (cons omega u))))
 	(if (eq (caar d) 'aed::dummy-unknown-state)
 	    (format str "unknown dist")
-	  (let ((first t))
-	    (prob:do-sample-points (x p (cond-dist (pe q) (cons omega u)))
-	      (if first (setf first nil) (format str " + "))
-	      (format str "~a*~a" (round-decimal p *prob-rounding*)
-		      (round-decimal (q-fn:value q x) *rounding*)))
-	    (format str " = ~a"
-		    (round-decimal
-		     (expectation
-		      (cond-dist (pe q) (cons omega u))
-		      (lambda (omega2) (q-fn:value q omega2)))
-		     *rounding*))))))
+            (let ((first t))
+              (prob:do-sample-points (x p (cond-dist (pe q) (cons omega u)))
+                (if first (setf first nil) (format str " + "))
+                (format str "~a*~a" (round-decimal p *prob-rounding*)
+                        (round-decimal (q-fn:value q x) *rounding*)))
+              (format str " = ~a"
+                      (round-decimal
+                       (expectation
+                        (cond-dist (pe q) (cons omega u))
+                        (lambda (omega2) (q-fn:value q omega2)))
+                       *rounding*))))))
     (handler-case (format str "~&Recommended choice is ~a" (q-fn:best-choice q omega))
       (q-fn:unknown-state-action () (format str "~&Unable to determine best choice.")))))
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; internal

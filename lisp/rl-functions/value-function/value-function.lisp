@@ -30,7 +30,9 @@ value")
 
 (defclass <value-fn> () 
   ()
-  (:documentation "Class for value functions.  Only operation is value.  Note that <q-function> is a subclass of this."))
+  (:documentation "Class <value-fn>
+Class for value functions.  Only operation is value.  Note that <q-function> is a subclass of
+this."))
 
 
 (defgeneric value (val-fn omega)

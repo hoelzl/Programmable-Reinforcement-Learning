@@ -12,14 +12,15 @@
 :q-fns - list of q-functions which are added together to make this one
 
 Other accessors
-strict, set-strict - if strictness is t (by default), then verifies, whenever choices is called, that all the q-functions really have the same list of choices (takes time O(num-q-functions*num-choices))"))
+strict, set-strict - if strictness is t (by default), then verifies, whenever choices is called,
+                     that all the q-functions really have the same list of choices (takes time
+                     O(num-q-functions*num-choices))"))
 
 
 
 (defmethod sum-q-functions ((q-fn <q-function>) &rest q-fns)
   "Q-functions can be added to make new ones"
   (make-instance '<sum-q-function> :q-fns (cons q-fn q-fns)))
-
 
 
 (defmethod evaluate ((q-fn <sum-q-function>) omega u)
@@ -30,13 +31,15 @@ strict, set-strict - if strictness is t (by default), then verifies, whenever ch
 
 (defmethod reset ((q-fn <sum-q-function>) &optional (params nil params-supplied))
   (declare (ignore params))
-  (assert (not params-supplied) nil "Initial parameters should not be supplied when calling reset on <sum-q-function> object.")
+  (assert (not params-supplied) ()
+          #.(str "Initial parameters should not be supplied when calling reset on "
+                 "<sum-q-function> object."))
   (dolist (q (q-fns q-fn))
     (reset q)))
 
 (defmethod update ((q-fn <sum-q-function>) omega u target eta)
   (declare (ignore omega u target eta))
-  (assert nil nil "Update method can't be called for <sum-q-function> object."))
+  (assert nil () "Update method can't be called for <sum-q-function> object."))
 
 (defmethod clone ((q-fn <sum-q-function>))
   (check-exact-class q-fn '<sum-q-function>)
@@ -50,9 +53,8 @@ strict, set-strict - if strictness is t (by default), then verifies, whenever ch
 	(dolist (q (q-fns q-fn))
 	  (write q :stream str))
 	(format str "))"))
-    (print-unreadable-object (q-fn str :type t :identity nil)
-      (format str "with ~W components" (length (q-fns q-fn))))))
-
+      (print-unreadable-object (q-fn str :type t :identity nil)
+        (format str "with ~W components" (length (q-fns q-fn))))))
 
 
 (defmethod choices ((q-fn <sum-q-function>) omega)
@@ -60,33 +62,38 @@ strict, set-strict - if strictness is t (by default), then verifies, whenever ch
 	 (first-q-choices (choices (first q-fns) omega)))
     
     ;; a time-consuming assert that should maybe be removed eventually
-    (assert (or (not (strict q-fn)) (every (lambda (q) (equal (choices q omega) first-q-choices)) (rest q-fns))) nil
-      "When q-functions are being summed, they must have the same list of choices at each state.  But at state ~a, the q-functions had choice lists ~a."
-      omega (mapcar (lambda (x) (choices x omega)) q-fns))
+    (assert (or (not (strict q-fn))
+                (every (lambda (q) (equal (choices q omega) first-q-choices)) (rest q-fns)))
+            ()
+            #.(str "When q-functions are being summed, they must have the same list of "
+                   "choices at each state.  But at state ~A, the q-functions had choice "
+                   "lists ~A.")
+            omega (mapcar (lambda (x) (choices x omega)) q-fns))
     first-q-choices))
     
 (defgeneric evaluate-comps (sum-q-fn omega u)
   (:documentation "Return list containing value of each q-function evaluated at omega and u")
   (:method ((q-fn <sum-q-function>) omega u)
-	   (loop for q in (q-fns q-fn) collecting (evaluate q omega u))))
+    (loop for q in (q-fns q-fn) collecting (evaluate q omega u))))
 
 (defmethod print-advice ((adv q-fn:<sum-q-function>) omega choices str)
   (handler-bind ((q-fn:unknown-state-action 
-		  #'(lambda (c)
-		      (declare (ignore c))
-		      (use-value 'unknown))))
-    (format str "~&Componentwise Q-values are ~a"
+                   #'(lambda (c)
+                       (declare (ignore c))
+                       (use-value 'unknown))))
+    (format str "~&Componentwise Q-values are ~A"
 	    (let ((q-vals (make-array 0 :fill-pointer 0 :adjustable t)))
 	    
 	      (set:do-elements (u choices q-vals)
-		(vector-push-extend (cons u 
-					  (mapcar #'list '(Q Qr Qc Qe)
-						  (cons
-						   (round-decimal (q-fn:evaluate adv omega u) 2)
-						   (mapcar (lambda (x) (round-decimal x 2))
-							   (q-fn:evaluate-comps adv omega u)))))
-				    q-vals))))
-    (handler-case (format str "~&Recommended choice is ~a" (q-fn:best-choice adv omega))
+		(vector-push-extend
+                 (cons u 
+                       (mapcar #'list '(Q Qr Qc Qe)
+                               (cons
+                                (round-decimal (q-fn:evaluate adv omega u) 2)
+                                (mapcar (lambda (x) (round-decimal x 2))
+                                        (q-fn:evaluate-comps adv omega u)))))
+                 q-vals))))
+    (handler-case (format str "~&Recommended choice is ~A" (q-fn:best-choice adv omega))
       (q-fn:unknown-state-action () (format str "~&Unable to determine best choice.")))))
 
 

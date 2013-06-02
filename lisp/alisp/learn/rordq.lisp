@@ -7,7 +7,8 @@
 
 (defclass <rordq> (<hordq>)
   ()
-  (:documentation "Like HORDQ, except without Qe (so it's implicitly set to 0 in the tabular case).
+  (:documentation "Class <rordq> (<hordq>)
+Like HORDQ, except without Qe (so it's implicitly set to 0 in the tabular case).
 
 Initargs
 :lrate - learning rate
@@ -15,13 +16,12 @@ Initargs
 :hist-inc - how often to save hist
 :qr -  Q-function object for qr component.
 :qc -  Q-function object for qc component.
-:debug-str - nil by default.  If non-nil, the state of the alg is logged to this stream
-
-"))
+:debug-str - nil by default.  If non-nil, the state of the alg is logged to this stream"))
 
 (defmethod print-object ((alg <rordq>) str)
-  (format str "<RORDQ alg with ~a choice stack items"
-	  (length (choice-stack alg))))
+  (print-unreadable-object (alg str :type t)
+    (format str "with ~a choice stack items"
+            (length (choice-stack alg)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; What the algorithm does in response to the various messages
@@ -29,15 +29,14 @@ Initargs
 
 (defmethod inform-env-step ((alg <rordq>) act rew to term)
   (declare (ignore to act term))
-  
   (let ((stack (choice-stack alg))
 	(disc (discount alg)))
-    
+
     ;; do a Qr backup for level above current one
     (let ((item (second stack)))
       (qr-backup alg item rew)
       (setf (csi-qr-backup-flag item) t))
-    
+
     ;; update discount factors above current level
     (dolist (item (cdr stack))
       (multf (csi-discount item) disc))))
@@ -46,18 +45,14 @@ Initargs
 (defmethod inform-alisp-step ((alg <rordq>) omega u)
   (if (exit-state? omega)
       (rordq-handle-exit-state alg omega)
-    (rordq-handle-non-exit-state alg omega u)))
-
-
-
+      (rordq-handle-non-exit-state alg omega u)))
 
 (defun rordq-handle-non-exit-state (alg omega u)
-  
   (let ((tos (first (choice-stack alg)))
 	(par (second (choice-stack alg)))
 	(best 
-	 (handler-bind ((unknown-state-action #'choose-randomly))
-	   (best-choice (q alg) omega))))
+          (handler-bind ((unknown-state-action #'choose-randomly))
+            (best-choice (q alg) omega))))
     
     (handler-case
 	(let ((qr-val (q-fn:evaluate (qr alg) omega best))
@@ -71,7 +66,6 @@ Initargs
 	  (when (and par (not (csi-qr-backup-flag par)))
 	    (qr-backup alg par (+ qr-val qc-val))))
       (unknown-state-action ()))
-
 
     ;; if most recent choice at this level is non-nil, do Qe backup of 0
     (when (csi-visited tos)
@@ -95,15 +89,12 @@ Initargs
 
 
 (defun rordq-handle-exit-state (alg omega)
-  
   (let ((exited (pop (hordq-choice-stack alg)))
 	(current (first (choice-stack alg))))
     
     (handler-case
-	
 	(let ((qc-val (q-fn:evaluate (qc alg) omega 'no-choice))
-	      (qe-val 0)) ;; dummy value for qe
-    
+	      (qe-val 0))               ;; dummy value for qe
 	  (assert (and exited current))
     
 	  ;; do qc and qe backups for the previous choice point
@@ -117,17 +108,16 @@ Initargs
       (unknown-state-action ()))
     
     (cond
-     ;; if there were any choices visited at lower levels, do a qc
-     ;; and qe backup for the last one
-     ((csi-visited exited) 
-      (qc-backup alg exited 0))
+      ;; if there were any choices visited at lower levels, do a qc
+      ;; and qe backup for the last one
+      ((csi-visited exited) 
+       (qc-backup alg exited 0))
 
-     ;; otherwise, no qc and qe backups are needed, but a qr backup 
-     ;; may be needed for the previous choice at this level
-     ((not (csi-qr-backup-flag current))
-      (qr-backup alg current 0)
-      (setf (csi-qr-backup-flag current) t)))
-    
+      ;; otherwise, no qc and qe backups are needed, but a qr backup 
+      ;; may be needed for the previous choice at this level
+      ((not (csi-qr-backup-flag current))
+       (qr-backup alg current 0)
+       (setf (csi-qr-backup-flag current) t)))
 
     ;; update the choice stack entry at the level of omega
     (setf (csi-omega current) omega
@@ -138,9 +128,6 @@ Initargs
     ;; Make sure Qr of exit state gets set to 0
     (qr-backup alg current 0)))
 
-    
-     
-	  
 
 (defmethod inform-part-prog-terminated ((alg <rordq>) omega)
   (declare (ignore omega))
@@ -149,7 +136,6 @@ Initargs
   (assert (= 1 (length (choice-stack alg))))
 
   (let ((tos (first (choice-stack alg))))
-    
     ;; if a choice happened at top level do qc and qe backups
     (when (csi-visited tos)
       (qc-backup alg tos 0)
@@ -171,7 +157,8 @@ Initargs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod reset ((alg <rordq>))
-  "reset RORDQ.  Reset q function components to the initial values that were supplied during object creation."
+  "reset RORDQ
+Reset q function components to the initial values that were supplied during object creation."
   (set-qr (clone (init-qr alg)) alg)
   (set-qc (clone (init-qc alg)) alg)
   (set-qe (clone (init-qe alg)) alg)

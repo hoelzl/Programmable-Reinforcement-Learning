@@ -58,8 +58,10 @@ Other
   (:documentation "Class for exploration policies.  Subclass of <stochastic-policy>.
 
 Create using make-instance with initialization arguments
-:bucket-fn - function that maps a state to a bucket.  States whose buckets are equal under the test will share the count used in the exploration policy.  By default, is #'canonicalize
-:test - function used to compare bucket ids.  Default is #'equal."))
+:bucket-fn - function that maps a state to a bucket.  States whose buckets are equal under the
+             test will share the count used in the exploration policy.  By default, is
+             #'canonicalize
+:test -      function used to compare bucket ids.  Default is #'equal."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; initialization
@@ -74,11 +76,14 @@ Create using make-instance with initialization arguments
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun reset-table (pol)
-  "reset-table EXP-POL.  Make the count table of the policy be a new empty hash table.  See also reset-counts."
+  "reset-table EXP-POL
+Make the count table of the policy be a new empty hash table.  See also reset-counts."
   (set-count-table (make-hash-table :test (test pol)) pol))
 
 (defun reset-counts (pol)
-  "reset-counts EXP-POL.  Reset the count of each bucket currently in the policy's table to 0.  Preferable to reset-table if many of the same buckets are likely to be seen again."
+  "reset-counts EXP-POL
+Reset the count of each bucket currently in the policy's table to 0.  Preferable to reset-table
+if many of the same buckets are likely to be seen again."
   (let ((h (count-table pol)))
     (maphash #'(lambda (k v) (declare (ignore v)) (setf (gethash k h) 0)) h)))
 
@@ -93,7 +98,10 @@ Create using make-instance with initialization arguments
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric get-choice-dist (pol omega count)
-  (:documentation "get-choice-dist EXP-POL OMEGA COUNT.  Return a distribution over choices at OMEGA.  COUNT is a nonnegative integer representing how many times the bucket corresponding to this state has previously been seen since the policy was last reset."))
+  (:documentation "get-choice-dist EXP-POL OMEGA COUNT
+Return a distribution over choices at OMEGA.  COUNT is a nonnegative integer representing how
+many times the bucket corresponding to this state has previously been seen since the policy was
+last reset."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; internal

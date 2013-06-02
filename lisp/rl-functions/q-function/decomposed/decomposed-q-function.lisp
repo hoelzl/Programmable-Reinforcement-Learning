@@ -55,7 +55,11 @@ evaluate
                  :initarg :component-fn :initform (required-initarg :component-fn)
                  :writer set-component-fn)
    (q-function-table :accessor q-fn-table :initform (make-hash-table :test #'equal)))
-  (:documentation "Represents a q-function which works as follows.  At a state omega, a 'component function' is first applied to omega and returns a set of component ids.  Next, each id is looked up in an #'equal hash-table to return a q-function object.  Finally, the resulting q-function objects are applied to the given omega, u and added together."))
+  (:documentation "Class <decomposed-q-function> (<q-function>)
+Represents a q-function which works as follows.  At a state omega, a 'component function' is
+first applied to omega and returns a set of component ids.  Next, each id is looked up in an
+#'equal hash-table to return a q-function object.  Finally, the resulting q-function objects are
+applied to the given omega, u and added together."))
 
 
 
@@ -74,23 +78,23 @@ evaluate
    #'(lambda (id) 
        (handler-bind
 	   ((unknown-state-action #'(lambda (c) (declare (ignore c)) (use-value 0))))
-	 (evaluate-component q id omega u nil)))
-	 
-   ))
+	 (evaluate-component q id omega u nil)))))
 
 (defun update-component (q id omega u target eta)
   "update-component DECOMPOSED-Q-FUNCTION ID STATE CHOICE TARGET STEP-SIZE
-Update the q-function corresponding to the given component to be more like TARGET at STATE, CHOICE."
+Update the q-function corresponding to the given component to be more like TARGET at STATE,
+CHOICE."
   (let ((comps (funcall (component-fn q) omega)))
     (mvbind (pres reason) (member? id comps)
       (assert pres ()
-	"Component ~a not present in component list ~a because ~a"
-	id comps (get-explanation-string reason))))
+              "Component ~a not present in component list ~a because ~a"
+              id comps (get-explanation-string reason))))
   (update (get-q-component q id) omega u target eta))
 
 (defun evaluate-component (q id omega u &optional (check-legal-component t))
   "evaluate-component DECOMPOSED-Q-FUNCTION COMPONENT-ID STATE CHOICE &optional (CHECK-LEGAL? t)
-Evaluate the given component.  If CHECK-LEGAL? is true, then first make sure COMPONENT-ID is a valid component at STATE.
+Evaluate the given component.  If CHECK-LEGAL? is true, then first make sure COMPONENT-ID is a
+valid component at STATE.
 
 The evaluation of the Q-component may result in an unknown-state-action error being signalled."
 
@@ -98,9 +102,8 @@ The evaluation of the Q-component may result in an unknown-state-action error be
     (let ((comps (funcall (component-fn q) omega)))
       (mvbind (pres reason) (member? id comps)
 	(assert pres ()
-	  "Component ~a not present in component list ~a because ~a"
-	  id comps (get-explanation-string reason)))))
-  
+                "Component ~a not present in component list ~a because ~a"
+                id comps (get-explanation-string reason)))))  
   (evaluate (get-q-component q id) omega u))
 
 
@@ -111,37 +114,38 @@ The evaluation of the Q-component may result in an unknown-state-action error be
 	(mapping:evaluate table id)
       (mapping:mapping-undefined ()
 	(setf (mapping:evaluate table id)
-	  (make-new-q-component q id))))))
+              (make-new-q-component q id))))))
 
 
 (defgeneric make-new-q-component (q id)
-  (:documentation "A way for subclasses of <decomposed-q-function> to customize how objects corresponding to a particular Q-component are created.  This function is called when the get-q-component function fails to find the Q-function corresponding to a particular ID in the table."))
+  (:documentation "make-new-q-component Q ID 
+A way for subclasses of <decomposed-q-function> to customize how objects corresponding to a
+particular Q-component are created.  This function is called when the get-q-component function
+fails to find the Q-function corresponding to a particular ID in the table."))
 
 
 (defvar *dec-q-fn-comp-print-width* 20)
 
 (defmethod policy:print-advice ((q <decomposed-q-function>) omega choices str)
-  ;; called when using a prompt-policy with this q-function as an advisor
-  ;; (this happens when using io-interface mode for flat rl, alisp, or calisp)
+  ;; called when using a prompt-policy with this q-function as an advisor (this happens when
+  ;; using io-interface mode for flat rl, alisp, or calisp)
   
   (format str "Decomposed Q-function~%")
   (without-quotes
-   (pprint-logical-block (str nil)
-     (do-elements (id (funcall (component-fn q) omega))
-       (format str "~:@_~W~2,V:@T" id *dec-q-fn-comp-print-width*)
-       (handler-case
-	   (let ((comp (mapping:evaluate (q-fn-table q) id)))
-	     (pprint-fill str
-			  (mapset 'list 
-				  #'(lambda (u) 
-				      (cons u 
-					    (handler-case
-						(q-fn:evaluate comp omega u)
-					      (q-fn:unknown-state-action ()
-						'unknown))))
-				  choices) nil))
-	 (mapping:mapping-undefined ()
-	   (format str "Component ~A undefined in this Q-function." id)))))))
-  
-  
+      (pprint-logical-block (str nil)
+        (do-elements (id (funcall (component-fn q) omega))
+          (format str "~:@_~W~2,V:@T" id *dec-q-fn-comp-print-width*)
+          (handler-case
+              (let ((comp (mapping:evaluate (q-fn-table q) id)))
+                (pprint-fill str
+                             (mapset 'list 
+                                     #'(lambda (u) 
+                                         (cons u 
+                                               (handler-case
+                                                   (q-fn:evaluate comp omega u)
+                                                 (q-fn:unknown-state-action ()
+                                                   'unknown))))
+                                     choices) nil))
+            (mapping:mapping-undefined ()
+              (format str "Component ~A undefined in this Q-function." id)))))))
   

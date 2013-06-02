@@ -11,7 +11,6 @@
 
 (in-package #:test-alisp)
 
-
 (format t "~&Testing ALisp code")
 (fill-format-nl #\= 60)
 (format t "~&Creating objects")
@@ -29,11 +28,18 @@
 (terpri)
 (defparameter *sq-pol-hist* (alisp-user:get-policy-hist *smdpq*))
 (defparameter *sq-q-hist* (get-q-hist *smdpq*))
-(defparameter *sq-rews* (alisp-user:evaluate *p* *e* *sq-pol-hist* :num-steps 25 :num-trials 5))
-(defparameter *hq-rews* (alisp-user:evaluate *p* *e* (alisp-user:get-policy-hist *hordq*) :num-steps 25 :num-trials 5))
-(defparameter *gs-rews* (alisp-user:evaluate *p* *e* (alisp-user:get-policy-hist *gs*) :num-steps 25 :num-trials 5))
-(defparameter *hqs-rews* (alisp-user:evaluate *p* *e* (alisp-user:get-policy-hist *hsa*) :num-steps 25 :num-trials 5))
-
+(defparameter *sq-rews*
+  (alisp-user:evaluate *p* *e* *sq-pol-hist*
+                       :num-steps 25 :num-trials 5))
+(defparameter *hq-rews*
+  (alisp-user:evaluate *p* *e* (alisp-user:get-policy-hist *hordq*)
+                       :num-steps 25 :num-trials 5))
+(defparameter *gs-rews*
+  (alisp-user:evaluate *p* *e* (alisp-user:get-policy-hist *gs*)
+                       :num-steps 25 :num-trials 5))
+(defparameter *hqs-rews* 
+  (alisp-user:evaluate *p* *e* (alisp-user:get-policy-hist *hsa*)
+                       :num-steps 25 :num-trials 5))
 
 (format t "~%~%Learning curves for SMDPQ, HORDQ, HORDQ-SA, and GS are ~a"
 	(map 'vector #'list *sq-rews* *hq-rews* *hqs-rews* *gs-rews*))

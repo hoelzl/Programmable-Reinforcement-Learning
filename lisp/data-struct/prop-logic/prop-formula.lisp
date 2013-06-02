@@ -3,7 +3,10 @@
 (defpackage #:prop-logic
   (:documentation "Package for representing formulas in propositional logic.
 
-Formulas are representing using the [formula] type.  Elementary propositions are represented by symbols, and t and nil represent the logical constants TRUE and FALSE.  A propositional state, using the closed world assumption, is represented by a list of propositions that are true in that state.
+Formulas are representing using the [formula] type.  Elementary propositions are represented by
+symbols, and t and nil represent the logical constants TRUE and FALSE.  A propositional state,
+using the closed world assumption, is represented by a list of propositions that are true in
+that state.
 
 Basic creation and access
 -------------------------
@@ -53,9 +56,7 @@ props
 
 Debugging
 ---------
-pprint-dnf
-
-   ")
+pprint-dnf")
   
   (:use
    #:common-lisp
@@ -127,29 +128,32 @@ pprint-dnf
   (cons 'or l))
 
 (defun negate (f)
-  "negate FORMULA.  Return the negation of FORMULA, and also do simplification to remove double negatives."
+  "negate FORMULA
+Return the negation of FORMULA, and also do simplification to remove double negatives."
   (if (symbolp f)
       (list 'not f)
     (negatee f)))
 
 (defun negatee (x)
-  "negatee X.  For a negation, return the thing that's being negated (answer undefined if not a negation)."
+  "negatee X
+For a negation, return the thing that's being negated (answer undefined if not a negation)."
   (second x))
 
 (defun conjuncts (x)
-  "conjuncts X.  For a conjunction, return list of formulae being conjoined.  Not a fresh list, so copy it before modifying.  Answer undefined if not a conjunction."
+  "conjuncts X
+For a conjunction, return list of formulae being conjoined.  Not a fresh list, so copy it before
+modifying.  Answer undefined if not a conjunction."
   (if (symbolp x)
       (list x)
     (rest x)))
 
 (defun disjuncts (x)
-  "disjuncts X.  For a disjunction, return list of formulae being disjoined.  Not a fresh list, so copy it before modifying.  Answer undefined if not a disjunction."
+  "disjuncts X 
+For a disjunction, return list of formulae being disjoined.  Not a fresh list, so copy it before
+modifying.  Answer undefined if not a disjunction."
   (if (symbolp x)
       (list x)
     (rest x)))
-
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; various basic types of formulae
@@ -164,7 +168,8 @@ pprint-dnf
   (and (symbolp x) (not (is-constant x))))
 
 (defun is-compound-formula (x)
-  "is-compound-formula X.  Is X an and, not, or or (may not recursively check all the arguments for well-formedness)?"
+  "is-compound-formula X
+Is X an and, not, or or (may not recursively check all the arguments for well-formedness)?"
   (and (listp x)
        (member (car x) '(or not and))))
 
@@ -181,7 +186,9 @@ pprint-dnf
   (and (listp x) (eq (car x) 'not) (eq (length x) 2) ))
 
 (defun compound-formula-type (x)
-  "compound-formula X.  For a compound-formula, return the type ('or, 'not, or 'and) (answer undefined if not a compound formula)."
+  "compound-formula X
+For a compound-formula, return the type ('or, 'not, or 'and) (answer undefined if not a compound
+formula)."
   (car x))
 
 (defun is-literal (x)
@@ -193,13 +200,9 @@ pprint-dnf
 (defun literal-prop (l)
   "literal-prop L.  Get the proposition used in L.  Answer undefined if not a literal."
   (if (symbolp l) l 
-    (progn
-      (assert (eq (first l) 'not))
-      (second l))))
-
-
-
-
+      (progn
+        (assert (eq (first l) 'not))
+        (second l))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; general formulae
@@ -207,7 +210,6 @@ pprint-dnf
 
 (defun is-formula (x)
   "is-formula X
-
 Returns true iff X is one of
 1) t
 2) nil
@@ -218,29 +220,33 @@ Returns true iff X is one of
    (is-constant x)
    (is-prop-symbol x)
    (cond
-    ((is-negation x) (is-formula (negatee x)))
-    ((is-conjunction x) (every #'is-formula (conjuncts x)))
-    ((is-disjunction x) (every #'is-formula (disjuncts x))))))
+     ((is-negation x) (is-formula (negatee x)))
+     ((is-conjunction x) (every #'is-formula (conjuncts x)))
+     ((is-disjunction x) (every #'is-formula (disjuncts x))))))
 
 (deftype [formula] ()
-  "Type for propositional formulae.  Well-formed formulae are determined using the predicate is-formula.  See its documentation for more."
+  "Type for propositional formulae.  
+Well-formed formulae are determined using the predicate is-formula.  See its documentation for
+more."
   `(satisfies is-formula))
 
 
 (defun prop-symbols (formula &optional (result-type 'list))
-  "prop-symbols FORMULA &optional (RESULT-TYPE 'list).  Return the set of propositions symbols used in this FORMULA.  RESULT-TYPE can only be 'list for now."
+  "prop-symbols FORMULA &optional (RESULT-TYPE 'list)
+Return the set of propositions symbols used in this FORMULA.  RESULT-TYPE can only be 'list for
+now."
   (assert (eql result-type 'list))
   (let ((l nil))
     (labels 
 	((helper (f)
 	   (cond
-	    ((is-literal f)
-	     (adjoin (literal-prop f) l))
-	    ((is-compound-formula f)
-	     (ecase (compound-formula-type f)
-	       (not (helper (negatee f)))
-	       (and (map nil #'helper (conjuncts f)))
-	       (or (map nil #'helper (disjuncts f))))))
+             ((is-literal f)
+              (adjoin (literal-prop f) l))
+             ((is-compound-formula f)
+              (ecase (compound-formula-type f)
+                (not (helper (negatee f)))
+                (and (map nil #'helper (conjuncts f)))
+                (or (map nil #'helper (disjuncts f))))))
 	   (values)))
       (helper formula))))
 
@@ -267,19 +273,20 @@ Returns true iff X is one of
 
 
 (defgeneric holds (state formula)
-  (:documentation "holds STATE FORMULA.  Does STATE make FORMULA true?  STATE is, for now, a list of the propositions that are true.")
+  (:documentation "holds STATE FORMULA
+Does STATE make FORMULA true?  STATE is, for now, a list of the propositions that are true.")
   (:method (state (formula (eql t)))
-	   (declare (ignore state))
-	   t)
+    (declare (ignore state))
+    t)
   (:method (state (formula (eql nil)))
-	   (declare (ignore state))
-	   nil)
+    (declare (ignore state))
+    nil)
   (:method (state (formula symbol))
-	   (member formula state))
+    (member formula state))
   (:method (state (formula list))
-	   (ecase (first formula)
-	     (and (every (lambda (f) (holds state f)) (rest formula)))
-	     (or (some (lambda (f) (holds state f)) (rest formula)))
-	     (not (not (holds state (second formula)))))))
+    (ecase (first formula)
+      (and (every (lambda (f) (holds state f)) (rest formula)))
+      (or (some (lambda (f) (holds state f)) (rest formula)))
+      (not (not (holds state (second formula)))))))
 	     
 

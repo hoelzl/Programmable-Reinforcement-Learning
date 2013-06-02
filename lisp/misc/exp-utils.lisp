@@ -1,22 +1,32 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; misc/exp-utils.lisp
 ;; utilities for running experiments
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (in-package #:utils)
 
 (defmacro avg-over-trials (n &body body)
-  "avg-over-trials N &res BODY.
-Run BODY N times and return an average of the results.  For this to make sense, BODY must always return something with the same structure. Currently this can be any nested combination of lists and vectors."
+  "avg-over-trials N &res BODY
+Run BODY N times and return an average of the results.  For this to make sense, BODY must always
+return something with the same structure. Currently this can be any nested combination of lists
+and vectors."
   (with-gensyms (v x avg)
-    `(let ((,v (mapcar (lambda (,x) (declare (ignore ,x)) ,@body) (below ,n))))
+    `(let ((,v (mapcar (lambda (,x)
+                         (declare (ignore ,x))
+                         ,@body)
+                       (below ,n))))
        (let ((,avg (apply #'average ,v)))
 	 (values ,avg (apply #'std ,avg ,v))))))
 
-(defgeneric average (arg1 &rest args))
+(defgeneric average (arg1 &rest args)
+  (:documentation
+   "average &rest ARGS
+Compute the average of ARGS.  For numeric arguments this returns their average values, if ARGS
+consists of vectors or lists returns a vector or list of averages."))
 
 (defmethod average ((arg1 number) &rest args)
-  (float (/ (reduce #'+ (cons arg1 args)) (1+ (length args)))))
+  (float (/ (reduce #'+ (cons arg1 args))
+            (1+ (length args)))))
 
 (defmethod average ((arg1 list) &rest args)
   (apply #'mapcar #'average arg1 args))
@@ -24,16 +34,18 @@ Run BODY N times and return an average of the results.  For this to make sense, 
 (defmethod average ((arg1 vector) &rest args)
   (apply #'map 'vector #'average arg1 args))
 
-(defgeneric std (avg arg1 &rest args))
+(defgeneric std (avg arg1 &rest args)
+  (:documentation 
+   "std AVG &rest ARGS
+Compute the standard deviation of ARGS if AVG is the expected value."))
 
 (defmethod std (avg (arg1 number) &rest args)
-      (sqrt
-       (- (/ (loop
-		 for x in (cons arg1 args)
-		 sum (* x x))
-	     (1+ (length args)))
-	  (* avg avg))))
-
+  (sqrt
+   (- (/ (loop
+           for x in (cons arg1 args)
+           sum (* x x))
+         (1+ (length args)))
+      (* avg avg))))
 
 (defmethod std (avg (arg1 list) &rest args)
   (apply #'mapcar #'std avg arg1 args))

@@ -2,10 +2,9 @@
 
 (defpackage #:td-taxi-env
   (:documentation " td-taxi-env.lisp
-The taxi environment in Tom Dietterrich's MAXQ paper, in which there's
-a single passenger and taxi, and the episode terminates once the
-passenger has been dropped off, at which point a reward of 1 is given.
-There's no discount.  This file supersedes td-taxi-mdp.lisp
+The taxi environment in Tom Dietterrich's MAXQ paper, in which there's a single passenger and
+taxi, and the episode terminates once the passenger has been dropped off, at which point a
+reward of 1 is given.  There's no discount.  This file supersedes td-taxi-mdp.lisp
 
 Types
 ------
@@ -122,11 +121,11 @@ in-taxi
   (:documentation "
 Constructor for <td-taxi-env> takes the following required initargs
 :world-map - world map
-:ps - passenger source list.  Passenger source sampled uniformly from these
-:pd - passenger dest list.  Passenger dest sampled uniformly from these
-:if - initial fuel.  1 by default.
-:fp - probability of using up 1 unit of fuel on a given move.  0 by default.
-:cd - probability of passenger changing destination en route
+:ps -        passenger source list.  Passenger source sampled uniformly from these
+:pd -        passenger dest list.  Passenger dest sampled uniformly from these
+:if -        initial fuel.  1 by default.
+:fp -        probability of using up 1 unit of fuel on a given move.  0 by default.
+:cd -        probability of passenger changing destination en route
 
 and the following optional initargs
 :wcc - wall collision cost.  .5 by default.
@@ -144,17 +143,16 @@ and the following optional initargs
 
 (defparameter *avail-actions* '(N E S W D P F))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; constructor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod initialize-instance :after ((e <td-taxi-env>) &rest args &key world-map ps pd)
   (declare (ignore args))
-  (assert (and world-map ps pd) () "worldmap, passenger source and dest, must be supplied when creating <td-taxi-env>")
+  (assert (and world-map ps pd) ()
+          "worldmap, passenger source and dest, must be supplied when creating <td-taxi-env>")
   (set-test #'not-wall e))
   
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; operations from <env>
@@ -164,58 +162,54 @@ and the following optional initargs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-
-
-
-
 (defun reward (e s a d)
   (if (is-terminal-state e s)
       0
-  (- (indicator (eq (pass-loc d) 'at-dest))
-     (col e)
-     (* (wcc e)
-	(indicator 
-	 (and (equal (taxi-pos s) (taxi-pos d))
-	      (member a *moves*)))))))
+      (- (indicator (eq (pass-loc d) 'at-dest))
+         (col e)
+         (* (wcc e)
+            (indicator 
+             (and (equal (taxi-pos s) (taxi-pos d))
+                  (member a *moves*)))))))
 
 
 (defmethod sample-next ((e <td-taxi-env>) s a &aux (src (taxi-pos s)))
   (assert (member a *avail-actions*)  (a) "Action ~a not member of ~a" a *avail-actions*)
   (let ((next-s
-  (make-td-taxi-state
-   :taxi-pos
-   (if (and (member a *moves*) (> (fuel s) 0))
-       (let ((slip-prob (/ (- 1 (msp e)) 2))
-	     (forward-loc (result src a))
-	     (left-loc (result src (rot-counterclockwise a)))
-	     (right-loc (result src (rot-clockwise a))))
-	 (let ((forward-prob (* (msp e) (indicator (is-legal-loc e forward-loc))))
-	       (right-prob (* slip-prob (indicator (is-legal-loc e right-loc))))
-	       (left-prob (* slip-prob (indicator (is-legal-loc e left-loc)))))
-	   (let ((stay-prob (- 1 (+ forward-prob left-prob right-prob))))
-	     (prob:sample-multinomial
-	      (list forward-loc right-loc left-loc src)
-	      forward-prob right-prob left-prob stay-prob))))
-     src)
-   :pass-loc
-   (if (eql a 'P)
-       (if (equal src (pass-source s)) 
-	   'in-taxi
-	 (pass-loc s))
-     (if (and (equal src (pass-dest s)) (eq (pass-loc s) 'in-taxi) (eql a 'D))
-	 'at-dest
-       (pass-loc s)))
-   :pass-source (pass-source s) 
-   :pass-dest   (let ((cd (change-dest-prob e)))
-		  (if (eql (prob:sample-multinomial 2 cd (- 1 cd)) 0)
-		      (prob:sample-uniformly (pd e))
-		    (pass-dest s)))
-   :fuel (if (eql a 'F)
-	     (init-fuel e)
-	   (let ((fp (fuel-decrease-prob e))
-		 (f (fuel s)))
-	     (prob:sample-multinomial (list (max 0 (1- f)) f) fp (- 1 fp))))
-   :env e)))
+          (make-td-taxi-state
+           :taxi-pos
+           (if (and (member a *moves*) (> (fuel s) 0))
+               (let ((slip-prob (/ (- 1 (msp e)) 2))
+                     (forward-loc (result src a))
+                     (left-loc (result src (rot-counterclockwise a)))
+                     (right-loc (result src (rot-clockwise a))))
+                 (let ((forward-prob (* (msp e) (indicator (is-legal-loc e forward-loc))))
+                       (right-prob (* slip-prob (indicator (is-legal-loc e right-loc))))
+                       (left-prob (* slip-prob (indicator (is-legal-loc e left-loc)))))
+                   (let ((stay-prob (- 1 (+ forward-prob left-prob right-prob))))
+                     (prob:sample-multinomial
+                      (list forward-loc right-loc left-loc src)
+                      forward-prob right-prob left-prob stay-prob))))
+               src)
+           :pass-loc
+           (if (eql a 'P)
+               (if (equal src (pass-source s)) 
+                   'in-taxi
+                   (pass-loc s))
+               (if (and (equal src (pass-dest s)) (eq (pass-loc s) 'in-taxi) (eql a 'D))
+                   'at-dest
+                   (pass-loc s)))
+           :pass-source (pass-source s) 
+           :pass-dest   (let ((cd (change-dest-prob e)))
+                          (if (eql (prob:sample-multinomial 2 cd (- 1 cd)) 0)
+                              (prob:sample-uniformly (pd e))
+                              (pass-dest s)))
+           :fuel (if (eql a 'F)
+                     (init-fuel e)
+                     (let ((fp (fuel-decrease-prob e))
+                           (f (fuel s)))
+                       (prob:sample-multinomial (list (max 0 (1- f)) f) fp (- 1 fp))))
+           :env e)))
     (values next-s (reward e s a next-s))))
 
 
@@ -233,40 +227,40 @@ and the following optional initargs
   (eq (pass-loc s) 'at-dest))
 
 (defmethod io-interface :before ((e <td-taxi-env>))
-  (format t "~&Welcome to the td-taxi environment.  This environment models a taxi that moves around in a map, and must pick up a passenger and drop her off at the destination.  X's on the map represent walls and blank spaces are roads.  The taxi is represented by a t or T (capitalized once you have picked up the passenger).  The actions are 0,1,2,3 to move N,E,S,W, 4 to putdown the passenger, and 5 to pickup the passenger.~%~%"))
-  
+  (format t "~&Welcome to the td-taxi environment.  
+This environment models a taxi that moves around in a map, and must pick up a passenger and drop
+her off at the destination.  X's on the map represent walls and blank spaces are roads.  The
+taxi is represented by a t or T (capitalized once you have picked up the passenger).  The
+actions are 0,1,2,3 to move N,E,S,W, 4 to putdown the passenger, and 5 to pickup the
+passenger.~%~%"))
 
 (defmethod avail-actions ((e <td-taxi-env>) s)
   (declare (ignore s))
   *avail-actions*)
   
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; other methods on states
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-
 (defmethod print-object ((s td-taxi-state) str)
   (loop
-      with e = (env s)
-      with d = (dimensions e)
-      for i from -1 to (first d)
-      do (format str "~&")
-      do (loop
-	     for j from -1 to (second d)
-	     do (cond ((or (= i -1) (= i (first d)) (= j -1) (= j (second d)))
-		       (format str "X"))
-		      ((eq (loc-value e (list i j)) 'wall) 
-		       (format str "X"))
-		      ((equal (taxi-pos s) (list i j))
-		       (if (eq (pass-loc s) 'in-taxi)
-			   (format str "T")
-			 (format str "t")))
-		      (t (format str " "))))
-      finally (format str "~&Source : ~a  Dest : ~a  Fuel : ~a" (pass-source s) (pass-dest s) (fuel s))))
+    with e = (env s)
+    with d = (dimensions e)
+    for i from -1 to (first d)
+    do (format str "~&")
+    do (loop
+         for j from -1 to (second d)
+         do (cond ((or (= i -1) (= i (first d)) (= j -1) (= j (second d)))
+                   (format str "X"))
+                  ((eq (loc-value e (list i j)) 'wall) 
+                   (format str "X"))
+                  ((equal (taxi-pos s) (list i j))
+                   (if (eq (pass-loc s) 'in-taxi)
+                       (format str "T")
+                       (format str "t")))
+                  (t (format str " "))))
+    finally (format str "~&Source : ~a  Dest : ~a  Fuel : ~a" (pass-source s) (pass-dest s) (fuel s))))
 	 
 
 (defmethod clone ((s td-taxi-state))
@@ -289,22 +283,15 @@ and the following optional initargs
 
 (defmethod canonicalize ((s td-taxi-state))
   "convert to list"
-  (list 'pos (taxi-pos s) 'pass (pass-loc s) 'source (pass-source s) 'dest (pass-dest s) 'fuel (fuel s)))
-
+  (list 'pos (taxi-pos s) 'pass (pass-loc s) 'source (pass-source s)
+        'dest (pass-dest s) 'fuel (fuel s)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Internal functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
-		       
-  
 (defun not-wall (x)
   (not (eq 'wall x)))
-
-
-
-(in-package common-lisp-user)
-
 
 
 

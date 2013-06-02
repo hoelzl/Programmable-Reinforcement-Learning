@@ -193,7 +193,8 @@ For example, (HELP matlisp) (HELP mapcar)")
 	      (format stream "~&~%")
 	      (force-output)
 	      (format stream 
-		      "Package ~a has no documentation of its own.  However, help is available for the following symbols from it"
+		      "Package ~a has no documentation of its own.  
+However, help is available for the following symbols from it"
 		      (package-name item))
 	      (format stream   
 		      "~%================================================")

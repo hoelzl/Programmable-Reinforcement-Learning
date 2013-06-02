@@ -38,7 +38,8 @@ size")
   (:documentation 
    "A simple implementation of FIFO caches.  Create using make-instance.
 
-Conceptually, uses a circular array to store the items and looks them up by searching through the array. 
+Conceptually, uses a circular array to store the items and looks them up by searching through
+the array.
 
 Initargs
 :size - size of cache.  Required.
@@ -54,8 +55,7 @@ Initargs
   (setf (cache-ptr c) 0)
   (values))
 
-(defmethod initialize-instance :after ((c <fifo-cache>) &rest args 
-				       &key (size nil))
+(defmethod initialize-instance :after ((c <fifo-cache>) &rest args &key (size nil))
   (declare (ignore args))
   (assert (integerp size))
   (set-v (make-array size) c))
@@ -65,13 +65,13 @@ Initargs
 	(search-ptr c) (cache-ptr c))
   (if (>= (cache-ptr c) (1- (size c)))
       (setf (cache-ptr c) 0)
-    (incf (cache-ptr c)))
+      (incf (cache-ptr c)))
   (values))
 
 (defun lookup (item c)
   (let* ((v (v c))
 	 (pos
-	  ;; search starting from search-ptr 
+	  ;; search starting from search-ptr
 	  (or (position item v :test (test c) :key #'car :start (search-ptr c))
 	      (position item v :test (test c) :key #'car :end (search-ptr c)))))
     (if pos
@@ -80,7 +80,6 @@ Initargs
 	  (setf (search-ptr c) pos) ;; set the search-ptr to pos
 	  (values val t))
       (progn (incf *misses*) (values nil nil)))))
-    
 
 (defun reset-stats ()
   (setf *hits* 0

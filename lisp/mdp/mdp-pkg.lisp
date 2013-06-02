@@ -37,7 +37,8 @@
 	   #:outcome-reward
 	   #:outcome-duration
 	   #:outcome-p)
-  (:documentation "Code relating to Markov Decision Processes.
+  (:documentation "Package mdp
+Code relating to Markov Decision Processes.
 
 Types
 -----
@@ -55,8 +56,8 @@ tabular-smdp
 sparsify-smdp
 make-smdp-over-recursive-closure
 
-(s)MDP Operations
------------------
+MDP and SMDP Operations
+-----------------------
 trans-prob
 trans-dist
 smdp-trans-dist
@@ -90,5 +91,3 @@ outcome-p
 "))
 
 
-(in-package #:cl-user)
-	   

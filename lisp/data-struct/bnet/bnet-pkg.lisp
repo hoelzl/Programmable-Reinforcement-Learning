@@ -15,7 +15,9 @@ make-param-desc
 
 2tbn operations
 ---------------
-2tbns are [cond-prob-dist]s, so see the prob package for applicable functions.  Operations specific to 2tbns :
+
+2tbns are [cond-prob-dist]s, so see the prob package for applicable functions.  Operations
+specific to 2tbns :
 init-dist
 reward
 state-set

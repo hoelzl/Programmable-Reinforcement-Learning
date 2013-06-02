@@ -14,11 +14,12 @@
           :initform (required-initarg :table)
 	  :reader table
 	  :type array))
-  (:documentation "A <tabular-policy> has initargs
+  (:documentation "Class <tabular-policy> (<policy>)
+A <tabular-policy> has initargs
 :state-set
 :table
-
-and represents a (deterministic, stationary) policy by a vector of actions.  Indexing is done using the numbered-set state-set."))
+and represents a (deterministic, stationary) policy by a vector of actions.  Indexing is done
+using the numbered-set state-set."))
 
 (defun make-tabular-policy (table &optional (state-set (length table)))
   (make-instance '<tabular-policy>
@@ -27,12 +28,12 @@ and represents a (deterministic, stationary) policy by a vector of actions.  Ind
 (defmethod make-choice ((pol <tabular-policy>) s)
   (aref (table pol) (set:item-number s (state-set pol))))
 
-
 (defmethod same ((p1 <tabular-policy>) (p2 <tabular-policy>))
   "Doesn't check sameness of state sets - just looks at the tables"
   (same (table p1) (table p2)))
 
 (defmethod print-object  ((p1 <tabular-policy>) str)
-  (format str "<<Tabular policy with table ~a>>" (table p1)))
+  (print-unreadable-object (p1 str :type t)
+    (format str "table: ~A" (table p1))))
 
 

@@ -7,7 +7,8 @@
 
 (defclass <fully-observable-env> (<env>)
   ()
-  (:documentation "A fully observable environment is one where the percept equals the current state."))
+  (:documentation "Class <fully-observable-env> (<env>)
+A fully observable environment is one where the percept equals the current state."))
 
 (defmethod sample-percept ((e <fully-observable-env>) s a r s2)
   (declare (ignore s a r))
@@ -18,12 +19,15 @@
 
 ;;; TODO: This should probably be in env.lisp, since it is called by CURRENT-EFFECTORS.
 (defgeneric get-state (e)
-  (:documentation "get-state FULLY-OBSERVABLE-ENV.  Return the current state of FULLY-OBSERVABLE-ENV.  The returned object should be treated as immutable, since the environment might hold a reference to it.")
+  (:documentation "get-state FULLY-OBSERVABLE-ENV
+Return the current state of FULLY-OBSERVABLE-ENV.  The returned object should be treated as
+immutable, since the environment might hold a reference to it.")
   (:method ((e <fully-observable-env>))
 	   (state e)))
 
 
 (defmethod set-state (s e)
-  "sets state and also takes care of setting the percept."
+  "set-state STATE FULLY-OBSERVABLE-ENVIRONMENT
+Sets state and also takes care of setting the percept."
   (call-next-method)
   (set-last-percept s e))

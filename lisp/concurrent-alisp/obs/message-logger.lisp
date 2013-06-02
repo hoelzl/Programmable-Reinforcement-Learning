@@ -24,7 +24,8 @@ get-log")
    (msg-log :accessor msg-log))
   (:documentation "Class <calisp-message-logger>.  Subclass of <calisp-observer>.
 Initargs
-:log-max-length - the max length that the message log can get.  After this point, old messages will start to be removed.  Defaults to 1000."))
+LOG-MAX-LENGTH: the max length that the message log can get.  After this point, old messages
+                will start to be removed.  Defaults to 1000."))
 
 (defmethod inform-start-execution ((alg <calisp-message-logger>))
   (setf (msg-log alg) (make-circular-vector (log-max-length alg))))

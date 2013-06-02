@@ -1,9 +1,13 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:approximate-policy-iteration
-  (:documentation "Package approximate-policy-iteration (api).  Defines the <approx-pol-it> learning algorithm.  
+  (:documentation "Package approximate-policy-iteration (api).
 
-Approximate policy iteration is an on-policy Q-learning algorithm.  At periodic intervals, the Q-function is saved, and the exploration policy acts greedily with respect to the most recent saved Q-function.  The algorithm is closely related to 'optimistic policy iteration' and SARSA.
+Defines the <approx-pol-it> learning algorithm.
+
+Approximate policy iteration is an on-policy Q-learning algorithm.  At periodic intervals, the
+Q-function is saved, and the exploration policy acts greedily with respect to the most recent
+saved Q-function.  The algorithm is closely related to 'optimistic policy iteration' and SARSA.
 
 Exports
 -------
@@ -58,21 +62,28 @@ Exports
    (prev-a :accessor prev-a)
    (prev-r :accessor prev-r)
    (prev-s2 :accessor prev-s2))
-  (:documentation "The <approx-pol-it> class.  Inherits from <learning-algorithm>.  Initargs
+  (:documentation "Class <approx-pol-it> (<learning-algorithm>).  Initargs
 
-:lrate - <learning-rate>.  .01 by default.
-:discount - 1 by default.
-:debug-str - nil by default
+:lrate -       <learning-rate>.  .01 by default.
+:discount -    1 by default.
+:debug-str -   nil by default
 :pol-imp-int - how often the policy is updated.  Required.
-:q-fn - <q-function> - either this or env must be provided.
-:env - the environment (if q-fn is not provided, defaults to a tabular q-function for this environment)
+:q-fn -        <q-function> - either this or env must be provided.
+:env -         the environment (if q-fn is not provided, defaults to a tabular q-function for
+               this environment)
 
 There are two additional arguments
-:term-policy - a policy that is 'guaranteed' to terminate eventually.  By default, this is a random-policy
-:pol-switch - if during learning, we have been in an episode for at least this many steps, then we switch to the guaranteed eventual termination policy.  It should be significantly higher than the amount of time taken by the termination-policy to terminate.  Not setting this variable amounts to setting it to infinity.
 
-When asked for its knowledge state, a <approx-pol-it> object returns the currently estimated Q-function.  Its convert-to-policy method turns a Q-function into the corresponding greedy policy.
-"))
+:term-policy - a policy that is 'guaranteed' to terminate eventually.  By default, this is a
+               random-policy
+:pol-switch -  if during learning, we have been in an episode for at least this many steps, then
+               we switch to the guaranteed eventual termination policy.  It should be
+               significantly higher than the amount of time taken by the termination-policy to
+               terminate.  Not setting this variable amounts to setting it to infinity.
+
+When asked for its knowledge state, a <approx-pol-it> object returns the currently estimated
+Q-function.  Its convert-to-policy method turns a Q-function into the corresponding greedy
+policy."))
 
 
 (defmethod initialize-instance :after ((alg <approx-pol-it>) &rest args &key pol-imp-int env)
@@ -94,11 +105,9 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
     (set-exp-policy 
      (make-instance 'policy:<greedy-policy> :q-function cloned-q)
      alg)
-    ;; So init-q and exp-q are the same object to begin with
-    ;; but this shouldn't cause problems because neither will ever
-    ;; be modified
+    ;; So init-q and exp-q are the same object to begin with but this shouldn't cause problems
+    ;; because neither will ever be modified
     ))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; The main operations
@@ -139,11 +148,11 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
 		  prev-r nil
 		  prev-s2 nil))
       
-	;; otherwise, just update prev-values
-	(setf prev-s prev-s2
-	      prev-a a
-	      prev-r r
-	      prev-s2 s2)))
+          ;; otherwise, just update prev-values
+          (setf prev-s prev-s2
+                prev-a a
+                prev-r r
+                prev-s2 s2)))
     
     ;; if necessary, update the current Q-function being used for exploration
     (when (funcall (pol-imp-pred alg) (current-env-step alg))
@@ -157,7 +166,7 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
   (make-choice
    (if (aand (pol-switch alg) (> (current-episode-step alg) it))
        (term-policy alg)
-     (exp-policy alg))
+       (exp-policy alg))
    omega))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

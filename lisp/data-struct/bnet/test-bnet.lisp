@@ -47,10 +47,15 @@
 (defstruct qux
   oof)
 
-(defparameter *2tbn* (make-instance '<2tbn> :state-descs (list *desc1* *desc2*) :state-acc (make-vec-accessors 2)))
-(defparameter  *stbn* (make-instance '<2tbn> :state-descs (list *desc1* *desc2*) :state-acc (make-struct-accessors foo (bar baz))))
-(defparameter *sa2tbn* (make-instance '<2tbn> :state-descs (list *desc1* *desc2*) 
-			    :state-acc (make-struct-accessors qux ((oof array 2)))))
+(defparameter *2tbn* (make-instance '<2tbn>
+                       :state-descs (list *desc1* *desc2*)
+                       :state-acc (make-vec-accessors 2)))
+(defparameter  *stbn* (make-instance '<2tbn>
+                        :state-descs (list *desc1* *desc2*)
+                        :state-acc (make-struct-accessors foo (bar baz))))
+(defparameter *sa2tbn* (make-instance '<2tbn>
+                         :state-descs (list *desc1* *desc2*) 
+                         :state-acc (make-struct-accessors qux ((oof array 2)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -68,12 +73,12 @@
 					      (slip-prob .1))
   (make-2tbn-mdp-env
    (make-instance '<2tbn>
-    :state-descs (make-taxi-state-descs num-taxis map-size  slip-prob)
-    :action-descs (make-taxi-action-descs num-taxis)
-    :reward-descs (make-reward-descs num-taxis collision-cost cost-of-living)
-    :state-acc (make-struct-accessors taxi-es ((locs array num-taxis)))
-    :action-acc (make-list-accessors num-taxis)
-    :reward-acc (make-vec-accessors (1+ (/ (* num-taxis (1- num-taxis)) 2))))))
+     :state-descs (make-taxi-state-descs num-taxis map-size  slip-prob)
+     :action-descs (make-taxi-action-descs num-taxis)
+     :reward-descs (make-reward-descs num-taxis collision-cost cost-of-living)
+     :state-acc (make-struct-accessors taxi-es ((locs array num-taxis)))
+     :action-acc (make-list-accessors num-taxis)
+     :reward-acc (make-vec-accessors (1+ (/ (* num-taxis (1- num-taxis)) 2))))))
 
 (defun make-taxi-action-descs (n)
   (mapset 'list
@@ -94,17 +99,16 @@
 					:reward-fn (lambda (x) 
 						     (if (equal (first x) (second x))
 							 (- coll-cost)
-						       0)))))
+                                                         0)))))
 		(loop 
-		    for i below n
-		    append (loop for j below n
+                  for i below n
+                  append (loop for j below n
 			       when (< i j)
-			       collect (list i j))))))
+                                 collect (list i j))))))
 
-(defun make-taxi-state-descs (num-taxis map-size  slip-prob)
-		      
+(defun make-taxi-state-descs (num-taxis map-size slip-prob)		      
   (let ((slip-dist `((nil . ,(- 1 slip-prob)) (left . ,(/ slip-prob 2))
-					      (right . ,(/ slip-prob 2))))
+                     (right . ,(/ slip-prob 2))))
 	(gw (make-instance '<grid-world> :world-map (make-array (list map-size map-size)
 								:initial-element 0)))
 	(locs (make-instance 'prod-set:<var-set> :sets (list map-size map-size)
@@ -114,13 +118,13 @@
 	       (destructuring-bind (old-loc act) par
 		 (if (eq act 'R)
 		     (make-deterministic-dist old-loc)
-		   (make-rv-dist (lambda (x)
-				   (result-legal gw old-loc
-						 (cond
-						  ((eq x 'left) (rot-counterclockwise act))
-						  ((eq x 'right) (rot-clockwise act))
-						  (t act))))
-				 slip-dist)))))
+                     (make-rv-dist (lambda (x)
+                                     (result-legal gw old-loc
+                                                   (cond
+                                                     ((eq x 'left) (rot-counterclockwise act))
+                                                     ((eq x 'right) (rot-clockwise act))
+                                                     (t act))))
+                                   slip-dist)))))
       (mapset 'list
 	      (lambda (i)
 		(make-2tbn-var-desc

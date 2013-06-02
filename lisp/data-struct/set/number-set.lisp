@@ -15,7 +15,7 @@
 	  (let ((ret current))
 	    (incf current)
 	    (iterator-not-done ret))
-	(iterator-done)))))
+          (iterator-done)))))
 
 (defmethod size ((s integer))
   s)
@@ -23,7 +23,7 @@
 (defmethod item-number (item (s integer))
   (if (member? item s)
       item
-    (error 'item-not-in-set :item item :set s)))
+      (error 'item-not-in-set :item item :set s)))
 
 (defmethod item (num (s integer))
   "TODO check bounds, signal condition"

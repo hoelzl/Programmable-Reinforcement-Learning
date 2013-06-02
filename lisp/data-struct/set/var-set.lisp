@@ -1,25 +1,27 @@
 (in-package #:prod-set)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class definition.  
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass <var-set> (<prod-set>)
-  ((element-type :initarg :element-type :reader element-type :type symbol :initform 'vector))
+  ((element-type :initarg :element-type  :initform 'vector :reader element-type :type symbol))
    
-  (:documentation "A subclass of <prod-set> that uses sequences to represent instantiations.
+  (:documentation
+   "A subclass of <prod-set> that uses sequences to represent instantiations.
 
 Create with make-instance or using make-var-set.  Initargs
-:sets - sequence of sets as in <prod-set>
-:element-type - should be 'list or 'vector (default is 'vector).
+:sets -            sequence of sets as in <prod-set>
+:element-type -    should be 'list or 'vector (default is 'vector).
 :iterate-quickly - as in <prod-set>.  optional and defaults to nil.
 "))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; constructor
+;; Constructor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod initialize-instance :after ((s <var-set>) &rest args &key (element-type 'vector))
+(defmethod initialize-instance :after
+    ((s <var-set>) &rest args &key (element-type 'vector))
   (declare (ignore args))
   (let* ((d (dim s)))
     (set-inst-acc 
@@ -28,9 +30,6 @@ Create with make-instance or using make-var-set.  Initargs
        (list (make-list-accessors d)))
      s)
     s))
-  
-(in-package common-lisp-user)    
-
 
 
 

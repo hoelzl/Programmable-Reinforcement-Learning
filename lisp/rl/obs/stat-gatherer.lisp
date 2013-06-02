@@ -52,13 +52,15 @@ num-env-steps")
     :initarg :reset? 
     :initform t))
   
-  (:documentation "Class for gathering stats about a run of reinforcement-learning.  Resets all counts the run function is called by default.  Right now counts total reward, num episodes started, num episodes ended, num env steps, num choice states.  Can add more stats in future, but make sure everything is O(1) space (so we can include this class as a default observer and not worry about memory).
+  (:documentation "Class <stat-gatherer> (<rl-observer>) 
+Class for gathering stats about a run of reinforcement-learning.  Resets all counts when the run
+function is called by default.  Right now counts total reward, num episodes started, num
+episodes ended, num env steps, num choice states.  Can add more stats in future, but make sure
+everything is O(1) space (so we can include this class as a default observer and not worry about
+memory).
 
 Initargs
-:reset? - whether to reset each time run is called.
-
-
-"))
+:reset? - whether to reset each time run is called."))
 
 
 (defun make-stat-gatherer (&key (reset? t))
@@ -66,7 +68,7 @@ Initargs
   (make-instance '<stat-gatherer> :reset? reset?))
 
 (defmethod print-object ((obs <stat-gatherer>) str)
-  (format str "~&RL stats~&~a episodes started and ~a finished~&~a env steps"
+  (format str "~&RL stats~&~a episodes started and ~A finished~&~A env steps"
 	  (num-episodes-started obs) (num-episodes-finished obs) (num-env-steps obs) ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -84,11 +86,8 @@ Initargs
   (declare (ignore s))
   (incf (num-ep-started obs)))
 
-
-
 (defmethod inform-env-step ((obs <stat-gatherer>) act rew to term)
   (declare (ignore to act))
   (incf (rew obs) rew)
   (incf (sg-num-env-steps obs))
   (when term (incf (num-ep-finished obs))))
-

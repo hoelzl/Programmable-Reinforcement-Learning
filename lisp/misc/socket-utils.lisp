@@ -1,9 +1,9 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; socket utils
 ;;
 ;; Utilities for dealing with sockets
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (in-package #:common-lisp-user)
 
@@ -16,14 +16,12 @@
 (in-package #:socket-utils)
 
 
-;; clear-all-input
-;;
-;; repeatedly call clear-input on socket s until listen returns false
-;; print a "." on each attempt.  setting quiet to true suppresses this.
 (defun clear-all-input (s &optional (quiet nil))
-  (loop
+  "clear-all-input S &optional (QUIET NIL)
+
+Repeatedly call clear-input on socket s until listen returns false print a \".\" on each
+attempt.  Setting quiet to true suppresses this."
+(loop
       while (listen s)
       do (clear-input s)
 	 (unless quiet (format t "."))))
-
-(in-package cl-user)

@@ -1,7 +1,15 @@
-(defpackage #:calisp-approximate-policy-iteration
-  (:documentation "Package calisp-approximate-policy-iteration (capi).  Defines the <approx-pol-it> learning algorithm (not to be confused with the algorithm of the same name in the api package, which is for flat RL).
+(in-package #:common-lisp-user)
 
-Approximate policy iteration is an on-policy SMDP Q-learning algorithm.  At periodic intervals, the Q-function is saved, and the exploration policy acts greedily with respect to the most recent saved Q-function.  The algorithm is closely related to 'optimistic policy iteration' and SARSA.
+(defpackage #:calisp-approximate-policy-iteration
+  (:documentation "Package calisp-approximate-policy-iteration (capi).
+
+Defines the <approx-pol-it> learning algorithm (not to be confused with the algorithm of the
+same name in the api package, which is for flat RL).
+
+Approximate policy iteration is an on-policy SMDP Q-learning algorithm.  At periodic intervals,
+the Q-function is saved, and the exploration policy acts greedily with respect to the most
+recent saved Q-function.  The algorithm is closely related to 'optimistic policy iteration' and
+SARSA.
 
 Exports
 -------
@@ -21,7 +29,8 @@ Exports
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defclass <approx-pol-it> (<on-policy-learning-algorithm> <q-learning-algorithm> <calisp-learning-algorithm>)
+(defclass <approx-pol-it>
+    (<on-policy-learning-algorithm> <q-learning-algorithm> <calisp-learning-algorithm>)
   ((discount :type float
 	     :initarg :discount
 	     :initform 1.0
@@ -56,20 +65,28 @@ Exports
    (prev-u :accessor prev-u)
    (reward-acc :accessor reward-acc :type float)
    (cumulative-discount :accessor cumulative-discount :type float))
-  (:documentation "The <approx-pol-it> class.  Inherits from on-policy-learning-algorithm, q-learning-algorithm, and calisp-learning-algorithm.  Initargs
+  (:documentation
+   "Class <approx-pol-it> (<on-policy-learning-algorithm> <q-learning-algorithm>
+                       <calisp-learning-algorithm>)
 
-:lrate - <learning-rate>.  .01 by default.
-:discount - 1 by default.
-:debug-str - nil by default
-:pol-imp-int - how often the policy is updated.  Required.
-:q-fn - <q-function>
+Initargs
+LRATE:       <learning-rate>.  .01 by default.
+DISCOUNT:    1 by default.
+DEBUG-STR:   nil by default
+POL-IMP-INT: how often the policy is updated.  Required.
+Q-FN:        <q-function>
 
 There are two additional arguments
-:term-policy - a policy that is 'guaranteed' to terminate eventually.  By default, this is a random-policy
-:pol-switch - if during learning, we have been in an episode for at least this many steps, then we switch to the guaranteed eventual termination policy.  It should be significantly higher than the amount of time taken by the termination-policy to terminate.  Not setting this variable amounts to setting it to infinity.
+TERM-POLICY: a policy that is 'guaranteed' to terminate eventually.  By default, this is a
+             random-policy
+POL-SWITCH:  if during learning, we have been in an episode for at least this many steps, then
+             we switch to the guaranteed eventual termination policy.  It should be
+             significantly higher than the amount of time taken by the termination-policy to
+             terminate.  Not setting this variable amounts to setting it to infinity.
 
-When asked for its knowledge state, a <approx-pol-it> object returns the currently estimated Q-function.  Its convert-to-policy method turns a Q-function into the corresponding greedy policy.
-"))
+When asked for its knowledge state, a <approx-pol-it> object returns the currently estimated
+Q-function.  Its convert-to-policy method turns a Q-function into the corresponding greedy
+policy."))
 
 
 (defmethod initialize-instance :after ((alg <approx-pol-it>) &rest args &key pol-imp-int)
@@ -78,12 +95,10 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
   (set-pol-imp-pred
    (lambda (x) (= (mod x pol-imp-int) 0))
    alg)
-
-    (unless (slot-boundp alg 'term-policy)
+  (unless (slot-boundp alg 'term-policy)
     (set-term-policy 
      (make-instance 'policy:<random-policy> :choice-fn #'js-choices)
      alg))
-
   (let ((cloned-q (clone (q-fn alg))))
     (set-init-q-fn cloned-q alg)
     (set-exp-policy 
@@ -131,7 +146,6 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
   (with-slots (q-function prev-omega prev-u reward-acc 
 	       cumulative-discount learning-rate)
       alg
-    
     ;; do a backup if a previous state has been seen in this episode
     (when prev-omega
       (assert prev-u)
@@ -142,7 +156,6 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
 			     (q-fn:evaluate q-function omega u)
 			   (q-fn:unknown-state-action () 0))))
 		   (lrate:get-rate learning-rate (cons prev-omega prev-u))))
-    
     ;; remember omega and u
     (setf prev-omega omega
 	  prev-u u
@@ -151,7 +164,6 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
 
 (defmethod inform-part-prog-terminated ((alg <approx-pol-it>) omega)
   (declare (ignore omega))
-
   (with-slots (prev-omega prev-u learning-rate) alg
     ;; do a backup if necessary
     (when prev-omega
@@ -172,7 +184,7 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
   (make-choice
    (if (aand (pol-switch alg) (> (current-episode-step alg) it))
        (term-policy alg)
-     (exp-policy alg))
+       (exp-policy alg))
    omega))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -190,8 +202,4 @@ When asked for its knowledge state, a <approx-pol-it> object returns the current
 
 (defmethod get-q-fn ((alg <approx-pol-it>) ks)
   ks)
-
-
-(in-package cl-user)
-
    

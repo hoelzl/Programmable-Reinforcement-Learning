@@ -5,7 +5,6 @@
 
 (in-package #:q-function)
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class def
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23,11 +22,11 @@
           :initform (required-initarg :table)
 	  :reader table
 	  :type (simple-array float 1)))
-  (:documentation "A <tabular-q-function> has initargs
+  (:documentation "Class <tabular-q-function> (<q-function>)
+A <tabular-q-function> has initargs
 :state-set
 :action-sets
-:table
-
+:table 
 and represents a q-function by an array."))
 
 
@@ -36,7 +35,11 @@ and represents a q-function by an array."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun make-tabular-q-function (table &optional (state-set nil) (action-sets nil))
-  "make-tabular-q-function TABLE &optional STATE-SET ACTION-SETS.  TABLE is an array with one entry per state, in which each entry is an array (one entry per action available at that state).  If STATE-SET and ACTION-SETS are not provided, then sets of the form {0,1,...,n} (of the appropriate sizes) are used.  ACTION-SETS be an array of action sets for each state"
+  "make-tabular-q-function TABLE &optional STATE-SET ACTION-SETS
+TABLE is an array with one entry per state, in which each entry is an array (one entry per
+action available at that state).  If STATE-SET and ACTION-SETS are not provided, then sets of
+the form {0,1,...,n} (of the appropriate sizes) are used.  ACTION-SETS be an array of action
+sets for each state"
   (unless state-set
     (setf state-set (length table)))
   (unless action-sets
@@ -82,14 +85,13 @@ and represents a q-function by an array."))
       (error 'unknown-state-action :state s :action nil :q-fn q))))
 
 
-
 (defmethod reset ((q <tabular-q-function>) &optional (params nil))
-  "reset all entries to 0."
+  "Reset all entries to 0."
   (assert (not params) () "params argument not supported for tabular-q-function")
   (loop
-      for row across (table q)
-      do (dotimes (j (length row))
-	   (setf (aref row j) 0.0))))
+    for row across (table q)
+    do (dotimes (j (length row))
+         (setf (aref row j) 0.0))))
 
 
 (defmethod update ((q <tabular-q-function>) s a val eta)
@@ -114,12 +116,12 @@ and represents a q-function by an array."))
   "TODO Should do error checking to see if state, action sets are equal."
   (expt
    (loop
-       for r across (table q)
-       for r2 across (table q2)
-       sum (loop
-	       for x across r
-	       for y across r2
-	       sum (expt (abs (- x y)) p)))
+     for r across (table q)
+     for r2 across (table q2)
+     sum (loop
+           for x across r
+           for y across r2
+           sum (expt (abs (- x y)) p)))
    (/ 1 p)))
 
 

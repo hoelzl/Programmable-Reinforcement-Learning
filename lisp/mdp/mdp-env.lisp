@@ -7,7 +7,7 @@ Exported ypes
 <mdp-env> - a subclass of <fully-observable-env> whose behaviour is governed by an MDP
 
 In addition to general <env> operations, also provides
-mdp - get underlying mdp of <mdp-env>
+mdp -               get underlying mdp of <mdp-env>
 make-2tbn-mdp-env - create a <mdp-env> based on a 2TBN
 
 ")
@@ -21,12 +21,11 @@ make-2tbn-mdp-env - create a <mdp-env> based on a 2TBN
    #:make-2tbn-mdp-env))
 
 
-
 (in-package #:mdp-env)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Class definition
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defclass <mdp-env> (<fully-observable-env>)
   ((m :initarg :mdp
       :initform (required-initarg :mdp)
@@ -35,11 +34,10 @@ make-2tbn-mdp-env - create a <mdp-env> based on a 2TBN
                    :initform (required-initarg :mdp)
 		   :reader init-dist
 		   :type prob:<prob-dist>))
-  (:documentation "Class <mdp-env> 
+  (:documentation "Class <mdp-env> (<fully-observable-env>)
 Initargs
 :m - MDP that this environment is based on.
-:init-dist - Distribution over initial state
-"))
+:init-dist - Distribution over initial state"))
 
 
 ;; reset the state to begin with
@@ -53,6 +51,9 @@ Initargs
 ;; Operations on the underlying MDP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+;;; TODO: Having different generics with the same name in different packages seems really ugly.
+;;; Either rename them into env-trans-prob or unify with mdp:trans-prob. --tc
 (defgeneric trans-prob (e s a d))
 
 (defmethod trans-prob ((e <mdp-env>) s a d)
@@ -85,7 +86,9 @@ Initargs
 
 (defclass <smdp-env> (<mdp-env>)
   ()
-  (:documentation "Like an <mdp-env> except works on any SMDP.  sample-next returns the duration as a third argument.  A bit hacky and might change in future."))
+  (:documentation "Class <smdp-env> (<mdp-env>)
+Like an <mdp-env> except works on any SMDP.  Sample-next returns the duration as a third
+argument.  A bit hacky and might change in future."))
 
 (defmethod sample-next ((e <smdp-env>) s a)
   (let* ((m (mdp e))

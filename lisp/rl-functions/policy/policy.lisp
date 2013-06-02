@@ -66,8 +66,7 @@ unknown-state
    
    #:choose-to-abort
    #:unknown-state
-   #:unknown-state-action
-   ))
+   #:unknown-state-action))
   
 
 (in-package #:policy)
@@ -79,25 +78,36 @@ unknown-state
 
 (defclass <policy> ()
   ()
-  (:documentation "Class for representing policies.  A policy is any object that is used to make decisions as a function of some state.  This can include random-choices, making greedy choices w.r.t a q-function, or even 'policies' that prompt the user to enter a choice."))
+  (:documentation "Abstract class <policy>
+Class for representing policies.  A policy is any object that is used to make decisions as a
+function of some state.  This can include random-choices, making greedy choices w.r.t a
+q-function, or even 'policies' that prompt the user to enter a choice."))
 
 (defclass <stochastic-policy> (<policy>)
   ()
-  (:documentation "Class <stochastic-policy> (<policy>).  Implements a method for choice-dist, which returns a probability distribution over choices.  The make-choice method for stochastic policies just samples from this distribution."))
+  (:documentation "Class <stochastic-policy> (<policy>)
+Implements a method for choice-dist, which returns a probability distribution over choices.  The
+make-choice method for stochastic policies just samples from this distribution."))
 
 (defgeneric make-choice (d omega)
-  (:documentation "make-choice POLICY STATE.  Specifies how this policy makes choices at a given state.  An 'unknown-state error might be thrown.")
+  (:documentation "make-choice POLICY STATE
+Specifies how this policy makes choices at a given state.  An 'unknown-state error might be
+thrown.")
   (:method ((d <stochastic-policy>) omega)
-	   (sample (choice-dist d omega)))
+    (sample (choice-dist d omega)))
   (:method ((d function) omega)
-	   (funcall d omega)))
+    (funcall d omega)))
 
 (define-condition choose-to-abort (serious-condition)
   ()
-  (:documentation "Signalled (using error) by a policy's make-choice method when, for some reason, rather than making a choice, it has decided to 'abort'.  For example, the prompt-policy would signal this if the user decided to quit rather than entering a choice."))
+  (:documentation "Condition choose-to-abort
+Signalled (using error) by a policy's make-choice method when, for some reason, rather than
+making a choice, it has decided to 'abort'.  For example, the prompt-policy would signal this if
+the user decided to quit rather than entering a choice."))
 
 (defgeneric choice-dist (pol omega)
-  (:documentation "choice-dist STOCHASTIC-POLICY OMEGA.  Return an object of type [prob-dist] over the choices at this state."))
+  (:documentation "choice-dist STOCHASTIC-POLICY OMEGA
+Return an object of type [prob-dist] over the choices at this state."))
 
 
 (defmacro policy-case (fn &rest l)
@@ -107,7 +117,9 @@ FN - a function (evaluated)
 Vi - a symbol or number (not evaluated)
 Pi - a policy (evaluated)
 
-Return a policy that makes choices by applying FN to the state OMEGA, then finds one of the Vi such that the returned value of FN is #'eql to Vi, and makes a choice using the corresponding policy Pi.  There must always be exactly one Vi that matches, otherwise it is an error."
+Return a policy that makes choices by applying FN to the state OMEGA, then finds one of the Vi
+such that the returned value of FN is #'eql to Vi, and makes a choice using the corresponding
+policy Pi.  There must always be exactly one Vi that matches, otherwise it is an error."
   
   (with-gensyms (func omega)
     (let ((pol-gensyms (loop for i below (length l) collecting (gensym))))
@@ -120,9 +132,9 @@ Return a policy that makes choices by applying FN to the state OMEGA, then finds
 					   (let ((fp (first p)))
 					     (if (member fp '(t otherwise nil))
 						 (list fp)
-					       fp))
+                                                 fp))
 					   s))
-			  pol-gensyms l))
+                   pol-gensyms l))
 	      ,omega))))))
 	 
 

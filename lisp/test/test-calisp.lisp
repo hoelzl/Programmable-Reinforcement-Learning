@@ -38,7 +38,8 @@
 		   :q-function q-dec
 		   :reward-decomposer #'rbe-reward-decomp))
 (setf sq (make-instance 'csq:<smdpq> :q-fn q))
-(calisp-user:learn p e 'random (list sq tq-learner) 5000 :hist-length 50 :step-print-inc 100 :episode-print-inc 10)
+(calisp-user:learn p e 'random (list sq tq-learner) 5000
+                   :hist-length 50 :step-print-inc 100 :episode-print-inc 10)
 (setf sq-q-hist (get-q-hist sq)
       sq-pol-hist (get-policy-hist sq)
       tq-q-hist (get-q-hist tq-learner)
@@ -47,4 +48,3 @@
       tq-rews (calisp-user:evaluate p e tq-pol-hist :num-steps 50 :num-trials 1))
 (pprint sq-rews)
 (pprint tq-rews)
-	

@@ -33,19 +33,26 @@ units - Accessed using strat-es-units.  A hash table from unit id to structure o
 ;;; end changes ;;;;
 
 (defun get-unit-state (id s)
-  "get-unit-state ID S.  S is of type strat-env-state.  Returns a structure of type unit, or nil if unit doesn't exist."
+  "get-unit-state ID S
+S is of type strat-env-state.  Returns a structure of type unit, or nil if unit doesn't exist."
   (gethash id (strat-es-units s)))
 
 (defun units-belonging-to (id s)
-  "units-belonging-to PLAYER-ID STRAT-ENV-STATE.  Return list of ids of units belonging to this player.  Only returns those units with HP > 0, to deal with the ghost units that stick around for a while after they die."
+  "units-belonging-to PLAYER-ID STRAT-ENV-STATE
+Return list of ids of units belonging to this player.  Only returns those units with HP > 0, to
+deal with the ghost units that stick around for a while after they die."
   (hash-table-select (strat-es-units s)
 		     (lambda (us)
 		       (and (= (unit-player-id us) id) (> (unit-hp us) 0)))))
+
 (defun units-belonging-to-of-type (id type s)
-  "units-belonging-to-of-type ID TYPE STATE.  returns all units of a particular type belonging to player id in STATE"
+  "units-belonging-to-of-type ID TYPE STATE
+Returns all units of a particular type belonging to player id in STATE"
   (hash-table-select (strat-es-units s)
 		     (lambda (us)
-		       (and (= (unit-player-id us) id) (> (unit-hp us) 0) (= (unit-type us) type)))))
+		       (and (= (unit-player-id us) id)
+                            (> (unit-hp us) 0)
+                            (= (unit-type us) type)))))
 
 (defun get-unit-loc (id s)
   (unit-loc (get-unit-state id s)))
@@ -58,9 +65,6 @@ units - Accessed using strat-es-units.  A hash table from unit id to structure o
 
 (defmethod effectors ((s strat-env-state))
   (sort (units-belonging-to *my-player-id* s) #'<))
-
-     
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; global-state
@@ -78,7 +82,6 @@ units - Accessed using strat-es-units.  A hash table from unit id to structure o
 ;; returns a fresh structure 
 (defmethod clone ((g global-state))
   (copy-structure g))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; unit states
@@ -109,8 +112,3 @@ units - Accessed using strat-es-units.  A hash table from unit id to structure o
    :status (unit-status u)
    :status-args (copy-list (unit-status-args u))
    :kills (unit-kills u)))
-  
-
-
-
-(in-package cl-user)

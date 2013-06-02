@@ -10,22 +10,33 @@
 
 
 (defun symbols (&optional (p *package*))
-  "symbols PACKAGE (default current package).  Return list of all symbols of PACKAGE, a package designator."
+  "symbols PACKAGE (default current package)
+Return list of all symbols of PACKAGE, a package designator."
   (let ((s nil))
     (do-symbols (v p)
       (push v s))
     s))
 
 (defun external-symbols (&optional (p *package*))
-  "external-symbols PACKAGE (default current package).  Return list of external symbols of PACKAGE, a package designator."
+  "external-symbols PACKAGE (default current package)
+Return list of external symbols of PACKAGE, a package designator."
   (let ((s nil))
     (do-external-symbols (v p)
       (push v s))
     s))
 
 
+;;; TODO: Remove this, and instead define the packages in such a way that dynamic exports becom
+;;; unnecessary.  (Otherwise we get lots of grief from Lisp implementations, such as SBCL, that
+;;; expect all information about a package to be present in the DEFPACKAGE form. --tc
+
 (defmacro export-from (package &rest symbol-names)
-  "export-from PACKAGE &rest SYMBOL-NAMES.  PACKAGE is a designator for a package.  Each element of SYMBOL-NAMES is a string naming a symbol that is present in PACKAGE.  Calling export-from causes the given symbols to be made available as external symbols of the current package, so any package that uses the current package will have access to them."
+  "export-from PACKAGE &rest SYMBOL-NAMES
+
+PACKAGE is a designator for a package.  Each element of SYMBOL-NAMES is a string naming a symbol
+that is present in PACKAGE.  Calling export-from causes the given symbols to be made available
+as external symbols of the current package, so any package that uses the current package will
+have access to them."
   (let ((symb (gensym)))
     `(eval-when (:compile-toplevel :execute :load-toplevel)
        (dolist (symb-name ',symbol-names)

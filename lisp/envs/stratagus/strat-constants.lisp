@@ -5,19 +5,19 @@
 ;; stratagus-related constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; some macros for defining stratagus constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (eval-now
- (defun make-const-name (sym prefix)
+  (defun make-const-name (sym prefix)
     (intern (concatenate 'string "*" (symbol-name prefix) "-" (symbol-name sym) "*"))))
 
   (defmacro def-strat-const (const-type a name num)
-    "Macro def-strat-const CONST-TYPE A NAME NUM.  E.g. (def-strat-const unit *unit-names* grunt 1) will make a constant *unit-grunt* with value 1 and set (aref *unit-names* 1) to the string \"grunt\".  Make sure to also export the symbol *unit-grunt* (see stratagus-env-pkg.lisp) in this case."
+    "Macro def-strat-const CONST-TYPE A NAME NUM
+E.g. (def-strat-const unit *unit-names* grunt 1) will make a constant *unit-grunt* with value 1
+and set (aref *unit-names* 1) to the string \"grunt\".  Make sure to also export the symbol
+*unit-grunt* (see stratagus-env-pkg.lisp) in this case."
     `(eval-now      
       (defconstant ,(make-const-name name const-type) ,num)
       (setf (aref ,a ,num) (string-downcase (symbol-name ',name)))))
@@ -39,16 +39,15 @@ Repeatedly calls def-strat-const."
 		do (setf l (cddr l)))))
 
 (eval-now
- (defparameter *action-names* (make-array 10))
- (defparameter *unit-names* (make-array 105))
- (defparameter *status-names* (make-array 10))
- (defparameter *move-names* (make-array 4)))
+  (defparameter *action-names* (make-array 10))
+  (defparameter *unit-names* (make-array 105))
+  (defparameter *status-names* (make-array 10))
+  (defparameter *move-names* (make-array 4)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; actions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (def-strat-consts action *action-names*
   noop 0
@@ -63,8 +62,6 @@ Repeatedly calls def-strat-const."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; unit types
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
 (def-strat-consts unit *unit-names*
   footman 0
@@ -133,9 +130,6 @@ Repeatedly calls def-strat-const."
   orc-wall 104
   gold-mine 92
   oil-patch 93)
-  
-
-  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; unit status ids
@@ -179,7 +173,7 @@ Repeatedly calls def-strat-const."
 (defun build-cmd (&rest args)
   (if (= (length args) 1)
       (format nil "~a ~a" *action-build* (first args))
-    (format nil "~a ~a ~a ~a" *action-build* (first args) (second args) (third args))))
+      (format nil "~a ~a ~a ~a" *action-build* (first args) (second args) (third args))))
 
 (defun noop-cmd (&rest args)
   (format nil "~a" *action-noop*))
@@ -202,8 +196,3 @@ Repeatedly calls def-strat-const."
 (defconstant *reset-message* "RESET")
 (defconstant *noop* "NOOP")
 (defconstant *print-inc* 100)
-
-
-
-
-(in-package cl-user)

@@ -6,18 +6,24 @@
 STRING : a string
 DELIMITERS : a list of characters
 
-Split STRING into substrings separated by blocks of at least one character from DELIMITERS.  Return the substrings as multiple values."
+Split STRING into substrings separated by blocks of at least one character from DELIMITERS.
+Return the substrings as multiple values."
   
   (flet
       ((is-delim (c) (member c delims))
        (is-not-delim (c) (not (member c delims))))
     (values-list
      (loop
-	 with i = 0
-	 with l = (length str)
+       with i = 0
+       with l = (length str)
+       
+       for j = (position-if #'is-not-delim str :start i)
+       while j
+       
+       do (setf i (or (position-if #'is-delim str :start j) l))
+       collect (subseq str j i)))))
 
-	 for j = (position-if #'is-not-delim str :start i)
-	 while j
-
-	 do (setf i (or (position-if #'is-delim str :start j) l))
-	 collect (subseq str j i)))))
+(defun str (&rest args)
+  "str &rest ARGS
+Concatenate all elements of ARGS into a string"
+  (apply #'concatenate 'string args))

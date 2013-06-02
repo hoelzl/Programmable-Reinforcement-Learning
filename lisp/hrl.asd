@@ -1,7 +1,5 @@
 (in-package asdf)
 
-
-
 (asdf:defsystem "hrl"
     :components ((:module "misc" :pathname "misc/" :serial t
 			  :components
@@ -327,12 +325,6 @@
 							       (:file "rbe-dec"
 								      :depends-on ("rbe-prog"))))
 			   (:module "ve-env" :components ((:file "ve-prog1")))))
-		 
-		 
-
-			   
-
-
 		
 		 (:module "test" :depends-on ("envs" "misc")
 			  :components ((:file "mdp-test-envs")))))

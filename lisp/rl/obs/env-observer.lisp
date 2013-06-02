@@ -1,7 +1,9 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:env-observer
-  (:documentation "Package env-observer.  Defines <env-observer>, a type of observer that prints out what happens in the environment to a stream.
+  (:documentation "Package env-observer.  
+Defines <env-observer>, a type of observer that prints out what happens in the environment to a
+stream.
 
 Exports
 -------
@@ -18,10 +20,8 @@ make-env-observer")
   
 (defclass <env-observer> (<rl-observer>)
   ((output-stream :type (or (eql t) stream)
-		  :reader str
-		  :initarg :str
-		  :writer set-output-stream
-		  :initform t)
+		  :reader outstream :writer set-output-stream
+                  :initarg :stream :initform t)
    (prompt-after-actions :type boolean
 			 :accessor prompt?
 			 :initarg :prompt?)
@@ -33,33 +33,35 @@ make-env-observer")
    (steps :type fixnum
 	  :accessor steps
           :initform 0))
-  (:documentation "Subclass of <alisp-observer> whose sole function is to show what happens in the environment as a result of running an ALisp program.  Create instances using make-env-observer"))
+  (:documentation "Class <env-observer> (<rl-observer>)
+The sole function of this class is to show what happens in the environment as a result of
+running an ALisp program.  Create instances using make-env-observer"))
 
 
 
 
 (defun make-env-observer (&optional (stream t) (prompt? nil))
-  "make-env-observer &optional (OUTPUT-STREAM t) (PROMPT? nil).  Make an <env-observer>.  When PROMPT? is true, prompts user to press enter after each step."
-  (make-instance '<env-observer> :str stream :prompt? prompt? ))
+  "make-env-observer &optional (OUTPUT-STREAM t) (PROMPT? nil)
+Make an <env-observer>.  When PROMPT? is true, prompts user to press enter after each step."
+  (make-instance '<env-observer> :stream stream :prompt? prompt?))
 
 (defmethod inform-start-episode ((obs <env-observer>) s)
-  (awhen (str obs)
-	 (format it "~&~%Environment reset to ~&~a" s))
+  (awhen (outstream obs)
+    (format it "~&~%Environment reset to ~&~a" s))
   (setf (prompt-this-ep obs) t
 	(steps obs) 0))
   
-
 (defmethod inform-env-step ((obs <env-observer>) act rew to term)
-  (awhen (str obs)
-	 (format it "~&Episode ~a Step ~a.  Did ~a, received ~a, and now in state ~&~a" 
-		 (eps obs) (steps obs) act rew to)
-	 (when (and (prompt? obs) (prompt-this-ep obs))
-	   (let ((c (prompt "~&Press enter to continue or \"skip\" to skip to end of this episode. ")))
-	     (when (equal c "skip") (setf (prompt-this-ep obs) nil)))))
+  (awhen (outstream obs)
+    (format it "~&Episode ~A Step ~A.  Did ~A, received ~A, and now in state ~&~A." 
+            (eps obs) (steps obs) act rew to)
+    (when (and (prompt? obs) (prompt-this-ep obs))
+      (let ((c (prompt "~&Press enter to continue or \"skip\" to skip to end of this episode. ")))
+        (when (equal c "skip") (setf (prompt-this-ep obs) nil)))))
   (incf (steps obs))
   (when term
-    (awhen (str obs)
-	   (format it "~&Episode complete."))
+    (awhen (outstream obs)
+      (format it "~&Episode complete."))
     (incf (eps obs)))
   (values))
 

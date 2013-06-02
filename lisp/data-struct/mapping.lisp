@@ -49,16 +49,18 @@ mapping-undefined
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftype [changeable-mapping] ()
-  "A changeable mapping is a [mapping] that can be changed.  Either a sequence or hashtable."
+  "A changeable mapping is a [mapping] that can be changed.  Either a sequence or hashtable.
+See [mapping] for the interpretation of lists and sequences as mappings"
   `(or sequence hash-table))
 
 (deftype [mapping] ()
   "Type for mappings.  Can be one of
 1) A function
-2) A list, which is nil, or whose first element is a pair.  This is interpreted as a #'same association list.
-3) A vector, or list whose first element is not a pair.  This is interpreted as mapping from 0,1,...,n-1 to the elements of the sequence.
+2) A list, which is nil, or whose first element is a pair.  This is interpreted as a #'same
+   association list.
+3) A vector, or list whose first element is not a pair.  This is interpreted as mapping from
+   0,1,...,n-1 to the elements of the sequence.
 4) A hashtable
-
 See also [changeable-mapping]."
   `(or function sequence hash-table))
 
@@ -71,17 +73,20 @@ See also [changeable-mapping]."
 (define-condition mapping-undefined ()
   ((item :initarg :item :reader get-item)
    (m :initarg :mapping :reader get-mapping))
-  (:report (lambda (c s) (format s "Value of mapping ~a not defined at ~a" (get-mapping c) (get-item c))))
-  (:documentation "Signalled when applying a mapping to an item that it's not defined at."))
+  (:report (lambda (c s)
+             (format s "Value of mapping ~a not defined at ~a"
+                     (get-mapping c) (get-item c))))
+  (:documentation
+   "Signalled when applying a mapping to an item that it's not defined at."))
 
 
 (defun defined? (m x)
-  "defined? MAPPING ITEM.  Return t iff mapping is defined at item?"
+  "defined? MAPPING ITEM
+Return t iff mapping is defined at item?"
   (handler-case 
       (progn (evaluate m x) t)
     (mapping-undefined ()
       nil)))
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -89,100 +94,106 @@ See also [changeable-mapping]."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     
 (defgeneric evaluate (m x)
-  (:documentation "Evaluate MAPPING ITEM.  Return value of MAPPING applied to item.  May signal a 'mapping-undefined error.  Is an accessor, i.e., something like (setf (evaluate m x) y) works.")
+  (:documentation "Evaluate MAPPING ITEM
+Return value of MAPPING applied to item.  May signal a 'mapping-undefined error.  Is an
+accessor, i.e., something like (setf (evaluate m x) y) works.")
   (:method ((m function) x)
-	   (funcall m x))
+    (funcall m x))
   (:method ((m sequence) x)
-	   (if (is-assoc-list m)
-	       (aif (assoc x m :test #'same)
-		    (cdr it)
-		    (error 'mapping-undefined :item x :mapping m))
-	     (handler-case
-		 (let ((v (elt m x)))
-		   (when (eq v 'mapping-value-undefined)
-		     (error 'mapping-undefined :item x :mapping m))
-		   v)
-
-	       (type-error ()
-		 (error 'mapping-undefined :item x :mapping m)
-		 ;; TODO This isn't quite right - the type error may have been caused for a different reason
-		 ))))		 
+    (if (is-assoc-list m)
+        (aif (assoc x m :test #'same)
+             (cdr it)
+             (error 'mapping-undefined :item x :mapping m))
+        (handler-case
+            (let ((v (elt m x)))
+              (when (eq v 'mapping-value-undefined)
+                (error 'mapping-undefined :item x :mapping m))
+              v)
+          (type-error ()
+            (error 'mapping-undefined :item x :mapping m)
+            ;; TODO This isn't quite right - the type error may have been caused for a different
+            ;; reason
+            ))))		 
 			    
   (:method ((m hash-table) x)
-	   (mvbind (val present?)
-	       (gethash x m)
-	     (if present?
-		 val
-	       (error 'mapping-undefined :item x :mapping m)))))
+    (mvbind (val present?)
+        (gethash x m)
+      (if present?
+          val
+          (error 'mapping-undefined :item x :mapping m)))))
 
 (defun evaluate-mv (m x)
-  "evaluate-mv MAPPING ITEM.  Apply evaluate to MAPPING and ITEM, and handle errors. Works like gethash - returns two values: 1) the mapping value if it exists, or nil otherwise 2) t if the item was present and nil otherwise."
+  "evaluate-mv MAPPING ITEM
+Apply evaluate to MAPPING and ITEM, and handle errors. Works like gethash - returns two values:
+1) the mapping value if it exists, or nil otherwise 2) t if the item was present and nil
+otherwise."
   (handler-case
       (values (evaluate m x) t)
     (mapping-undefined ()
       (values nil nil))))
 
 (defsetf evaluate set-mapping-value)
-  
-
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; setting values
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (defmacro set-value (m x y &optional (defined? nil def-supp))
   "set-value M X Y &optional DEFINED?.  
 
 M must be of type [changeable-mapping]
 
-Set the value of M at X to equal Y, and return Y.  M may be destructively modified.  If DEFINED? is provided, first verifies either that M is already defined at X if DEFINED? is true, or that it is not if DEFINED? is nil.
+Set the value of M at X to equal Y, and return Y.  M may be destructively modified.  If DEFINED?
+is provided, first verifies either that M is already defined at X if DEFINED? is true, or that
+it is not if DEFINED? is nil.
 
 If no error checking is needed, one can just use (setf (evaluate M X) Y)."
   
   `(progn
      ,@(when def-supp
 	 `((assert (nxor ,defined? (defined? ,m ,x)) ()
-	     "Mapping ~a is, unexpectedly, ~:[~;not ~]defined at ~a" 
-	     ,m ,defined? ,x)))
+                   "Mapping ~A is, unexpectedly, ~:[~;not ~]defined at ~A." 
+                   ,m ,defined? ,x)))
      (_f set-mapping-value ,m ,x ,y)))
 
 (defgeneric set-mapping-value (m x y)
-  (:documentation "set-mapping-value M X Y.  Return a mapping that is the same as M except X now maps to Y.  M may be destructively modified.  This shouldn't be called by external code - use set-value instead.")
+  (:documentation "set-mapping-value M X Y
+Return a mapping that is the same as M except X now maps to Y.  M may be destructively modified.
+This shouldn't be called by external code - use set-value instead.")
   (:method ((m sequence) x y)
-	   (if (is-assoc-list m)
-	       (let ((entry (assoc x m)))
-		 (if entry
-		     (progn (setf (cdr entry) y) m)
-		   (cons (cons x y) m)))
-	     (setf (elt m x) y)))
+    (if (is-assoc-list m)
+        (let ((entry (assoc x m)))
+          (if entry
+              (progn (setf (cdr entry) y) m)
+              (cons (cons x y) m)))
+        (setf (elt m x) y)))
   (:method ((m hash-table) x y)
-	   (setf (gethash x m) y)))
+    (setf (gethash x m) y)))
 
 (defgeneric make-value-undefined (m x)
   (:documentation "make-value-undefined M X.
-Make M not be defined at X, and return the resulting mapping.  Should not be called by external code - use make-undefined instead.")
+Make M not be defined at X, and return the resulting mapping.  Should not be called by external
+code - use make-undefined instead.")
   (:method ((m sequence) x)
-	   (if (is-assoc-list m)
-	       (delete x m :key #'car :test #'same)
-	     (progn
-	       (setf (elt m x) 'mapping-value-undefined)
-	       m)))
+    (if (is-assoc-list m)
+        (delete x m :key #'car :test #'same)
+        (progn
+          (setf (elt m x) 'mapping-value-undefined)
+          m)))
   (:method ((m hash-table) x)
-	   (remhash x m)
-	   m))
+    (remhash x m)
+    m))
 
 
 (defmacro make-undefined (m x &optional (defined nil def-supp))
-  "Macro make-undefined M X &optional (CHECK-DEFINED nil).  Make M be undefined at X.  If CHECK-DEFINED, first check that the macro is defined at X."
+  "Macro make-undefined M X &optional (CHECK-DEFINED nil)
+Make M be undefined at X.  If CHECK-DEFINED, first check that the macro is defined at X."
   `(progn
      ,@(when def-supp
 	 `((assert (or (not ,defined) (defined? ,m ,x)) ()
-	     "Mapping ~a is, unexpectedly, not defined at ~a"
-	     ,m ,defined ,x)))
+                   "Mapping ~a is, unexpectedly, not defined at ~a"
+                   ,m ,defined ,x)))
      (_f make-value-undefined ,m ,x)))
      
   

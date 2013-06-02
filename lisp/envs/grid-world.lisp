@@ -2,28 +2,41 @@
 
 ;; Package info
 (defpackage #:grid-world
-  (:documentation "envs/grid-world.lisp
-Code for navigation in worlds whose map is a subset of a 2d grid.  The world is represented by a 2d array of integers where increasing the first coordinate corresponds to going south and increasing the second coordinate to going east. Locations in the grid are represented as two-element lists.  You can allow walls, doors, etc by using different values in the corresponding location in the array.  To use this when creating new environments, make a class that inherits from both <grid-world> and <env> (see resource-balance-env for an example).  To use a grid world directly, you can also just use a 2d boolean array (where t indicates a legal square) and all the operations will work.
+  (:documentation "Package grid-world
+
+Code for navigation in worlds whose map is a subset of a 2d grid.  The world is represented by a
+2d array of integers where increasing the first coordinate corresponds to going south and
+increasing the second coordinate to going east. Locations in the grid are represented as
+two-element lists.  You can allow walls, doors, etc by using different values in the
+corresponding location in the array.  To use this when creating new environments, make a class
+that inherits from both <grid-world> and <env> (see resource-balance-env for an example).  To
+use a grid world directly, you can also just use a 2d boolean array (where t indicates a legal
+square) and all the operations will work.
 
 Initargs
-:world-map : map of the world
-:legality-test : function that takes in the value at a location and returns t iff it is possible for the agent to be at this location (so it's not a wall, etc).  By default, is just the identity function.
+:world-map:      map of the world
+:legality-test: function that takes in the value at a location and returns t iff it is possible
+                for the agent to be at this location (so it's not a wall, etc).  By default, is
+                just the identity function.
 
-Operations :
-- set-test : change the legality test
-- result : nominal result of moving in a given direction from a given state.  doesn't check legality.
-- result-legal : nominal result of moving in a given direction, except if destination is not legal, just stay at source.
-- rot-clockwise : clockwise rotation of a direction.
-- rot-counterclockwise : counterclockwise rotation of a direction.
-- is-legal-loc : is a location on the map and otherwise legal?
-- noisy-move-dist : return the probability distribution corresponding to making a noisy move in a location
-- sample-noisy-move : sample from above dist
-- unif-grid-dist-sampler : a sampler that uniformly chooses among legal locations
-- weighted-grid-dist-sampler : a sampler that chooses a location according to some distribution
-- loc-value : value of a location. 
-- dimensions : 2-element list representing dimensions of map
-- manhattan-dist : manhattan distance between two locations
-- shortest-path-dist : shortest-path distance
+Operations:
+- set-test:             change the legality test
+- result:               nominal result of moving in a given direction from a given state.
+                        doesn't check legality.
+- result-legal:         nominal result of moving in a given direction, except if destination is
+                        not legal, just stay at source.
+- rot-clockwise:        clockwise rotation of a direction.
+- rot-counterclockwise: counterclockwise rotation of a direction.
+- is-legal-loc:         is a location on the map and otherwise legal?
+- noisy-move-dist:      return the probability distribution corresponding to making a noisy move
+                        in a location
+- sample-noisy-move:    sample from above dist
+- unif-grid-dist-sampler: a sampler that uniformly chooses among legal locations
+- weighted-grid-dist-sampler: a sampler that chooses a location according to some distribution
+- loc-value:            value of a location. 
+- dimensions:           2-element list representing dimensions of map
+- manhattan-dist:       manhattan distance between two locations
+- shortest-path-dist:   shortest-path distance
 
 Exported symbols
 - N, S, E, W : directions
@@ -62,26 +75,18 @@ Constants
 
 ;; TODO clean up
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; define class
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defclass <grid-world> ()
-  ((wmap :initarg :world-map
-         :initform (required-initarg :world-map)
-         :type array
+  ((wmap :type array
+         :initarg :world-map :initform (required-initarg :world-map)
          :reader wmap)
    (legality-test :type function
-		  :initarg :legality-test
-		  :initform #'identity
-		  :writer set-test
-		  :reader test)
-   (shortest-paths :reader shortest-paths
-		   :writer set-shortest-paths
-		   :initform nil)))
-		   
-   
-
+		  :initarg :legality-test :initform #'identity
+		  :reader test :writer set-test)
+   (shortest-paths :initform nil
+                   :reader shortest-paths :writer set-shortest-paths)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Constants
@@ -89,10 +94,6 @@ Constants
 
 (defparameter *moves* '(N E S W))
 'R
-
-
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; exported functions
@@ -133,48 +134,51 @@ Constants
 	 (c (second dims))
 	 (unweighted-row-probs (make-array r))
 	 (col-probs (make-array (list r c)))
-	 (s (loop for i below r summing (setf (aref unweighted-row-probs i) (loop for j below c summing (aref weights i j))))))
+	 (s (loop for i below r
+                  summing (setf (aref unweighted-row-probs i) 
+                                (loop for j below c 
+                                      summing (aref weights i j))))))
 
     ;; compute P(col|row)  
     (loop
-	for i below r
-		    
-	when (> (aref unweighted-row-probs i) 0)
+      for i below r
+      when (> (aref unweighted-row-probs i) 0)
 	do (loop
-	       for j below c
-	       do (setf (aref col-probs i j) (/ (aref weights i j) (aref unweighted-row-probs i)))))
+             for j below c
+             do (setf (aref col-probs i j)
+                      (/ (aref weights i j) (aref unweighted-row-probs i)))))
     
     (lambda ()
-      
       ;; sample row
       (let* ((row (loop
-		      with r1 = (random s)
-		      for i below (1- r)
-		      with s1 = (aref unweighted-row-probs 0)
-			    
-		      if (< r1 s1)
+                    with r1 = (random s)
+                    for i below (1- r)
+                    with s1 = (aref unweighted-row-probs 0)
+                    
+                    if (< r1 s1)
 		      return i
 			 
-		      do (incf s1 (aref unweighted-row-probs (1+ i)))
-		      finally (return (1- r))))
+                    do (incf s1 (aref unweighted-row-probs (1+ i)))
+                    finally (return (1- r))))
 	     
 	     ;; sample column conditional on row
 	     (col (loop
-		      with r2 = (random 1.0)
-		      for j below (1- c)
-		      with s2 = (aref col-probs row j)
-				
-		      if (< r2 s2)
+                    with r2 = (random 1.0)
+                    for j below (1- c)
+                    with s2 = (aref col-probs row j)
+                    
+                    if (< r2 s2)
 		      return j
-			     
-		      do (incf s2 (aref col-probs row (1+ j)))
-		      finally (return (1- c)))))
+                    
+                    do (incf s2 (aref col-probs row (1+ j)))
+                    finally (return (1- c)))))
 	(list row col)))))
-	
 
 
 (defun result (l a)
-  "result LOC ACT.  returns a (fresh) list representing the nominal result of doing a in l.  doesn't check for legality of the move."
+  "result LOC ACT
+Returns a (fresh) list representing the nominal result of doing a in l.  doesn't check for
+legality of the move."
   (cond ((eq a 'N) (list (1- (first l)) (second l)))
 	((eq a 'S) (list (1+ (first l)) (second l)))
 	((eq a 'E) (list (first l) (1+ (second l))))
@@ -182,10 +186,10 @@ Constants
 	(t (copy-list l))))
 
 
-
-
 (defun result-legal (gw l a)
-  "result-legal GW LOC ACTION.  If ACTION taken at LOC leads to a legal new location, return the new location, otherwise, just return a copy of LOC."
+  "result-legal GW LOC ACTION
+If ACTION taken at LOC leads to a legal new location, return the new location, otherwise, just
+return a copy of LOC."
   (let ((d  (cond ((eq a 'N) (list (1- (first l)) (second l)))
 		  ((eq a 'S) (list (1+ (first l)) (second l)))
 		  ((eq a 'E) (list (first l) (1+ (second l))))
@@ -193,15 +197,17 @@ Constants
 		  (t (copy-list l)))))
     (if (is-legal-loc gw d)
 	d
-      (copy-list l))))
+        (copy-list l))))
     
 
 (defun rot-clockwise (a)
-  "rot-clockwise DIR.  DIR must be a member of gw:*moves*.  Return the 90-degree clockwise rotation of DIR."
+  "rot-clockwise DIR
+DIR must be a member of gw:*moves*.  Return the 90-degree clockwise rotation of DIR."
   (ecase a (N 'E) (E 'S) (S 'W) (W 'N) (R 'R)))
 
 (defun rot-counterclockwise (a)
-  "rot-clockwise DIR.  DIR must be a member of gw:*moves*.  Return the 90-degree counterclockwise rotation of DIR."
+  "rot-clockwise DIR
+DIR must be a member of gw:*moves*.  Return the 90-degree counterclockwise rotation of DIR."
   (ecase a (N 'W) (W 'S) (S 'E) (E 'N) (R 'R)))
 
 
@@ -213,9 +219,9 @@ Constants
 (defun manhattan-dist (l1 l2)
   "manhattan-dist LOC1 LOC2."
   (loop
-      for x in l1
-      for y in l2
-      summing (abs (- x y))))
+    for x in l1
+    for y in l2
+    summing (abs (- x y))))
 
 
 (defun is-valid-loc (gw l)
@@ -229,15 +235,12 @@ Constants
      (>= x 0)
      (< x (second dims)))))
 	   
-
-
-
 (defun is-legal-loc (gw l)
-  "is-legal-loc GW LOC.  Return t iff location is in grid, and legal (i.e. the agent can be at this location."
+  "is-legal-loc GW LOC
+
+Return t iff location is in grid, and legal (i.e. the agent can be at this location."
   (and (is-valid-loc gw l)
        (funcall (test gw) (loc-value gw l))))
-
-
 
 ;; noisy-move-dist
 ;;
@@ -245,7 +248,6 @@ Constants
 ;; l : location
 ;; a : action
 ;; msp : move success prob
-;;
 ;;
 ;; RETURNS
 ;; list representing a prob dist : each element of the list is a pair (new-loc . prob)
@@ -276,77 +278,69 @@ Constants
 
 
 (defun compute-shortest-paths (gw)
-  "compute-shortest-paths GRID-WORLD. Uses Floyd's algorithm.  Returns a hashtable that maps pairs of valid locations l1 and l2 to
-the length of the shortest path between them, or nil if there's no such path.  Is cubic in the number of valid locations, so try not to call it too often."
-  
-
+  "compute-shortest-paths GRID-WORLD
+Uses Floyd's algorithm.  Returns a hashtable that maps pairs of valid locations l1 and l2 to the
+length of the shortest path between them, or nil if there's no such path.  Is cubic in the
+number of valid locations, so try not to call it too often."
   (let* ((wm (world-map gw))
 	 (dims (array-dimensions wm))
 	 (legal-locs (loop
-			 for i below (first dims)
-			 appending (loop
-				       for j below (second dims)
-				       if (funcall (test gw) (aref wm i j))
-				       collect (list i j)))))
-    
-
+                       for i below (first dims)
+                       appending (loop
+                                   for j below (second dims)
+                                   if (funcall (test gw) (aref wm i j))
+                                     collect (list i j)))))
     (if (loop for i below (first dims)
-	    always (loop for j below (second dims)
-		       always (funcall (test gw) (aref wm i j))))
+              always (loop for j below (second dims)
+                           always (funcall (test gw) (aref wm i j))))
 	
 	;; a hack that avoids the expensive computation when the map has no walls    
 	(loop
-	    with distances = (make-hash-table :test #'equal)
-	    finally (return distances)
+          with distances = (make-hash-table :test #'equal)
+          finally (return distances)
 		    
-	    for l in legal-locs
-	    do (loop
-		   for l2 in legal-locs
-		   do (setf (gethash (cons l l2) distances)
+          for l in legal-locs
+          do (loop
+               for l2 in legal-locs
+               do (setf (gethash (cons l l2) distances)
 			(manhattan-dist l l2))))
-			
-    
-    (loop
-	with distances = (make-hash-table :test #'equal)
-	finally (return distances)
-	initially (loop
+        (loop
+          with distances = (make-hash-table :test #'equal)
+          finally (return distances)
+          initially (loop
 		      for l in legal-locs
 		      do (setf (gethash (cons l l) distances) 0)
 		      do (loop
-			     for m in *moves*
-			     with d of-type list
-			     do (setf d (result l m))
-			     when (is-legal-loc gw d)
+                           for m in *moves*
+                           with d of-type list
+                           do (setf d (result l m))
+                           when (is-legal-loc gw d)
 			     do (setf (gethash (cons l d) distances) 1)))
 		  
-	for l1 in legal-locs
-	do (loop
+          for l1 in legal-locs
+          do (loop
 	       for l2 in legal-locs
 	       do (loop
-		      for l3 in legal-locs
-		      do (let ((d1 (gethash (cons l2 l1) distances))
-			       (d2 (gethash (cons l1 l3) distances))
-			       (d3 (gethash (cons l2 l3) distances)))
-			   (when (and d1 d2 (or (not d3) (> d3 (+ d1 d2))))
-			     (setf (gethash (cons l2 l3) distances)
-			       (+ d1 d2))))))))))
+                    for l3 in legal-locs
+                    do (let ((d1 (gethash (cons l2 l1) distances))
+                             (d2 (gethash (cons l1 l3) distances))
+                             (d3 (gethash (cons l2 l3) distances)))
+                         (when (and d1 d2 (or (not d3) (> d3 (+ d1 d2))))
+                           (setf (gethash (cons l2 l3) distances)
+                                 (+ d1 d2))))))))))
 			       
-			     
-
-		  
-			 
 (defun shortest-path-dist (gw l1 l2)
-   "shortest-path-dist GW L1 L2.  Returns the shortest-path distance between L1 and L2 in the grid.  If it hasn't been called before on this grid, then first runs Floyd's algorithm to compute and store all-pairs shortest paths.  So if the map is large, this could take a while."
-   (let ((sp 
+  "shortest-path-dist GW L1 L2
+Returns the shortest-path distance between L1 and L2 in the grid.  If it hasn't been called
+before on this grid, then first runs Floyd's algorithm to compute and store all-pairs shortest
+paths.  So if the map is large, this could take a while."
+  (let ((sp 
 	  (or (shortest-paths gw)
 	      (set-shortest-paths
 	       (compute-shortest-paths gw)
 	       gw))))
-     (gethash (cons l1 l2) sp)))
+    (gethash (cons l1 l2) sp)))
 	 
-
-						       
-
 ;; loc-value
 ;;
 ;; gw : <grid-world>
@@ -376,13 +370,8 @@ the length of the shortest path between them, or nil if there's no such path.  I
 (defmethod shortest-paths ((gw array))
   (compute-shortest-paths gw))
 
-
 (defmethod loc-value ((gw array) l)
   (apply #'aref gw l))
-
-
-(in-package common-lisp-user)
-
 
 
 

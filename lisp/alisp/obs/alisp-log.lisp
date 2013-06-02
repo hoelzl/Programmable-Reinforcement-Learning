@@ -5,18 +5,19 @@
 
 (in-package alisp)
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; class def
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (defclass <alisp-log> (<alisp-observer>)
   ((output-stream
-    :type (or (eql :str) (eql t) stream)
-    :reader str
-    :initarg :str))
-  (:documentation "Class <alisp-log>.  Has a single required initialization argument :str for the output stream.  Implements all the methods from <learning-algorithm>, and in each case just prints the information about the message to the stream."))
+    :type (or (eql :stream) (eql t) stream)
+    :reader outstream
+    :initarg :stream))
+  (:documentation "Class <alisp-log>
+Has a single required initialization argument :stream for the output stream.  Implements all the
+methods from <learning-algorithm>, and in each case just prints the information about the
+message to the stream."))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25,13 +26,17 @@
 
 
 (defmacro deflogmessage (name lambda-list)
-  "deflogmessage NAME LAMBDA-LIST.  Used to define messages to a alisp-log.  For example, (deflogmessage inform-reset (s)) will expand to code that creates a method for inform-reset which prints 'inform-reset' and s to the stream.  See examples in this file."
+  "deflogmessage NAME LAMBDA-LIST
+Used to define messages to a alisp-log.  For example, (deflogmessage inform-reset (s)) will
+expand to code that creates a method for inform-reset which prints 'inform-reset' and s to the
+stream.  See examples in this file."
   (with-gensyms (alg)
     `(defmethod ,name ,(cons `(,alg <alisp-log>) lambda-list)
-		(format (str ,alg) "~&~%Alisp log informed of ~a" ,(string-downcase (symbol-name name)))
+       (format (outstream ,alg) "~&~%Alisp log informed of ~A."
+               ,(string-downcase (symbol-name name)))
        ,@(loop for arg in lambda-list
-	     for i from 0
-	     collect `(format (str ,alg) "~&Arg ~a : ~a" ,i ,arg)))))
+               for i from 0
+               collect `(format (outstream ,alg) "~&Arg ~A: ~A." ,i ,arg)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

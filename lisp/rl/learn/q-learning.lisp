@@ -40,17 +40,18 @@ make-q-learning-alg
 		    :writer set-init-q-fn)
    (prev-s :accessor prev-s)
    (prev-a :accessor prev-a))
-  (:documentation "The <q-learning> class.  Inherits from <learning-algorithm>.  Create using make-instance. Initargs
+  (:documentation "The <q-learning> class.  Inherits from <learning-algorithm>.  
+Create using make-instance. Initargs
 
-:lrate - <learning-rate>
-:q-fn - <q-function> (defaults to a tabular q-fn - see the env initarg below)
-:env - if q-fn initarg not provided, must provide this instead.
+:lrate -  <learning-rate>
+:q-fn -   <q-function> (defaults to a tabular q-fn - see the env initarg below)
+:env -    if q-fn initarg not provided, must provide this instead.
 :discount (optional, default 1.0)
 as well as the initargs from <learning-algorithm>
 
-
-When asked for its knowledge state, a <q-learning> object returns the currently estimated Q-function.  Its convert-to-policy method turns a Q-function into the corresponding greedy policy.
-"))
+When asked for its knowledge state, a <q-learning> object returns the currently estimated
+Q-function.  Its convert-to-policy method turns a Q-function into the corresponding greedy
+policy."))
 
 
 (defmethod initialize-instance :after ((alg <q-learning>) &rest args &key env)
@@ -58,7 +59,6 @@ When asked for its knowledge state, a <q-learning> object returns the currently 
   (unless (slot-boundp alg 'q-function)
     (set-q-fn (make-instance 'q-fn:<env-q-function> :env env) alg))
   (set-init-q-fn (clone (q-fn alg)) alg))
-
 
 
 ; (defun make-q-learning-alg (env &key (lrate .01) 
@@ -86,15 +86,15 @@ When asked for its knowledge state, a <q-learning> object returns the currently 
 	(progn
 	  (q-fn:update q-fn prev-s a r eta)
 	  (setf (prev-s alg) nil))
-      (progn
-	(q-fn:update q-fn prev-s a
-		     (+ r 
-			(* (discount alg) 
-			   (handler-case
-			       (q-fn:value q-fn s2)
-			     (q-fn:unknown-state-action () 0))))
-		     eta)
-	(setf (prev-s alg) s2)))))
+        (progn
+          (q-fn:update q-fn prev-s a
+                       (+ r 
+                          (* (discount alg) 
+                             (handler-case
+                                 (q-fn:value q-fn s2)
+                               (q-fn:unknown-state-action () 0))))
+                       eta)
+          (setf (prev-s alg) s2)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -112,11 +112,4 @@ When asked for its knowledge state, a <q-learning> object returns the currently 
 
 (defmethod get-q-fn ((alg <q-learning>) ks)
   ks)
-
-		  
-
-
-
-(in-package cl-user)
-
    

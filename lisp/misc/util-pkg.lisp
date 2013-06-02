@@ -141,14 +141,14 @@
 	   #:convert-to-matlab
 	   #:convert-from-matlab
 	   
-	   #:split-string)
+	   #:split-string
+           #:str)
   (:export #:help
 	   #:help-int))
 
 
 (defpackage #:help
   (:use #:common-lisp
-	#:package-utils)
+	#:package-utils
+        #:utils)
   (:export #:help #:help-int))
-	   
-(in-package #:cl-user)

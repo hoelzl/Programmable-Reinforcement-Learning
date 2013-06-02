@@ -1,7 +1,7 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; mdp-test-envs.lisp
 ;; will hold some simple debugging examples for mdp code
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (in-package #:common-lisp-user)
 
@@ -18,7 +18,7 @@
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; *test-mdp-1*
 ;;
 ;; 3 states, 2 actions (clockwise and counter)
@@ -30,7 +30,7 @@
 ;;
 ;; 2 is a terminal state.  no discounting
 ;; note that all policies are proper because of noisy transitions.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defparameter *trans-mat-1*
   (make-array '(3 2 3)
@@ -46,8 +46,8 @@
 		((2 5 1) (2 5 1))
 		((0 0 0) (0 0 0)))))
 
-(defparameter *test-mdp-1* (mdp:make-tabular-mdp *trans-mat-1* *rew-mat-1* :termination-vector #(nil nil t)))
-
+(defparameter *test-mdp-1*
+  (mdp:make-tabular-mdp *trans-mat-1* *rew-mat-1* :termination-vector #(nil nil t)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +67,7 @@
 (defparameter *term* (make-array '(2 3) :initial-contents '((nil nil T) (nil nil nil))))
 (defparameter *rew* (make-array '(2 3) :initial-contents '((2 0 4) (1 -2 -3))))
 
-(defparameter *test-mdp-2* (make-maze-mdp *world-map* :rewards *rew* :cost-of-living 5 :move-success-prob .8 :termination *term* :collision-cost 2.0))
-
-(in-package common-lisp-user)	      
-   
+(defparameter *test-mdp-2*
+  (make-maze-mdp *world-map*
+                 :rewards *rew* :cost-of-living 5 :move-success-prob .8
+                 :termination *term* :collision-cost 2.0))

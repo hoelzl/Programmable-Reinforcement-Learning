@@ -1,8 +1,7 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:reinforcement-learning
-  (:documentation "Internal package for (flat) reinforcement learning.
-")
+  (:documentation "Internal package for (flat) reinforcement learning.")
   (:nicknames #:rl)
   (:use #:common-lisp
 	#:utils
@@ -51,7 +50,8 @@
            #:set-hist-collect))
 
 (defpackage #:rl-user
-  (:documentation "Package rl-user.  Package used when running rl algorithms in environments.
+  (:documentation "Package rl-user.
+Package used when running rl algorithms in environments.
 
 Exported symbols
 ==================
@@ -113,7 +113,8 @@ Other observers
 
 (defpackage #:rl-observer
   (:nicknames #:rl-obs)
-  (:documentation "Package rl-observer.  Used when making new observers/learning algorithms/stats gatherers.
+  (:documentation "Package rl-observer.
+Used when making new observers/learning algorithms/stats gatherers.
 
 Types
 -----

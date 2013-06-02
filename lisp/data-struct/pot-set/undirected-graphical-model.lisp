@@ -52,17 +52,20 @@ ELIM-ORDER - list of variables in order of elimination.
 INST-SET - object of type <prod-set> that represents set of joint instantiations.
 TEMP - the temperature.  Must be a nonnegative real number or the symbol 'utils:infty
 
-Returns an object of type <undirected-graphical-model> (and therefore, of type [prob-dist]) representing the Boltzmann distribution over assignments, in which the probability of an assignment is proportional to exp(POT-TOTAL/TEMP) where POT-TOTAL is the sum of the potentials evaluated at the assignment.  If TEMP is 'infty, return a uniform distribution.  If TEMP is 0, returns a distribution that deterministically equals some maximizing assignment."
+Returns an object of type <undirected-graphical-model> (and therefore, of type [prob-dist])
+representing the Boltzmann distribution over assignments, in which the probability of an
+assignment is proportional to exp(POT-TOTAL/TEMP) where POT-TOTAL is the sum of the potentials
+evaluated at the assignment.  If TEMP is 'infty, return a uniform distribution.  If TEMP is 0,
+returns a distribution that deterministically equals some maximizing assignment."
   
   (cond
-   ((eql temp 'infty) (prob:make-unif-dist-over-set s))
-   ((eql temp 0) (make-deterministic-dist (best-assignment *max* *plus* potentials elim-order s)))
-   (t ;; temp is a positive real number
-    (assert (and (numberp temp) (> temp 0)) (temp)
-      "Illegal temperature ~a in Boltzmann distribution" temp)
-    (let ((exp-fn #'(lambda (x) (exp (/ x temp)))))
-      (make-instance '<undirected-graphical-model>
-	:potentials (mapcar #'(lambda (pot) (compose-potential exp-fn pot)) potentials)
-	:inst-set s
-	:elim-order elim-order)))))
-
+    ((eql temp 'infty) (prob:make-unif-dist-over-set s))
+    ((eql temp 0) (make-deterministic-dist (best-assignment *max* *plus* potentials elim-order s)))
+    (t                                  ;; temp is a positive real number
+     (assert (and (numberp temp) (> temp 0)) (temp)
+             "Illegal temperature ~a in Boltzmann distribution" temp)
+     (let ((exp-fn #'(lambda (x) (exp (/ x temp)))))
+       (make-instance '<undirected-graphical-model>
+         :potentials (mapcar #'(lambda (pot) (compose-potential exp-fn pot)) potentials)
+         :inst-set s
+         :elim-order elim-order)))))

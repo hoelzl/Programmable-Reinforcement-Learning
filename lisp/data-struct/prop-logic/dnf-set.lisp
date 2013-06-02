@@ -16,18 +16,24 @@
 		 :initarg :props
                  :initform (required-initarg :props)
 		 :writer set-props))
-  (:documentation "<dnf-set>.  Represents the set of satisfying assignments of a DNF formula. Create using make-dnf-set.
+  (:documentation "Class <dnf-set>
 
-DNF sets support many of the standard set operations.  One thing to note is that the operation same is not exactly correct - it returns t iff the two formulae have the same canonical representations.  So it might sometimes fail to detect equivalent formulae (not sure)."))
+Represents the set of satisfying assignments of a DNF formula. Create using make-dnf-set.
+
+DNF sets support many of the standard set operations.  One thing to note is that the operation
+same is not exactly correct - it returns t iff the two formulae have the same canonical
+representations.  So it might sometimes fail to detect equivalent formulae (not sure)."))
 
 (defun make-dnf-set (formula props)
-  "make-dnf-set FORMULA PROPS.  Make a <dnf-set> object representing the set of satisfying assignments to FORMULA over the symbols PROPS (which must include those in formula)."
+  "make-dnf-set FORMULA PROPS
+Make a <dnf-set> object representing the set of satisfying assignments to FORMULA over the
+symbols PROPS (which must include those in formula)."
   (let ((formula-props (prop-symbols formula)))
     (assert (subset formula-props props) ()
-      "Symbols in ~a are ~a, which is not a subset of ~a"
-      formula formula-props props)
+            "Symbols in ~a are ~a, which is not a subset of ~a"
+            formula formula-props props)
     (assert (is-dnf-formula formula) ()
-      "~a is not a DNF formula" formula)
+            "~a is not a DNF formula" formula)
     (make-instance '<dnf-set> :formula (standardize-dnf formula) :props props)))
 
 
@@ -42,8 +48,8 @@ DNF sets support many of the standard set operations.  One thing to note is that
   (let ((p (props s))
 	(p2 (props s2)))
     (assert (set-eq p p2) ()
-      "Sets ~a and ~a have differing proposition sets ~a and ~a" 
-      s s2 p p2)
+            "Sets ~a and ~a have differing proposition sets ~a and ~a" 
+            s s2 p p2)
     (make-dnf-set
      (dnf-and (formula s) (formula s2))
      p)))
@@ -53,8 +59,8 @@ DNF sets support many of the standard set operations.  One thing to note is that
   (let ((p (props s))
 	(p2 (props s2)))
     (assert (set-eq p p2) ()
-      "Sets ~a and ~a have differing proposition sets ~a and ~a" 
-      s s2 p p2)
+            "Sets ~a and ~a have differing proposition sets ~a and ~a" 
+            s s2 p p2)
     (make-dnf-set
      (dnf-or (formula s) (formula s2))
      p)))

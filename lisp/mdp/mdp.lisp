@@ -6,7 +6,8 @@
 
 (defclass <mdp> (<smdp>)
   ()
-  (:documentation "abstract class for Markov Decision Processes
+  (:documentation "Abstract class <mdp> (<smdp>)
+Abstract class for Markov Decision Processes
 
 Initargs
 :state-set
@@ -27,15 +28,19 @@ Subclasses must
 
 
 (defgeneric trans-dist (m s a)
-  (:documentation "trans-dist MDP STATE ACTION.  Transition distribution as a result of doing ACTION at STATE."))
+  (:documentation "trans-dist MDP STATE ACTION
+Transition distribution as a result of doing ACTION at STATE."))
 
 (defgeneric trans-prob (m s a d)
-  (:documentation "trans-prob MDP SOURCE ACTION DEST.  Probability of transitioning from SOURCE to DEST given ACTION.  Default method just uses the trans-dist.")
+  (:documentation "trans-prob MDP SOURCE ACTION DEST
+Probability of transitioning from SOURCE to DEST given ACTION.  Default method just uses the
+trans-dist.")
   (:method ((m <mdp>) s a d)
-	   (prob (trans-dist m s a) d)))
+    (prob (trans-dist m s a) d)))
 
 (defgeneric reward (m s a d)
-  (:documentation "reward MDP SOURCE ACTION DEST.  Reward for transitioning from SOURCE to DEST given ACTION."))
+  (:documentation "reward MDP SOURCE ACTION DEST
+Reward for transitioning from SOURCE to DEST given ACTION."))
 
 
 
@@ -55,7 +60,9 @@ Subclasses must
 	   :initarg :s)
    (action :reader a
 	   :initarg :a))
-  (:documentation "Wrapper that turns a row of the mdp transition distribution (over next state) into an SMDP transition distribution (over next-state, reward, and duration)."))
+  (:documentation "Class <mdp-trans-dist> (<prob-dist>)
+Wrapper that turns a row of the mdp transition distribution (over next state) into an SMDP
+transition distribution (over next-state, reward, and duration)."))
 
 (defmethod sample ((d <mdp-trans-dist>))
   (let ((s2 (sample (dist d))))
@@ -66,7 +73,7 @@ Subclasses must
     (if (and (eql (outcome-reward outcome) (reward (mdp d) (s d) (a d) s2))
 	     (eql (outcome-duration outcome) 1))
 	(prob (dist d) s2)
-      0)))
+        0)))
 
 (defmethod expectation ((d <mdp-trans-dist>) f)
   (let ((m (mdp d))
@@ -80,7 +87,6 @@ Subclasses must
 (defmethod smdp-trans-dist ((m <mdp>) s a)
   (make-instance '<mdp-trans-dist> :dist (trans-dist m s a) :mdp m :s s :a a))
 
-
 (defmethod sample-iterator ((d <mdp-trans-dist>))
   (let ((iter (set:iterator (state-set (mdp d)))))
     (lambda ()
@@ -88,15 +94,12 @@ Subclasses must
 	  (funcall iter)
 	(if done?
 	    (values nil nil t)
-	  (values (make-outcome s2
-				(reward (mdp d) (s d) (a d) s2)
-				1)
-		  (prob (dist d) s2) 
-		  nil))))))
+            (values (make-outcome s2
+                                  (reward (mdp d) (s d) (a d) s2)
+                                  1)
+                    (prob (dist d) s2) 
+                    nil))))))
       
-  
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Other operations - these are implemented here (but
@@ -105,36 +108,46 @@ Subclasses must
 
 
 (defgeneric transition-matrix (m)
-  (:documentation "transition-matrix MDP.  Requires state and action sets to be [numbered-set]s.  In this case, return the transition matrix, indexed using the numbering on the states and actions.  Default method just enumerates over states and actions to generate the matrix.")
+  (:documentation "transition-matrix MDP
+Requires state and action sets to be [numbered-set]s.  In this case, return the transition
+matrix, indexed using the numbering on the states and actions.  Default method just enumerates
+over states and actions to generate the matrix.")
   (:method ((m <mdp>))
-	   (let* ((states (state-set m))
-		  (actions (action-set m))
-		  (num-states (size states))
-		  (num-actions (size actions))
-		  (trans-matrix (make-array (list num-states num-actions num-states))))
-	     (assert (and (typep states '[numbered-set]) (typep actions '[numbered-set]))
-		 nil "State and action sets of MDP must be of type [numbered-set] in order to create transition matrix")
-	     (do-elements (s states trans-matrix i)
-	       (do-elements (a actions nil j)
-		 (do-elements (s2 states nil k)
-		   (setf (aref trans-matrix i j k)
-		     (trans-prob m s a s2))))))))
+    (let* ((states (state-set m))
+           (actions (action-set m))
+           (num-states (size states))
+           (num-actions (size actions))
+           (trans-matrix (make-array (list num-states num-actions num-states))))
+      (assert (and (typep states '[numbered-set]) (typep actions '[numbered-set]))
+              ()
+              #.(str "State and action sets of MDP must be of type [numbered-set] in order "
+                     "to create a transition matrix"))
+      (do-elements (s states trans-matrix i)
+        (do-elements (a actions nil j)
+          (do-elements (s2 states nil k)
+            (setf (aref trans-matrix i j k)
+                  (trans-prob m s a s2))))))))
 
 (defgeneric reward-matrix (m)
-  (:documentation "reward-matrix MDP.  Requires state and action sets to be [numbered-set]s.  In this case, return the reward matrix, indexed using the numbering on the states and actions.  Default method just enumerates over states and actions to generate the matrix.")
+  (:documentation "reward-matrix MDP
+Requires state and action sets to be [numbered-set]s.  In this case, return the reward matrix,
+indexed using the numbering on the states and actions.  Default method just enumerates over
+states and actions to generate the matrix.")
   (:method ((m <mdp>))
-	   (let* ((states (state-set m))
-		  (actions (action-set m))
-		  (num-states (size states))
-		  (num-actions (size actions))
-		  (rew-matrix (make-array (list num-states num-actions num-states))))
-	     (assert (and (typep states '[numbered-set]) (typep actions '[numbered-set]))
-		 nil "State and action sets of MDP must be of type [numbered-set] in order to create reward matrix")
-	     (do-elements (s states rew-matrix i)
-	       (do-elements (a actions nil j)
-		 (do-elements (s2 states nil k)
-		   (setf (aref rew-matrix i j k)
-		     (reward m s a s2))))))))
+    (let* ((states (state-set m))
+           (actions (action-set m))
+           (num-states (size states))
+           (num-actions (size actions))
+           (rew-matrix (make-array (list num-states num-actions num-states))))
+      (assert (and (typep states '[numbered-set]) (typep actions '[numbered-set]))
+              ()
+              #.(str "State and action sets of MDP must be of type [numbered-set] in order "
+                     "to create reward matrix"))
+      (do-elements (s states rew-matrix i)
+        (do-elements (a actions nil j)
+          (do-elements (s2 states nil k)
+            (setf (aref rew-matrix i j k)
+                  (reward m s a s2))))))))
 
 
 

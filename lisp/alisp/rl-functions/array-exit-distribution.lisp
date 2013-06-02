@@ -4,21 +4,24 @@
   ((featurizer :reader featurizer :initarg :featurizer :type function
 	       :initform (lambda (omega u) (cons (canonicalize omega) (canonicalize u))))
    (key-fn :reader key-fn :type function :initarg :key-fn)
-   (cond-dists :type (simple-array * 1) :reader cond-dists :writer set-cond-dists :initarg :cond-dists))
-  (:documentation "A conditional probability distribution for exit distributions in ALisp.
+   (cond-dists :type (simple-array * 1)
+               :reader cond-dists :writer set-cond-dists :initarg :cond-dists))
+  (:documentation "Class <array-exit-distribution> (<cond-prob-dist>)
+A conditional probability distribution for exit distributions in ALisp.
 
 Initargs
-:featurizer - Function of two arguments that maps from omega and u to a feature vector that is passed to fn-approx, which returns a probability distribution over exit state.  Default is just (canonicalize (cons omega u))
-:key-fn - Function from omega, u to a nonnegative integer
-:Num-keys - key-fn takes values between 0 and num-keys - 1
-"))
+FEATURIZER: Function of two arguments that maps from omega and u to a feature vector that is
+            passed to fn-approx, which returns a probability distribution over exit state.
+            Default is just (canonicalize (cons omega u))
+KEY-FN:   Function from omega, u to a nonnegative integer
+NUM-KEYS: KEY-FN takes values between 0 and num-keys - 1"))
 
-(defmethod initialize-instance :after ((d <array-exit-distribution>) &rest args &key key-fn num-keys)
+(defmethod initialize-instance :after
+    ((d <array-exit-distribution>) &rest args &key key-fn num-keys)
   (declare (ignore args))
   (assert (and key-fn num-keys))
   (unless (slot-boundp d 'cond-dists)
     (set-cond-dists (make-array num-keys :initial-element nil) d)))
-
 
 (defmethod cond-dist ((p <array-exit-distribution>) x)
   (exit-dist p (car x) (cdr x)))
@@ -43,7 +46,7 @@ Initargs
 	(assert ind () "Invalid item ~a given to array exit dist ~a" ind features)
 	(let ((dist (aref cd ind)))
 	  (setf (aref cd ind)
-	    (if dist 
-		(updatef dist new-dist eta)
-	      (updatef d new-dist eta))))))))
+                (if dist 
+                    (updatef dist new-dist eta)
+                    (updatef d new-dist eta))))))))
 

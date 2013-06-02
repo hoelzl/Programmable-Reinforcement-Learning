@@ -116,19 +116,21 @@ gathering
   "rbe-env-state - state for resource balance environment.
 
 State variables that change during an episode
-1) pos - array of positions of each peasant
-2) status - array of statuses of each peasant.  Each one can be 'empty-handed, 'carrying-gold, 'carrying-wood, 'dropoff-gold, 'dropoff-wood, or '(gathering i) for some integer i, which means that the peasant will be carrying the resource i+1 steps in the future
-3) gold - amount of gold at base
-4) wood - amount of wood at base
+1) pos -    array of positions of each peasant
+2) status - array of statuses of each peasant.  Each one can be 'empty-handed, 'carrying-gold,
+            'carrying-wood, 'dropoff-gold, 'dropoff-wood, or '(gathering i) for some integer i,
+            which means that the peasant will be carrying the resource i+1 steps in the future
+3) gold -   amount of gold at base
+4) wood -   amount of wood at base
 
 State variables that don't change during an episode
-5) world map - A 2d array.  For now, we only care about the dimensions of this array.
-6) num-peas - number of peasants
+5) world map -      a 2d array.  For now, we only care about the dimensions of this array.
+6) num-peas -       number of peasants
 7) max-gold
 8) max-wood
-9) base-loc - where the base is
-10) forest-locs - where the forests are
-11) mine-locs - where the gold mines are
+9) base-loc -       where the base is
+10) forest-locs -   where the forests are
+11) mine-locs -     where the gold mines are
 12) cost-of-living
 13) collision-cost
 14) dropoff-reward"
@@ -153,76 +155,74 @@ State variables that don't change during an episode
 (defmethod effectors ((s rbe-env-state))
   (below (num-peas s)))
 
-
 (defmethod canonicalize ((s rbe-env-state))
   (list (pos s) (status s) (gold s) (wood s)))
 
 (defun pprint-rbe-state (str s)
   (pprint-logical-block (str nil)
     (loop
-	with wm = (world-map s)
-	with peas-list = (below (num-peas s))
-	with num-rows = (array-dimension wm 0)
-	with num-cols = (array-dimension wm 1)
-	with box-size = 3
-	with (row row-offset col col-offset pos)
-	with positions = (pos s)
-	with status = (status s)
+      with wm = (world-map s)
+      with peas-list = (below (num-peas s))
+      with num-rows = (array-dimension wm 0)
+      with num-cols = (array-dimension wm 1)
+      with box-size = 3
+      with (row row-offset col col-offset pos)
+      with positions = (pos s)
+      with status = (status s)
 		
-	for y below (* box-size num-rows)
-	do (multiple-value-setq (row row-offset)
-	     (floor y box-size))
-	   (loop
-	       for x below (* box-size num-cols)
-	       do (multiple-value-setq (col col-offset)
-		    (floor x box-size))
-		  (setf pos (list row col))
-		  (format str
-			  (or
-			   (cond
-			    ((or (= 0 col-offset) (= 0 row-offset)) "X")
-			    ((and (= 1 col-offset) (= 1 row-offset))
-			     (let ((i (find-if
-				       (lambda (x) 
-					 (and (equal (aref positions x) pos)
-					      (member (aref status x) '(empty-handed dropoff-gold dropoff-wood))))
-				       peas-list)))
-			       (when i (format nil "~a" i))))
-			    ((and (= 1 col-offset) (= 2 row-offset))
-			     (let ((i (find-if 
-				       (lambda (x)
-					 (and (equal (aref positions x) pos)
-					      (member (aref status x) '(carrying-gold carrying-wood))))
-				       peas-list)))
-			       (when i (format nil "~a" i))))
-			    ((and (= 2 col-offset) (= 1 row-offset))
-			     (let ((i (find-if
-				       (lambda (x)
-					 (and (equal (aref positions x) pos)
-					      (listp (aref status x))))
-				       peas-list)))
-			       (when i (format nil "~a" i))))
-			    ((and (= 2 col-offset) (= 2 row-offset))
-			     (if (member pos (forest-locs s) :test #'equal)
-				 "F"
-			       (if (member pos (mine-locs s) :test #'equal)
-				   "M"
-				 (when (equal pos (base-loc s)) "B")))))
-			   " "))
-	       finally (format str "X"))
-	   (pprint-newline :mandatory str)
+      for y below (* box-size num-rows)
+      do (multiple-value-setq (row row-offset)
+           (floor y box-size))
+         (loop
+           for x below (* box-size num-cols)
+           do (multiple-value-setq (col col-offset)
+                (floor x box-size))
+              (setf pos (list row col))
+              (format str
+                      (or
+                       (cond
+                         ((or (= 0 col-offset) (= 0 row-offset)) "X")
+                         ((and (= 1 col-offset) (= 1 row-offset))
+                          (let ((i (find-if
+                                    (lambda (x) 
+                                      (and (equal (aref positions x) pos)
+                                           (member (aref status x) '(empty-handed dropoff-gold dropoff-wood))))
+                                    peas-list)))
+                            (when i (format nil "~a" i))))
+                         ((and (= 1 col-offset) (= 2 row-offset))
+                          (let ((i (find-if 
+                                    (lambda (x)
+                                      (and (equal (aref positions x) pos)
+                                           (member (aref status x) '(carrying-gold carrying-wood))))
+                                    peas-list)))
+                            (when i (format nil "~a" i))))
+                         ((and (= 2 col-offset) (= 1 row-offset))
+                          (let ((i (find-if
+                                    (lambda (x)
+                                      (and (equal (aref positions x) pos)
+                                           (listp (aref status x))))
+                                    peas-list)))
+                            (when i (format nil "~a" i))))
+                         ((and (= 2 col-offset) (= 2 row-offset))
+                          (if (member pos (forest-locs s) :test #'equal)
+                              "F"
+                              (if (member pos (mine-locs s) :test #'equal)
+                                  "M"
+                                  (when (equal pos (base-loc s)) "B")))))
+                       " "))
+           finally (format str "X"))
+         (pprint-newline :mandatory str)
 
 	   
-	finally (format str "~V@{~C~:*~}" (1+ (* box-size num-cols)) #\X)
-		(format str "~:@_Positions : ~a~:@_Statuses : ~a~:@_Gold : ~a Wood : ~a" 
-			(pos s) (status s) (gold s) (wood s))
-		)))
+      finally (format str "~V@{~C~:*~}" (1+ (* box-size num-cols)) #\X)
+              (format str "~:@_Positions : ~a~:@_Statuses : ~a~:@_Gold : ~a Wood : ~a" 
+                      (pos s) (status s) (gold s) (wood s)))))
 
 
 (defmethod print-object ((s rbe-env-state) str)
   (if (or *print-readably* (not *print-pretty*))
       (call-next-method)
-    (pprint-rbe-state str s)))
+      (pprint-rbe-state str s)))
 	   
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; variable
@@ -236,22 +236,22 @@ State variables that don't change during an episode
    
 (defun make-pos-cpd (wm slip-prob)
   (make-cpd 
-   (prev-pos prev-status act)
-   (let ((slip-dist `((nil . ,(- 1 slip-prob)) (left . ,(/ slip-prob 2))
-					       (right . ,(/ slip-prob 2)))))
-     (if (or (listp prev-status) (member act '(P D R)))
-	 (make-deterministic-dist prev-pos)
-       (make-rv-dist (lambda (x)
-		       (result-legal wm prev-pos
+      (prev-pos prev-status act)
+    (let ((slip-dist `((nil . ,(- 1 slip-prob)) (left . ,(/ slip-prob 2))
+                       (right . ,(/ slip-prob 2)))))
+      (if (or (listp prev-status) (member act '(P D R)))
+          (make-deterministic-dist prev-pos)
+          (make-rv-dist (lambda (x)
+                          (result-legal wm prev-pos
 					(case x
 					  (left (rot-counterclockwise act))
 					  (right (rot-clockwise act))
 					  (otherwise act))))
-		     slip-dist)))))
+                        slip-dist)))))
 
 (defun make-pos-desc (wm slip-prob i)
   (let ((positions 
-	 (make-instance '<var-set> :sets (array-dimensions wm) :element-type 'list)))
+          (make-instance '<var-set> :sets (array-dimensions wm) :element-type 'list)))
     (make-2tbn-var-desc
      :id `(pos ,i) :domain positions
      :init-slice-parents () :init-dist (constantly (make-unif-dist-over-set positions))
@@ -264,7 +264,7 @@ State variables that don't change during an episode
 
 (defun make-status-desc (i gather-time-dist)
   (make-2tbn-var-desc
-   :id `(status ,i) :domain nil ;; for now, because it's a pain to specify the actual set
+   :id `(status ,i) :domain nil        ;; for now, because it's a pain to specify the actual set
    :init-slice-parents () :init-dist (constantly (make-deterministic-dist 'empty-handed))
    :prev-slice-parents `((pos ,i) (status ,i) (action ,i)) 
    :curr-slice-parents '(base-loc forest-locs mine-locs)
@@ -272,38 +272,38 @@ State variables that don't change during an episode
 
 (defun make-status-cpd (gather-time-dist)
   (make-cpd 
-   (prev-pos prev-status a base-loc forest-locs mine-locs)
+      (prev-pos prev-status a base-loc forest-locs mine-locs)
    
-   (if (and (eq a 'P) ;; pickup
-	    (eq prev-status 'empty-handed)
-	    (or (member prev-pos forest-locs :test #'equal)
-		(member prev-pos mine-locs :test #'equal)))
-       (make-rv-dist (lambda (gt) `(gathering ,gt)) gather-time-dist)
+    (if (and (eq a 'P)                  ;; pickup
+             (eq prev-status 'empty-handed)
+             (or (member prev-pos forest-locs :test #'equal)
+                 (member prev-pos mine-locs :test #'equal)))
+        (make-rv-dist (lambda (gt) `(gathering ,gt)) gather-time-dist)
        
-     (make-deterministic-dist
-      (or
-       (cond
-	;; if gathering a resource
-	((listp prev-status)
-	 (let ((time-left (second prev-status)))
-	   (if (zerop time-left)
-	       (if (member prev-pos forest-locs :test #'equal)
-		   'carrying-wood
-		 'carrying-gold)
-	     `(gathering ,(1- time-left)))))
+        (make-deterministic-dist
+         (or
+          (cond
+            ;; if gathering a resource
+            ((listp prev-status)
+             (let ((time-left (second prev-status)))
+               (if (zerop time-left)
+                   (if (member prev-pos forest-locs :test #'equal)
+                       'carrying-wood
+                       'carrying-gold)
+                   `(gathering ,(1- time-left)))))
      
-	;; if just dropped off something
-	((member prev-status '(dropoff-gold dropoff-wood)) 'empty-handed)
+            ;; if just dropped off something
+            ((member prev-status '(dropoff-gold dropoff-wood)) 'empty-handed)
     
-	;; if doing a dropoff
-	((and (eq a 'D) 
-	      (equal prev-pos base-loc))
-	 (case prev-status
-	   (carrying-gold 'dropoff-gold)
-	   (carrying-wood 'dropoff-wood))))
+            ;; if doing a dropoff
+            ((and (eq a 'D) 
+                  (equal prev-pos base-loc))
+             (case prev-status
+               (carrying-gold 'dropoff-gold)
+               (carrying-wood 'dropoff-wood))))
      
-       prev-status ;; in default case, status doesn't change
-       )))))
+          prev-status                   ;; in default case, status doesn't change
+          )))))
        
 	   
 
@@ -320,9 +320,9 @@ State variables that don't change during an episode
 		      :curr-slice-parents (loop for i below num-peas collecting `(status ,i))
 		      :trans-dist 
 		      (make-cpd 
-		       (prev-gold &rest args)
-		       (make-deterministic-dist
-			(+ prev-gold (count 'dropoff-gold args))))
+                          (prev-gold &rest args)
+                        (make-deterministic-dist
+                         (+ prev-gold (count 'dropoff-gold args))))
 		      :init-slice-parents '()
 		      :init-dist (constantly (make-deterministic-dist 0))))
 
@@ -332,8 +332,8 @@ State variables that don't change during an episode
 		      :curr-slice-parents (loop for i below num-peas collecting `(status ,i))
 		      :trans-dist 
 		      (make-cpd (prev-wood &rest args)
-				(make-deterministic-dist
-				 (+ prev-wood (count 'dropoff-wood args))))
+                        (make-deterministic-dist
+                         (+ prev-wood (count 'dropoff-wood args))))
 		      :init-slice-parents '()
 		      :init-dist (constantly (make-deterministic-dist 0))))
 				       
@@ -348,10 +348,10 @@ State variables that don't change during an episode
    :prev-slice-parents '(max-gold max-wood gold wood) :curr-slice-parents '(gold wood)
    :reward-fn
    (make-cpd
-    (max-gold max-wood prev-gold prev-wood gold wood)
-    (* r (+
-	  (- (min max-gold gold) (min max-gold prev-gold))
-	  (- (min max-wood wood) (min max-wood prev-wood)))))))
+       (max-gold max-wood prev-gold prev-wood gold wood)
+     (* r (+
+           (- (min max-gold gold) (min max-gold prev-gold))
+           (- (min max-wood wood) (min max-wood prev-wood)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; collision cost
@@ -364,13 +364,13 @@ State variables that don't change during an episode
    :curr-slice-parents (mapset 'list (lambda (i) `(pos ,i)) num-peas)
    :reward-fn 
    (make-cpd 
-    (&rest args)
-    (* (- collision-cost)
-       (reduce #'+
-	       (maplist 
-		(lambda (positions)
-		  (count (first positions) (rest positions) :test #'equal))
-		args))))))
+       (&rest args)
+     (* (- collision-cost)
+        (reduce #'+
+                (maplist 
+                 (lambda (positions)
+                   (count (first positions) (rest positions) :test #'equal))
+                 args))))))
 
 
 	  
@@ -382,8 +382,9 @@ State variables that don't change during an episode
 		      &key (slip-prob .1) (collision-cost 5) (cost-of-living 1)
 			   (gather-time-dist '((3 . 0.5) (4 . 0.5))) (dropoff-reward 3))
 
-  "make-rbe-2tbn  MAP NUM-PEAS MAX-GOLD MAX-WOOD BASE-LOC FOREST-LOCS MINE-LOCS &key (SLIP-PROB .1) (COLLISION-COST 5) (COST-OF-LIVING 1) (GATHER-TIME-DIST '((3 . 0.5) (4 . 0.5))) (DROPOFF-REWARD 3) 
-  
+  "make-rbe-2tbn  MAP NUM-PEAS MAX-GOLD MAX-WOOD BASE-LOC FOREST-LOCS MINE-LOCS
+               &key (SLIP-PROB .1) (COLLISION-COST 5) (COST-OF-LIVING 1)
+                    (GATHER-TIME-DIST '((3 . 0.5) (4 . 0.5))) (DROPOFF-REWARD 3) 
 Return a '<2tbn>."
   
   (make-instance '<2tbn>
@@ -407,7 +408,10 @@ Return a '<2tbn>."
       (mapset 'list (lambda (i) (make-status-desc i gather-time-dist)) num-peas)))
     
     :action-descs
-    (mapset 'list (lambda (i) (make-2tbn-var-desc :id `(action ,i) :domain '(N E S W R P D))) num-peas)
+    (mapset 'list
+            (lambda (i)
+              (make-2tbn-var-desc :id `(action ,i) :domain '(N E S W R P D)))
+            num-peas)
     
     :reward-descs
     (list (make-2tbn-var-desc :id 'cost-of-living :domain 'real-numbers
@@ -437,7 +441,10 @@ Return a '<2tbn>."
   (world-map (get-state e)))
 
 (defun make-rbe-env (&rest args)
-  "make-rbe-env  MAP NUM-PEAS MAX-GOLD MAX-WOOD BASE-LOC FOREST-LOCS MINE-LOCS &key (SLIP-PROB .1) (COLLISION-COST 5) (COST-OF-LIVING 1) (GATHER-TIME-DIST '((3 . 0.5) (4 . 0.5))) (DROPOFF-REWARD 3).  Returns an environment."
+  "make-rbe-env  MAP NUM-PEAS MAX-GOLD MAX-WOOD BASE-LOC FOREST-LOCS MINE-LOCS
+              &key (SLIP-PROB .1) (COLLISION-COST 5) (COST-OF-LIVING 1)
+                   (GATHER-TIME-DIST '((3 . 0.5) (4 . 0.5))) (DROPOFF-REWARD 3)
+Returns an environment."
   (let ((mg (third args))
 	(mw (fourth args)))
     (mdp-env:make-2tbn-mdp-env 

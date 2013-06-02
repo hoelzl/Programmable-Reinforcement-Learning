@@ -3,7 +3,8 @@
 (defconstant +default-tail-length+ 10)
 
 (defun stail (s &optional (tail-length +default-tail-length+))
-  "stail SEQ &optional (LENGTH 10).  Return last LENGTH elements of SEQ."
+  "stail SEQ &optional (LENGTH 10)
+Return last LENGTH elements of SEQ."
   (if (> (length s) tail-length)
       (subseq s (- (length s) tail-length))
     s))
@@ -15,6 +16,8 @@
 
 
 (defmacro def-seq-accessor (name pos)
+  "def-seq-accessor NAME POS 
+Defines NAME as function of one argument S that accesses the POS-th element of S."
   (let ((s (gensym)))
     `(defun ,name (,s) (elt ,s ,pos))))
 
@@ -23,15 +26,17 @@
 (def-seq-accessor sthird 2)
 (def-seq-accessor sfourth 3)
 
-
 (defgeneric is-sorted (l &optional pred)
-  (:documentation "is-sorted SEQUENCE &OPTIONAL (PRED #'<=).  Do every pair of adjacent elements in SEQUENCE satisfy PRED?  (We're assuming PRED is transitive)")
+  (:documentation "is-sorted SEQUENCE &OPTIONAL (PRED #'<=)
+Does every pair of adjacent elements in SEQUENCE satisfy PRED?  (We're assuming PRED is
+transitive)")
   (:method ((l list) &optional (pred #'<=))
-	   (loop
-	       for rem on l
-	       always (or (not (cdr rem)) (funcall pred (car rem) (cadr rem)))))
+    (loop
+      for rem on l
+      always (or (not (cdr rem))
+                 (funcall pred (car rem) (cadr rem)))))
   (:method ((l vector) &optional (pred #'<=))
-	   (loop
-	       for i below (1- (length l))
-	       always (funcall pred (aref l i) (aref l (1+ i))))))
+    (loop
+      for i below (1- (length l))
+      always (funcall pred (aref l i) (aref l (1+ i))))))
 

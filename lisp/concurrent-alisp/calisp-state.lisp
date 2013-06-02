@@ -5,8 +5,6 @@
 
 (in-package #:calisp)
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; conditions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14,8 +12,10 @@
 (define-condition non-choosing-thread ()
   ((id :initarg :id :reader get-id)
    (state :initarg :state :reader get-state))
-  (:report (lambda (c s) (format s "Id ~a is not among choosing threads ~a" (get-id c) (js-choosing-thread-ids (get-state c))))))
-
+  (:report (lambda (c s)
+             (format s "Id ~A is not among choosing threads ~A."
+                     (get-id c)
+                     (js-choosing-thread-ids (get-state c))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32,8 +32,6 @@
   thread-states
   choosing-thread-ids
   choices)
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; functions for joint states
@@ -86,7 +84,8 @@ Returns list of positions of each id in list of choosing threads."
   
 
 (defun threads-in-subtask (omega name)
-  "threads-in-subtask OMEGA NAME.  Return a list of the ids of all threads whose stack contains a frame named NAME."
+  "threads-in-subtask OMEGA NAME
+Return a list of the ids of all threads whose stack contains a frame named NAME."
   (hash-table-select 
    (js-thread-states omega)
    (lambda (ts)
@@ -94,7 +93,8 @@ Returns list of positions of each id in list of choosing threads."
 	   (ts-stack ts)))))
 
 (defun threads-at-label (omega label)
-  "threads-at-label OMEGA LABEL.  Return a list of ids of threads whose program counter label is LABEL."
+  "threads-at-label OMEGA LABEL
+Return a list of ids of threads whose program counter label is LABEL."
   (hash-table-select
    (js-thread-states omega)
    (lambda (ts)
@@ -102,7 +102,8 @@ Returns list of positions of each id in list of choosing threads."
 
 
 (defun choosing-threads-at-label (omega label)
-  "threads-at-label OMEGA LABEL.  Return a list of ids of threads whose program counter label is LABEL."
+  "threads-at-label OMEGA LABEL
+Return a list of ids of threads whose program counter label is LABEL."
   (hash-table-select
    (js-thread-states omega)
    (lambda (ts)
@@ -119,16 +120,39 @@ Returns list of positions of each id in list of choosing threads."
 ;; def
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(deftype joint-state-type ()
+  "Type joint-state-type
+Specifies what the RLM is currently doing with the state:
+NIL:              The state is freshly created but not yet used by the RLM(?)
+ACTION:           The RLM is about to or in the process of evaluating an action
+                  definition (i.e., cloning the state before executing an action, checking
+                  whether the RLM is at a terminal state, evaluating DO-ACTION).
+ACTION-EXIT:      The RLM has completed evaluating DO-ACTION.
+CALL:             The RLM is about to or in in the process of evaluating a call (i.e, choosing
+                  values for unspecified variables, cloning the state before executing a call,
+                  filling unspecified arguments, evaluating the call code.
+CALL-EXIT:        The RLM has completed a call.
+CHOOSE:           The RLM is about to or in the process of evaluating a CHOOSE form.
+CHOOSE-EXIT:      The RLM has completed a CHOOSE form.
+INTERNAL:         The RLM is performing internal cleanup or bookkeeping actions.
+WITH-CHOICE:      The RLM is about to or in the process of evaluating a WITH-CHOICE form.
+WITH-CHOICE-EXIT: The RLM has completed a WITH-CHOICE form.
+"
+  '(or null
+    (member action action-exit call call-exit choose choose-exit internal 
+     with-choice with-choice-exit)))
+
+(deftype joint-state-status ()
+  '(member holding acting waiting-to-act running))
+
 (defstruct (thread-state (:conc-name ts-))
   pc
   next-frame
   stack
   choices
   effectors
-  (type nil "Can be 'choose, 'action, 'call, 'with-choice, any of these with -exit added on to the end, or internal")
-  (status nil "Can be choosing, holding, acting, waiting-to-act, or running"))
-
-
+  (type nil :type joint-state-type)
+  (status nil :type joint-state-status))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; functions on thread states
@@ -159,8 +183,8 @@ Returns list of positions of each id in list of choosing threads."
 
 (defun canonicalize-thread-states (t-states)
   (loop 
-      for k being each hash-key in t-states using (hash-value v)
-      collect (cons k (canonicalize-thread-state v))))
+    for k being each hash-key in t-states using (hash-value v)
+    collect (cons k (canonicalize-thread-state v))))
 
 ;; TODO this isn't quite right
 (defun canonicalize-thread-state (ts)
@@ -171,12 +195,13 @@ Returns list of positions of each id in list of choosing threads."
 
 
 (defun move-next-frame-to-stack (ts)
-  "move-next-frame-to-stack TS.  Moves next-frame of TS (which must be non-nil) to the top of the stack, and sets the next-frame field to nil."
+  "move-next-frame-to-stack TS
+Moves next-frame of TS (which must be non-nil) to the top of the stack, and sets the next-frame
+field to nil."
   (let ((next-frame (ts-next-frame ts)))
     (assert next-frame nil "Attempted to move nil frame to stack")
     (push next-frame (ts-stack ts)))
   (setf (ts-next-frame ts) nil))
-
 
 (defun choosing (ts)
   (eq (ts-status ts) 'choosing))
@@ -200,7 +225,7 @@ Does some frame on the stack of THREAD-STATE have name equal to NAME?"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defstruct (frame (:constructor make-frame (name &optional (label nil) (entries nil)))
-	    (:type list))
+                  (:type list))
   name
   label
   (entries nil))
@@ -209,20 +234,24 @@ Does some frame on the stack of THREAD-STATE have name equal to NAME?"
 
 (defun set-frame-var-val (frame var val &optional (already-exists nil exists-supplied))
   "set-frame-var-val FRAME VAR VAL &optional ALREADY-EXISTS.
-Set value of VAR in FRAME to VAL.  If ALREADY-EXISTS is supplied, then the existence or nonexistence of an entry for the given VAR is verified in advance and an assertion happens if the expectations fail."
+Set value of VAR in FRAME to VAL.  If ALREADY-EXISTS is supplied, then the existence or
+nonexistence of an entry for the given VAR is verified in advance and an assertion happens if
+the expectations fail."
 
   (let* ((entries (frame-entries frame))
 	 (entry (assoc var (frame-entries frame))))
     (when exists-supplied
       (if already-exists
-	  (assert entry nil "Contrary to expectations, entry for ~a does not exist in entries ~a of frame ~a"
+	  (assert entry ()
+                  #.(str "Contrary to expectations, entry for ~A does not exist in "
+                         "entries ~A of frame ~A.")
 		  var entries frame)
-	(assert (not entry) nil "Contrary to expectations, entry ~a does exist in entries ~a of frame ~a"
-		entry entries frame)))
-    
+          (assert (not entry) ()
+                  "Contrary to expectations, entry ~A does exist in entries ~A of frame ~A."
+                  entry entries frame)))
     (if entry
 	(setf (cdr entry) val)
-      (push (cons var val) (frame-entries frame)))))
+        (push (cons var val) (frame-entries frame)))))
 
 (defun get-frame-var-val (frame var)
   "get-frame-var-val FRAME VAR.  Return value of VAR in FRAME.  VAR must already exist."
@@ -235,14 +264,13 @@ Set value of VAR in FRAME to VAL.  If ALREADY-EXISTS is supplied, then the exist
 
 (defun stack-var-val (ts var-name)
   "stack-var-val THREAD-STATE VAR-NAME
-If some stack frame contains a variable with this name, return its value, and true as a secondary value.  Otherwise, return nil and nil."
-  
+If some stack frame contains a variable with this name, return its value, and true as a
+secondary value.  Otherwise, return nil and nil."  
   (dolist (f (ts-stack ts))
     (dolist (b (frame-entries f))
       (when (eq (car b) var-name)
 	(return-from stack-var-val (values (cdr b) t)))))
   (values nil nil))
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -254,8 +282,6 @@ If some stack frame contains a variable with this name, return its value, and tr
   label)
 
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; printing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -264,11 +290,14 @@ If some stack frame contains a variable with this name, return its value, and tr
 (defun pprint-calisp-state (str omega)
   (pprint-logical-block (str nil)
     (format str "Concurrent ALisp state")
-    (format str "~2I~:@_Environment state~4I~:@_~W" (js-env-state omega))
-    (format str "~2I~:@_Global memory ~/pprint-fill/" (frame-entries (js-global omega)))
-    (format str "~2I~:@_Thread states~4I~:@_~/calisp::pprint-thread-states/" (hash-to-alist (js-thread-states omega)))
-    (format str "~2I~:@_Choosing threads ~W" (js-choosing-thread-ids omega))
-    ))
+    (format str "~2I~:@_Environment state~4I~:@_~W"
+            (js-env-state omega))
+    (format str "~2I~:@_Global memory ~/pprint-fill/"
+            (frame-entries (js-global omega)))
+    (format str "~2I~:@_Thread states~4I~:@_~/calisp::pprint-thread-states/"
+            (hash-to-alist (js-thread-states omega)))
+    (format str "~2I~:@_Choosing threads ~W"
+            (js-choosing-thread-ids omega))))
 
 (set-pprint-dispatch 'joint-state #'pprint-calisp-state)
 
@@ -291,7 +320,3 @@ If some stack frame contains a variable with this name, return its value, and tr
       (print-pair "Status" (ts-status ts)))))
 
 (set-pprint-dispatch 'thread-state #'pprint-thread-state)
-
-
-
-(in-package cl-user) 

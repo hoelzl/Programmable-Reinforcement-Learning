@@ -76,25 +76,25 @@ wait
   (loop
     (with-choice 
 	attack-choice (attackers (powerset (my-effectors)))
-	(awhen attackers
-	       (spawn (get-new-thread-id 'attack)
-		      attack ()
-		      it)))
+      (awhen attackers
+        (spawn (get-new-thread-id 'attack)
+               attack ()
+               it)))
     (action defend 'defend)))
 
 
 (defun attack ()
   (let ((alive-enemies
-	 (loop
-	     for i from 0
-	     for h across (enemy-hps)
-	     when (> h 0)
-	     collect i)))
+          (loop
+            for i from 0
+            for h across (enemy-hps)
+            when (> h 0)
+              collect i)))
     (with-choice 
 	enemy-choice (target alive-enemies)
-	(while (and (> (aref (enemy-hps) target) 0)
-		    (> (length (my-effectors)) 1))
-	  (action attack (list 'attack target)))))
+      (while (and (> (aref (enemy-hps) target) 0)
+                  (> (length (my-effectors)) 1))
+        (action attack (list 'attack target)))))
   (reassign finish-attack (my-effectors) 'footman :wait-action 'defend))
 
     

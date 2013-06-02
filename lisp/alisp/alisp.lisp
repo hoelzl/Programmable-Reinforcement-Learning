@@ -5,7 +5,9 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:alisp
-  (:documentation "Package alisp.  The internal namespace for all code related to ALisp.  For more information see help for
+  (:documentation "Package alisp.  
+
+The internal namespace for all code related to ALisp.  For more information see help for
 alisp-user
 alisp-prog
 alisp-features
@@ -138,13 +140,22 @@ alisp-hordq
    #:set-hist-collect))
 
 (defpackage alisp-obs
-  (:documentation "Package alisp-obs.  Package used when creating new observers.  An alisp-observer is any object that observes the execution of an alisp program.  This can include learning algorithms (see subdirectory learn/), and also objects that maintain logs or statistics of execution (see subdirectory obs/). 
+  (:documentation "Package alisp-obs.  
 
-All alisp observers must inherit from <alisp-observer>.  They may also inherit from <alisp-learning-algorithm>, <q-learning-algorithm>, <policy-learning-algorithm>, <value-learning-algorithm>, or <alisp-model-learning-algorithm>.
+Package used when creating new observers.  An alisp-observer is any object that observes the
+execution of an alisp program.  This can include learning algorithms (see subdirectory learn/),
+and also objects that maintain logs or statistics of execution (see subdirectory obs/).
+
+All alisp observers must inherit from <alisp-observer>.  They may also inherit from
+<alisp-learning-algorithm>, <q-learning-algorithm>, <policy-learning-algorithm>,
+<value-learning-algorithm>, or <alisp-model-learning-algorithm>.
   
 Subclasses may implement any subset of inform- methods listed below.
 
-Note : many of the inform- methods pass some representation of the current environment or joint state to the observer.  This object should never be modified, since the environment or ALisp system might hold a reference to it.  Also, observers should not assume that this object will stay unchanged - if they need to store it for future use, they should clone it.
+Note : many of the inform- methods pass some representation of the current environment or joint
+state to the observer.  This object should never be modified, since the environment or ALisp
+system might hold a reference to it.  Also, observers should not assume that this object will
+stay unchanged - if they need to store it for future use, they should clone it.
 
 Types
 -----
@@ -193,10 +204,7 @@ exit-state?
 Macros
 ------
 defmessage
-debug-msg
-
-
-")
+debug-msg")
 
   (:use #:common-lisp
 	#:package-utils
@@ -234,8 +242,8 @@ debug-msg
            #:reset))
 
 (defpackage #:alisp-features
-  (:documentation "Package alisp-features.  Package used when writing features, e.g. for Q-functions.
-
+  (:documentation "Package alisp-features.
+Package used when writing features, e.g. for Q-functions.
 
 Referring to parts of joint state
 ---------------------------------
@@ -274,7 +282,9 @@ stack-contains-frame")
    #:use-alisp-state-bindings))
 
 (defpackage #:alisp-prog
-  (:documentation "Package alisp-prog.  Package used by alisp partial programs.
+  (:documentation "Package alisp-prog.
+Package used by alisp partial programs.
+
 Types :
 - <alisp-program>
 
@@ -319,5 +329,7 @@ Operations implemented by partial programs
 
 
 (defvar *rlm* nil "When executing an alisp program, holds the corresponding rlm")
-(defvar *containing-subroutine-name* nil "Holds the name of the most (dynamically) recently entered ALisp subroutine that has not yet exited.")
+(defvar *containing-subroutine-name* nil 
+  "Holds the name of the most (dynamically) recently entered ALisp subroutine that has not yet
+exited.")
 

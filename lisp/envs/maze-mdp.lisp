@@ -7,6 +7,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; TODO: Add function and class documentation --tc
+
 (in-package #:common-lisp-user)
 
 (defpackage #:maze-mdp
@@ -24,29 +26,23 @@
 ;; class definition
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defclass <maze-mdp> (<mdp> <grid-world>)
-  (
-   (rewards :type array
-            :initarg :rewards
-            :initform (required-initarg :rewards)
+  ((rewards :type array
+            :initarg :rewards :initform (required-initarg :rewards)
             :reader rewards)
    (cost-of-living :type integer
-		   :initarg :col
-                   :initform (required-initarg :cost-of-living)
+		   :initarg :col :initform (required-initarg :cost-of-living)
 		   :reader col)
-   (action-set :reader action-set
-	       :initarg :action-set)
+   (action-set :initarg :action-set
+               :reader action-set)
    (move-success-prob :type float
-		      :initarg :msp
-                      :initform 0.9
+		      :initarg :msp :initform 0.9
 		      :reader msp)
    (term :type array
-	 :initarg :term
-         :initform (required-initarg :term)
+	 :initarg :term :initform (required-initarg :term)
 	 :reader term)
    (collision-cost :type float
-		   :initarg :col-cost
-                   :initform 1.0
-		   :reader col-cost)))
+		   :reader col-cost
+		   :initarg :col-cost :initform 1.0)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -70,61 +66,57 @@
 ;;
 ;;
 ;; Available actions are 0 for North, 1 for east, 2 for south, 3 for west, 4 for rest
-;; A move succeeds with move-success-prob.  If not, then 
-;; choose uniformly from one of the perpendicular directions and
-;; attempt to move in that direction.  If an attempted move runs into a wall or goes off the edge, 
-;; location doesn't change and we pay collision-cost.  
-;; the origin is at the top-left-corner, S increases the first coordinate and E increases the second coordinate.
-(defun make-maze-mdp (world-map &key (dims (array-dimensions world-map)) (rewards (make-array dims :initial-element 0))
-				     (move-success-prob .9) (termination (make-array dims :initial-element nil))
+;; A move succeeds with move-success-prob.  If not, then choose uniformly from one of the
+;; perpendicular directions and attempt to move in that direction.  If an attempted move runs
+;; into a wall or goes off the edge, location doesn't change and we pay collision-cost.  the
+;; origin is at the top-left-corner, S increases the first coordinate and E increases the second
+;; coordinate.
+
+(defun make-maze-mdp (world-map &key (dims (array-dimensions world-map))
+                                     (rewards (make-array dims :initial-element 0))
+				     (move-success-prob .9)
+                                     (termination (make-array dims :initial-element nil))
 				     (collision-cost 1.0) (cost-of-living 1) (allow-rests t))
 
-  (make-instance '<maze-mdp> :world-map world-map :legality-test #'identity
-		 :rewards rewards :msp move-success-prob :term termination
-		 :col-cost collision-cost :col cost-of-living
-		 :state-set (make-instance '<var-set> :element-type 'list :sets (list (consec 0 (1- (first dims))) (consec 0 (1- (second dims)))))
-		 :action-set (if allow-rests '(N E S W R)
-			       '(N E S W))))
-
+  (make-instance '<maze-mdp>
+    :world-map world-map :legality-test #'identity :rewards rewards
+    :msp move-success-prob :term termination :col-cost collision-cost :col cost-of-living
+    :state-set (make-instance '<var-set>
+                 :element-type 'list
+                 :sets (list (consec 0 (1- (first dims))) (consec 0 (1- (second dims)))))
+    :action-set (if allow-rests
+                    '(N E S W R)
+                    '(N E S W))))
 
 
 (defmethod reward ((m <maze-mdp>) s a d)
   (if (terminal? m s)
       0
-    (if (possible-result m s a d)
-	(-
-	 (if (eq a 'R)
-	     0
-	   (if (equal s d)
-					; we must have hit a wall
-	       (- (col-cost m))
-
-	     (apply #'aref (rewards m) d)))
-	   
-	 (col m))
+      (if (possible-result m s a d)
+          (- (if (eq a 'R)
+                 0
+                 (if (equal s d) ;; we must have hit a wall
+                     (- (col-cost m))
+                     (apply #'aref (rewards m) d)))
+             (col m))
       0)))
-
-  
-
 
 (defmethod trans-dist ((m <maze-mdp>) s a)
   (if (or (eq a 'R) (terminal? m s))
       (list (cons s 1.0))
-    (let* ((move-success-prob (msp m))
-	   (slip-prob (/ (- 1 move-success-prob) 2))
-	   (forward-prob (if (is-valid-move m s a) move-success-prob 0))
-	   (left-prob (if (is-valid-move m s (rot-counterclockwise a)) slip-prob 0))
-	   (right-prob (if (is-valid-move m s (rot-clockwise a)) slip-prob 0)))
-      (list (cons (result s a) forward-prob)
-	    (cons (result s (rot-clockwise a)) right-prob)
-	    (cons (result s (rot-counterclockwise a)) left-prob)
-	    (cons s (- 1 (+ forward-prob right-prob left-prob)))))))
+      (let* ((move-success-prob (msp m))
+             (slip-prob (/ (- 1 move-success-prob) 2))
+             (forward-prob (if (is-valid-move m s a) move-success-prob 0))
+             (left-prob (if (is-valid-move m s (rot-counterclockwise a)) slip-prob 0))
+             (right-prob (if (is-valid-move m s (rot-clockwise a)) slip-prob 0)))
+        (list (cons (result s a) forward-prob)
+              (cons (result s (rot-clockwise a)) right-prob)
+              (cons (result s (rot-counterclockwise a)) left-prob)
+              (cons s (- 1 (+ forward-prob right-prob left-prob)))))))
 
 
 (defmethod terminal? ((m <maze-mdp>) s)
   (apply #'aref (term m) s))
-  
-
 
 ;; res
 ;; l : location (2-element list)
@@ -141,19 +133,13 @@
                 l))
           l))))
 
-  
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helper functions for moving around in grid
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-
 ;; is a valid in s in this map?
 (defun is-valid-move (m s a)
   (is-legal-loc m (result s a)))
-
-
 
 ;; Helper function that tests if a move could have happened
 (defun possible-result (m s a d)
@@ -170,10 +156,6 @@
 		  (not (and (is-legal-loc m d1)
 			    (is-legal-loc m d2)
 			    (is-legal-loc m d3))))))))
-
-
-
-(in-package common-lisp-user)
 
 
 

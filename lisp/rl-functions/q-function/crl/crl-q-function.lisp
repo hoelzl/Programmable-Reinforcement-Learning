@@ -77,11 +77,13 @@ evaluate
 (defun make-feature (vars func acc)
   "make-feature VARS FUNC INST-ACCESSOR.
   
-VARS - designator for a list of variable names.
-FUNC - function
+VARS -          designator for a list of variable names.
+FUNC -          function
 INST-ACCESSOR - inst-accessor.  See inst-vars package.
 
-Return a feature that depends on VARS and applies FUNC to their values.  INST-ACCESSOR is used to access variable values.  The returned object is used internally by the CRL Q-function operations."
+Return a feature that depends on VARS and applies FUNC to their values.  INST-ACCESSOR is used
+to access variable values.  The returned object is used internally by the CRL Q-function
+operations."
   (make-function-potential vars func acc))
   
   
@@ -95,21 +97,32 @@ Return a feature that depends on VARS and applies FUNC to their values.  INST-AC
    
   (:documentation "Class for coordinated relational linear Q-functions.
 
-:weights - vector of weights corresponding to the feature templates.  By default, all 0's.
-:ids - vector of ids for each feature template.  By default is #(0 1 2 ... dim-1)
-:choice-fn - function that takes in a state, and returns a <prod-set> representing the set of available choices.
-:debug-mode - if true, when maximizing q-function exhaustive maximization is also used, and compared with the answer of coordination graph maximization.  Nil by default.
+:weights -    vector of weights corresponding to the feature templates.  By default, all 0's.
+:ids -        vector of ids for each feature template.  By default is #(0 1 2 ... dim-1)
+:choice-fn -  function that takes in a state, and returns a <prod-set> representing the set of
+              available choices.
+:debug-mode - if true, when maximizing q-function exhaustive maximization is also used, and
+              compared with the answer of coordination graph maximization.  Nil by default.
 
 Must also provide at most one of the following
-:template-descs - List of template descriptions.  Each template description is a designator for a list of functions.  The functions are the feature templates - each one must take in a joint state omega, and output a list of applicable features at omega.  See the description of the feature structure-type.
+:template-descs -    List of template descriptions.  Each template description is a designator
+                     for a list of functions.  The functions are the feature templates - each
+                     one must take in a joint state omega, and output a list of applicable
+                     features at omega.  See the description of the feature structure-type.
 :feature-templates - vector of feature templates
 
-A coordinated Q-function is designed for domains in which the choices are structured objects, e.g. vectors, consisting of many components.  So, when looking for the best choice, exhaustive enumeration of all choice is impractical. The Q-function is approximated as a weighted combination of 'feature templates'.  A feature template is either a constant or a function that takes in a state and returns an object that designates a list of features, each of which is either a number or an object created using make-feature.  The value of the feature template at a state-action is the sum of the corresponding features."))
+A coordinated Q-function is designed for domains in which the choices are structured objects,
+e.g. vectors, consisting of many components.  So, when looking for the best choice, exhaustive
+enumeration of all choice is impractical. The Q-function is approximated as a weighted
+combination of 'feature templates'.  A feature template is either a constant or a function that
+takes in a state and returns an object that designates a list of features, each of which is
+either a number or an object created using make-feature.  The value of the feature template at a
+state-action is the sum of the corresponding features."))
 
 
 (defmethod copy-into progn ((q <crl-q-function>) (q2 <crl-q-function>))
   (reinitialize-instance q2 :feature-templates (temps q) :ids (ids q) 
-			 :weights (clone (weights q)) :choice-fn (choice-fn q)))
+                            :weights (clone (weights q)) :choice-fn (choice-fn q)))
   
 
 (defmethod shared-initialize :around ((q <crl-q-function>) slots 
@@ -117,29 +130,27 @@ A coordinated Q-function is designed for domains in which the choices are struct
 				      &key (template-descs nil temp-descs-supplied)
 					   (feature-ids 
 					    (coerce (below (length template-descs)) 'vector)))
-
   ;; parse the :template-descs argument if it's supplied, and call the next method
   (if temp-descs-supplied
       (apply #'call-next-method
 	     q slots
-	     :ids
-	     (loop
-		 with v = (make-array 0 :adjustable t :fill-pointer 0)
-		 for id across feature-ids
-		 for d in template-descs
-		 for n = (if (listp d) (length d) 1)
-		 if (= n 1)
-		 do (vector-push-extend id v)
-		 else
-		 do (dotimes (i n)
-		      (vector-push-extend (intern-compound-symbol id (format nil "~a" i)) v))
-		 finally (return v))
-	     :feature-templates
-	     (coerce
-	      (mapcan #'designated-list template-descs)
-	      'vector)
+	     :ids (loop
+                    with v = (make-array 0 :adjustable t :fill-pointer 0)
+                    for id across feature-ids
+                    for d in template-descs
+                    for n = (if (listp d) (length d) 1)
+                    if (= n 1)
+                      do (vector-push-extend id v)
+                    else
+                      do (dotimes (i n)
+                           (vector-push-extend (intern-compound-symbol
+                                                id (format nil "~a" i)) v))
+                    finally (return v))
+	     :feature-templates (coerce
+                                 (mapcan #'designated-list template-descs)
+                                 'vector)
 	     args)
-    (call-next-method))
+      (call-next-method))
   
   ;; when the feature-templates field has been set, use it to set some of the other fields
   ;; to default values
@@ -157,19 +168,21 @@ A coordinated Q-function is designed for domains in which the choices are struct
 
 (defmethod evaluate ((q <crl-q-function>) omega u)
   (loop
-      for temp across (temps q)
-      for w across (weights q)
-      sum (* w (evaluate-temp temp omega u))))
+    for temp across (temps q)
+    for w across (weights q)
+    sum (* w (evaluate-temp temp omega u))))
 
 
 (defun evaluate-temp (temp omega u)
-  "evaluate-temp FEATURE-TEMPLATE OMEGA U.
+  "evaluate-temp FEATURE-TEMPLATE OMEGA U
 
-FEATURE-TEMPLATE is either a function or a number (which represents the function that always returns that number).
-OMEGA is a state.
-U is a (joint) choice.
+FEATURE-TEMPLATE is either a function or a number (which represents the function that always
+                 returns that number).
+OMEGA            is a state.
+U                is a (joint) choice.
 
-Apply FEATURE-TEMPLATE to OMEGA, apply every feature in the list designated by the return value to U using evaluate-feature."
+Apply FEATURE-TEMPLATE to OMEGA, apply every feature in the list designated by the return value
+to U using evaluate-feature."
   (etypecase temp
     (function (sum-over (designated-list (funcall temp omega))
 			#'(lambda (feature) (evaluate-feature feature u))))
@@ -179,7 +192,7 @@ Apply FEATURE-TEMPLATE to OMEGA, apply every feature in the list designated by t
 (defun evaluate-feature (feature u)
   "evaluate-feature FEATURE U.
 FEATURE is a feature (of type potential)
-U is a (joint choice)."
+U       is a (joint choice)."
   (eval-pot feature u))
 
 
@@ -196,18 +209,20 @@ U is a (joint choice)."
 (defmethod best-choice ((q <crl-q-function>) omega)
   (let ((potentials (get-weighted-potentials q omega))
 	(choices (choices q omega)))
-    
     (multiple-value-bind (i v)
 	(best-assignment *max* *plus* potentials 
 			 (min-deficiency-elim-order 
 			  potentials 
 			  (inst-vars:var-names (prod-set:inst-acc choices)))
-			  choices)
+                         choices)
       (when (debug-mode q)
 	(multiple-value-bind (i2 v2) (call-next-method)
 	  (declare (ignore i2))
 	  (assert (< (abs-diff v v2) .01) ()
-	    "In debug mode for CRLQ at state ~a.  Coordination graph algorithm gave answer ~a, which is different from exhaustive algorithm's answer ~a." omega v v2)))
+                  #. (str "In debug mode for CRLQ at state ~A.  Coordination graph algorithm "
+                          "gave answer ~A, which is different from exhaustive algorithm's "
+                          "answer ~A.")
+                  omega v v2)))
       (values i v))))
 
 
@@ -235,14 +250,14 @@ U is a (joint choice)."
 (defun get-weighted-potentials (q omega)
   (apply #'nconc
 	 (map 'list
-	   #'(lambda (temp w)
-	       (flet ((mult (x) (* x w)))
-		 (etypecase temp
-		   (number (list (mult temp)))
-		   (function
-		    (mapcar #'(lambda (f) (compose-feature #'mult f))
-			    (designated-list (funcall temp omega)))))))
-	   (temps q) (weights q))))
+              #'(lambda (temp w)
+                  (flet ((mult (x) (* x w)))
+                    (etypecase temp
+                      (number (list (mult temp)))
+                      (function
+                       (mapcar #'(lambda (f) (compose-feature #'mult f))
+                               (designated-list (funcall temp omega)))))))
+              (temps q) (weights q))))
 
 (defmethod choices ((q <crl-q-function>) omega)
   (funcall (choice-fn q) omega))
@@ -251,23 +266,23 @@ U is a (joint choice)."
   (let* ((v (feature-vector q omega u))
 	 (w (weights q))
 	 (actual
-	  (loop
-	      for f across v
-	      for weight across w
-	      sum (* f weight)))
+           (loop
+             for f across v
+             for weight across w
+             sum (* f weight)))
 	 (diff (- target actual)))
-    
     (dotimes (i (length w))
       (incf (aref w i) (* diff eta (aref v i))))))
       
 (defmethod policy:print-advice ((adv crlq:<crl-q-function>) omega choices str)
-  (format str "~&Weights : ~a" (crlq:weights adv))
+  (format str "~&Weights : ~A" (crlq:weights adv))
   (do-elements (u choices)
-    (format str "~&~%Choice : ~a~&Features : ~a~&Q-value : ~a" 
+    (format str "~&~%Choice : ~A~&Features : ~A~&Q-value : ~A" 
 	    u
-	    (sparsify (crlq:feature-vector adv omega u) :name-fn (lambda (i) (aref (crlq:ids adv) i)))
+	    (sparsify (crlq:feature-vector adv omega u)
+                      :name-fn (lambda (i) (aref (crlq:ids adv) i)))
 	    (crlq:evaluate adv omega u)))
   (multiple-value-bind (u v)
       (q-fn:best-choice adv omega)
-    (format str "~&~%Best choice is ~a with value ~a" u v)))
-  
+    (format str "~&~%Best choice is ~A with value ~A" u v)))
+ 

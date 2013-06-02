@@ -59,20 +59,24 @@
 (defgeneric reset-table (bc)
   (:documentation "reset-table BC.  Reset the count table of BC to be empty.")
   (:method ((bc <bucketed-counts>))
-	    (set-count-table (make-hash-table :test #'equal) bc)))
+    (set-count-table (make-hash-table :test #'equal) bc)))
 
 (defgeneric reset-counts (bc)
-  (:documentation "reset-counts BC.  Reset all the counts currently in BC's table to 1.  Preferable to reset-table if the same bucket set is going to be used again.")
+  (:documentation "reset-counts BC
+Reset all the counts currently in BC's table to 1.  Preferable to reset-table if the same bucket
+set is going to be used again.")
   (:method ((bc <bucketed-counts>))
-	   (loop 
-	       for b being each hash-key in (count-table bc) 
-	       do (setf (gethash b (count-table bc)) 1))))
+    (loop 
+      for b being each hash-key in (count-table bc) 
+      do (setf (gethash b (count-table bc)) 1))))
 
 (defgeneric get-current-val (bc x)
-  (:documentation "get-current-val BC X.  Get the current value for the bucket of X and increment its count.  If X's bucket is not currently in the count table, it is first added with a count of 1.")
+  (:documentation "get-current-val BC X
+Get the current value for the bucket of X and increment its count.  If X's bucket is not
+currently in the count table, it is first added with a count of 1.")
   (:method ((bc <bucketed-counts>) x)
-	   (let ((b (funcall (bucket-fn bc) x)))
-	     (bucket-val bc (float (get-and-inc-count bc b)) b))))
+    (let ((b (funcall (bucket-fn bc) x)))
+      (bucket-val bc (float (get-and-inc-count bc b)) b))))
 
 
 
@@ -82,13 +86,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric bucket-val (bc count bucket)
-  (:documentation "bucket-val BC COUNT BUCKET.  Return value of bucket BUCKET having count COUNT.  Default is just to return COUNT.")
+  (:documentation "bucket-val BC COUNT BUCKET
+Return value of bucket BUCKET having count COUNT.  Default is just to return COUNT.")
   (:method ((bc <bucketed-counts>) count bucket)
-	   (declare (ignore bucket))
-	   count))
+    (declare (ignore bucket))
+    count))
 
 (defun get-and-inc-count (bc bucket)
-  "get-and-inc-count BC BUCKET.  Increment the count for BUCKET and return the old value.  If it is not in the table, return 1 and add it with a count of 2."
+  "get-and-inc-count BC BUCKET
+Increment the count for BUCKET and return the old value.  If it is not in the table, return 1
+and add it with a count of 2."
   (let* ((count-table (count-table bc))
 	 (count (or (gethash bucket count-table) 1)))
     (setf (gethash bucket count-table) (1+ count))
@@ -96,17 +103,13 @@
 
 
 (defun print-bc (bc)
-  "debug method that prints the counts and associated values"
+  "Debug method that prints the counts and associated values"
   (loop
-      with h = (count-table bc)
-      initially (format t "~&Printing bucket-count hash table")
-      for b being each hash-key in h using (hash-value v)
-      for r = (bucket-val bc v b)
-      do (format t "~&Bucket : ~a Count : ~a  Value : ~a" b v r)))
-	 
-
-
-(in-package cl-user)
+    with h = (count-table bc)
+    initially (format t "~&Printing bucket-count hash table")
+    for b being each hash-key in h using (hash-value v)
+    for r = (bucket-val bc v b)
+    do (format t "~&Bucket : ~a Count : ~a  Value : ~a" b v r)))
 
 	    
 	   

@@ -90,7 +90,7 @@ rbe-reward-decomp2
 (defun nav (loc)
   (until (equal (my-position) loc)
     (with-choice nav-choice (direction '(N S E W R))
-		 (action move direction))))
+      (action move direction))))
 
 (defun dropoff-resource ()
   (call nav ((base-loc)))
@@ -124,7 +124,10 @@ rbe-reward-decomp2
 
 (defun make-rbe-prog ()
   (make-instance '<calisp-program>
-    :root-fn #'rbe-prog :choosing-thread-fn (ordered-choosing-threads-function '((new-peasant) (task-choice) (get-resource dropoff-resource) (nav) (nav-choice)))))
+    :root-fn #'rbe-prog
+    :choosing-thread-fn (ordered-choosing-threads-function
+                         '((new-peasant) (task-choice) (get-resource dropoff-resource)
+                           (nav) (nav-choice)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -134,10 +137,11 @@ rbe-reward-decomp2
 (defun rbe-reward-decomp (omega s a r s2)
   "rbe-reward-decomp OMEGA S A R S2.
 
-Reward decomposer for partial program in rbe-prog for resource balance domain.  Each peasant receives rewards for pickup/dropoff, and collisions are split among the colliding peasants.  Cost-of-living is received by top thread."
+Reward decomposer for partial program in rbe-prog for resource balance domain.  Each peasant
+receives rewards for pickup/dropoff, and collisions are split among the colliding peasants.
+Cost-of-living is received by top thread."
   
   (declare (ignore omega r a))
-  
   (cons
    (cons 'root-thread (- (rbe:cost-of-living s)))
    (let ((positions (rbe:pos s2))
@@ -145,19 +149,18 @@ Reward decomposer for partial program in rbe-prog for resource balance domain.  
 	 (drop-rew (rbe:dropoff-reward s))
 	 (max-gold (rbe:max-gold s2))
 	 (max-wood (rbe:max-wood s2)))
-		   
      (let ((gold-rewards 
-	   (let ((num-gold (count 'rbe:dropoff-gold statuses)))
-	     (unless (zerop num-gold)
-	       (/ (* drop-rew
-		     (- (min max-gold (rbe:gold s2)) (min max-gold (rbe:gold s))))
-		  num-gold))))
-	  (wood-rewards 
-	   (let ((num-wood (count 'rbe:dropoff-wood statuses)))
-	     (unless (zerop num-wood)
-	       (/ (* drop-rew
-		     (- (min max-wood (rbe:wood s2)) (min max-wood (rbe:wood s))))
-		  num-wood)))))
+             (let ((num-gold (count 'rbe:dropoff-gold statuses)))
+               (unless (zerop num-gold)
+                 (/ (* drop-rew
+                       (- (min max-gold (rbe:gold s2)) (min max-gold (rbe:gold s))))
+                    num-gold))))
+           (wood-rewards 
+             (let ((num-wood (count 'rbe:dropoff-wood statuses)))
+               (unless (zerop num-wood)
+                 (/ (* drop-rew
+                       (- (min max-wood (rbe:wood s2)) (min max-wood (rbe:wood s))))
+                    num-wood)))))
        (mapset 'list
 	       #'(lambda (i)
 		   (cons i
@@ -175,7 +178,9 @@ Reward decomposer for partial program in rbe-prog for resource balance domain.  
 (defun rbe-reward-decomp2 (omega s a r s2)
   "rbe-reward-decomp2 OMEGA S A R S2.
 
-Reward decomposer for partial program in rbe-prog for resource balance domain.  Each peasant receives rewards for pickup/dropoff, and collisions are split among the colliding peasants.  Cost-of-living is split among peasant threads as well."
+Reward decomposer for partial program in rbe-prog for resource balance domain.  Each peasant
+receives rewards for pickup/dropoff, and collisions are split among the colliding peasants.
+Cost-of-living is split among peasant threads as well."
   
   (declare (ignore omega r a))
   
@@ -186,17 +191,17 @@ Reward decomposer for partial program in rbe-prog for resource balance domain.  
 	(max-gold (rbe:max-gold s2))
 	(max-wood (rbe:max-wood s2)))
     (let ((gold-rewards 
-	   (let ((num-gold (count 'rbe:dropoff-gold statuses)))
-	     (unless (zerop num-gold)
-	       (/ (* drop-rew
-		     (- (min max-gold (rbe:gold s2)) (min max-gold (rbe:gold s))))
-		  num-gold))))
+            (let ((num-gold (count 'rbe:dropoff-gold statuses)))
+              (unless (zerop num-gold)
+                (/ (* drop-rew
+                      (- (min max-gold (rbe:gold s2)) (min max-gold (rbe:gold s))))
+                   num-gold))))
 	  (wood-rewards 
-	   (let ((num-wood (count 'rbe:dropoff-wood statuses)))
-	     (unless (zerop num-wood)
-	       (/ (* drop-rew
-		     (- (min max-wood (rbe:wood s2)) (min max-wood (rbe:wood s))))
-		  num-wood)))))
+            (let ((num-wood (count 'rbe:dropoff-wood statuses)))
+              (unless (zerop num-wood)
+                (/ (* drop-rew
+                      (- (min max-wood (rbe:wood s2)) (min max-wood (rbe:wood s))))
+                   num-wood)))))
       (mapset 'list
 	      #'(lambda (i)
 		  (cons i

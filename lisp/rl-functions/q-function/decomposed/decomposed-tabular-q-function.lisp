@@ -9,14 +9,17 @@
   ()
   (:documentation "Class <decomposed-tabular-q-function> (<decomposed-q-function>)
 
-A particular kind of decomposed Q-function, in which each component is a tabular q-function (using #'equalp for comparison).  If asked for a component it doesn't know about, it will just create a new tabular q-function."))
+A particular kind of decomposed Q-function, in which each component is a tabular
+q-function (using #'equalp for comparison).  If asked for a component it doesn't know about, it
+will just create a new tabular q-function."))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; creation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod copy-into progn ((q <decomposed-tabular-q-function>) (q2 <decomposed-tabular-q-function>)))
+(defmethod copy-into progn
+    ((q <decomposed-tabular-q-function>) (q2 <decomposed-tabular-q-function>)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

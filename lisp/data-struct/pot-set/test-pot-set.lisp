@@ -27,9 +27,8 @@
 
 (defparameter *acc* (inst-vars:make-struct-accessors inst (foo bar baz qux oof)))
 (defparameter *insts* (make-instance '<prod-set> 
-                                   :sets *domains*
-                                   :inst-acc *acc*))
-
+                        :sets *domains*
+                        :inst-acc *acc*))
 
 (defparameter *pot1* (make-function-potential '(baz foo) #'+ *acc*))
 
@@ -39,7 +38,7 @@
     (b (- oof))))
 
 (defparameter *pot2* (make-function-potential
-                    '(bar oof qux) #'f2 *acc*))
+                      '(bar oof qux) #'f2 *acc*))
 
 (defun f3 (foo bar oof)
   (ecase bar
@@ -51,8 +50,8 @@
      (expt baz 2)))
 
 (defparameter *pot3* (make-function-potential
-                    '(foo bar oof) #'f3
-                    *acc*))
+                      '(foo bar oof) #'f3
+                      *acc*))
 
 (defparameter *pot4* (make-function-potential
                       '(oof baz)
@@ -67,7 +66,7 @@
 (defparameter *i4* (make-inst :foo 2 :bar 'a :baz 1 :qux '(a b) :oof 1))
 
 (do-tests
-    "potential evaluation"
+  "potential evaluation"
   
   (eval-pot *pot1* *i1*) 4
   (eval-pot *pot2* *i2*) 1
@@ -140,10 +139,10 @@
 		:key #'(lambda (k)
 			 (abs (- (or (gethash k h) 0)
 				 (or (cdr (assoc k expected :test #'equalp)) 0)))))
-      h)))
+        h)))
 
 (defun bsamp2 (pots elim-order *insts* temp &key (num 100) (inc (1+ num)) 
-	       &aux (*acc* (inst-acc *insts*)))
+                                            &aux (*acc* (inst-acc *insts*)))
   
   (let* ((g (boltzmann-gm pots elim-order *insts* temp))
 	 (h (rand-fn-hist (sample g) num :inc inc))
@@ -170,7 +169,7 @@
 (defvar *best*)
 
 (do-tests
-    "best-assignment function"
+  "best-assignment function"
   
   ;; empty lists of potentials and/or variables
   (multiple-value-list
@@ -191,20 +190,24 @@
   (progn
     (setf *best* (list (make-inst :foo 0 :bar 'a :baz 3  :qux nil :oof 0) -6))
     (multiple-value-list
-     (best-assignment *min* *plus* (list *pot1* *pot2* *pot3* *pot4*) '(foo bar baz qux oof) *insts*)))
+     (best-assignment *min* *plus* (list *pot1* *pot2* *pot3* *pot4*)
+                      '(foo bar baz qux oof) *insts*)))
   *best*
   
   (multiple-value-list
-   (best-assignment *min* *plus* (list *pot3* *pot4* *pot2* *pot1*) '(qux baz bar oof foo) *insts*))
+   (best-assignment *min* *plus* (list *pot3* *pot4* *pot2* *pot1*)
+                    '(qux baz bar oof foo) *insts*))
   *best*
   
   (multiple-value-list
-   (best-assignment *min* *plus* (list *pot4* *pot3* *pot2* *pot1*) '(bar oof foo baz qux) *insts*))
+   (best-assignment *min* *plus* (list *pot4* *pot3* *pot2* *pot1*)
+                    '(bar oof foo baz qux) *insts*))
   *best*
   
   
   (multiple-value-list 
-   (best-assignment *max* *plus* (list *pot4* *pot3* *pot1* *pot2*) '(qux baz oof foo bar) *insts*))
+   (best-assignment *max* *plus* (list *pot4* *pot3* *pot1* *pot2*)
+                    '(qux baz oof foo bar) *insts*))
   (list (make-inst :foo 2 :bar 'a :baz 0 :qux '(a b) :oof 2) 8)
   
   )
@@ -213,36 +216,42 @@
 (defvar *e2*)
 
 (do-rand-tests
-    "Boltzmann sampling (randomized)"
+  "Boltzmann sampling (randomized)"
   
   ;; border cases
   (setf *e1* '((#() . 1000)))
-  ;; TODO: The following two tests report errors (since (bsamp ...)
-  ;; always returns 2000.  This might be due to the compilation
-  ;; problems with RAND-FN-HIST, but on the other hand the hash table
-  ;; returned by rand-fn-hist looks pretty reasonable to me. --tc
+  ;; TODO: The following two tests report errors (since (bsamp ...)  always returns 2000.  This
+  ;; might be due to the compilation problems with RAND-FN-HIST, but on the other hand the hash
+  ;; table returned by rand-fn-hist looks pretty reasonable to me. --tc
   (eql 0 (bsamp nil nil nil 0 :expected *e1*))
   (eql 0 (bsamp nil nil nil 1 :expected *e1*))
   ;; TODO: Check why this fails --tc
   #+ (or)
   (< (bsamp nil '(1 0) '((a b c) 1) 1 :expected '((#(a 1) . 333) (#(b 1) . 333) (#(c 1) . 333))))
   (setf *e2*
-    (loop
-	for foo below 3
-	append
+        (loop
+          for foo below 3
+          append
 	  (loop 
-	      for baz below 4
-	      collect (cons
-		       (make-inst :foo foo :baz baz :bar 'uninstantiated :oof 'uninstantiated :qux 'uninstantiated) (round (* (/ (expt 2 (+ foo baz)) 105) 200))))))
+            for baz below 4
+            collect (cons
+                     (make-inst :foo foo :baz baz :bar 'uninstantiated :oof 'uninstantiated
+                                :qux 'uninstantiated)
+                     (round (* (/ (expt 2 (+ foo baz)) 105) 200))))))
   
   ;; single potential 
-  (< (bsamp (list *pot1*) '(foo baz) *domains* *c* :expected *e2* :acc *acc* :num 200 :inc 100) 50)
-  (< (bsamp (list *pot1*) '(baz foo) *domains* *c* :expected *e2* :acc *acc* :num 200 :inc 100) 50)
+  (< (bsamp (list *pot1*) '(foo baz) *domains* *c*
+            :expected *e2* :acc *acc* :num 200 :inc 100) 50)
+  (< (bsamp (list *pot1*) '(baz foo) *domains* *c*
+            :expected *e2* :acc *acc* :num 200 :inc 100) 50)
   
   ;; multiple potentials
-  (< (bsamp2 (list *pot3* *pot4*) '(foo oof bar qux baz) *insts* (/ 1 (log 10)) :num 500 :inc 50) 100)
-  (< (bsamp2 (list *pot3* *pot4*) '(oof qux baz bar foo) *insts* 'infty :num 2500 :inc 500) 1000)
+  (< (bsamp2 (list *pot3* *pot4*) '(foo oof bar qux baz) *insts*
+             (/ 1 (log 10)) :num 500 :inc 50) 100)
+  (< (bsamp2 (list *pot3* *pot4*) '(oof qux baz bar foo) *insts*
+             'infty :num 2500 :inc 500) 1000)
   
-  ;(< (bsamp2 (list *pot2* *pot4* *pot3* *pot1*) '(bar qux oof foo baz) *insts* 1000 :num 500 :inc 50) 100)
+  ;(< (bsamp2 (list *pot2* *pot4* *pot3* *pot1*) '(bar qux oof foo baz) *insts*
+  ;           1000 :num 500 :inc 50) 100)
 
   )

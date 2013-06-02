@@ -5,7 +5,10 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:calisp
-  (:documentation "Package calisp.  The internal namespace for all code related to Concurrent ALisp.  For more information see help for
+  (:documentation "Package calisp.  
+
+The internal namespace for all code related to Concurrent ALisp.  For more information see help
+for
 calisp-user
 calisp-prog
 calisp-obs")
@@ -110,13 +113,22 @@ calisp-io-int-observer
 (in-package cl-user)
 
 (defpackage #:calisp-obs
-  (:documentation "Package calisp-obs.  Package used when creating new observers.  A <calisp-observer> is any object that observes the execution of an concurrent alisp program.  This can include learning algorithms (see subdirectory learn/), and also objects that maintain logs or statistics of execution (see subdirectory obs/). 
+  (:documentation "Package calisp-obs
 
-All observers must inherit from <calisp-observer>.  They may also inherit from <calisp-learning-algorithm>, <q-learning-algorithm>, or <policy-learning-algorithm>.
+Package used when creating new observers.  A <calisp-observer> is any object that observes the
+execution of an concurrent alisp program.  This can include learning algorithms (see
+subdirectory learn/), and also objects that maintain logs or statistics of execution (see
+subdirectory obs/).
+
+All observers must inherit from <calisp-observer>.  They may also inherit from
+<calisp-learning-algorithm>, <q-learning-algorithm>, or <policy-learning-algorithm>.
   
 Subclasses may implement any subset of inform- methods listed below.
 
-Note : many of the inform- methods pass some representation of the current environment or joint state to the observer.  This object should never be modified, since the environment or concurrent ALisp system might hold a reference to it.  Also, observers should not assume that this object will stay unchanged - if they need to store it for future use, they should clone it.
+Note : many of the inform- methods pass some representation of the current environment or joint
+state to the observer.  This object should never be modified, since the environment or
+concurrent ALisp system might hold a reference to it.  Also, observers should not assume that
+this object will stay unchanged - if they need to store it for future use, they should clone it.
 
 Types
 -----
@@ -251,7 +263,8 @@ defmessage
 (in-package #:cl-user)
 
 (defpackage #:calisp-prog
-  (:documentation "Package calisp-prog.  Package used by concurrent Alisp partial programs.
+  (:documentation "Package calisp-prog
+Package used by concurrent Alisp partial programs.
 Types :
 - <calisp-program>
 
@@ -402,6 +415,9 @@ root-thread
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defvar *crlm* nil "When executing a concurrent alisp program, holds the corresponding CRLM")
-(defvar *containing-subroutine-name* nil "Holds the name of the most (dynamically) recently entered concurrent ALisp subroutine that has not yet exited.  Not used at the moment.")
+(defvar *crlm* nil
+  "When executing a concurrent alisp program, holds the corresponding CRLM")
+(defvar *containing-subroutine-name* nil
+  "Holds the name of the most (dynamically) recently entered concurrent ALisp subroutine that
+has not yet exited.  Not used at the moment.")
 

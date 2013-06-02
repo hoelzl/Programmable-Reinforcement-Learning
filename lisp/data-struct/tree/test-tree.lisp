@@ -23,7 +23,7 @@
 (defparameter *e3* (parent-edge *n5*))
 
 (do-tests
-    "consistency checking"
+  "consistency checking"
   (is-inconsistent-tree *n1* t) nil
   (is-inconsistent-tree *n1* nil) nil
   (is-inconsistent-tree *n2* t) 'not-root
@@ -55,7 +55,7 @@
   'incorrect-parent-edge)
 
 (do-tests
-    "tree traversal"
+  "tree traversal"
   (progn
     (setf (parent-edge *n5*) *e3*)
     (map-preorder 'list #'node-label *n1*))
@@ -68,7 +68,7 @@
 (defvar *deleted*)
 
 (do-tests
-    "tree modification"
+  "tree modification"
   (progn
     (add-subtree *n3* nil (copy-subtree *n2*) 0)
     (setf (node-label (get-child (get-child *n3* 0) 1)) 'ooof)

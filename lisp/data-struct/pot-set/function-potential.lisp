@@ -11,7 +11,7 @@
 
 
 (defstruct (function-potential (:conc-name fpot-)
-	    (:constructor create-function-potential))
+                               (:constructor create-function-potential))
   "Structure function-potential.  Create using make-function-potential."
   var-nums
   vars
@@ -23,8 +23,9 @@
   "make-function-potential VARS FN ACC
 
 VARS is a designator for a list of variable names.
-FN is a function that takes in k arguments, corresponding to the variables listed in VARS, and returns a floating point number.
-ACC is an instantiation accessor (see inst-vars package).
+FN   is a function that takes in k arguments, corresponding to the variables listed in VARS, and
+     returns a floating point number.
+ACC  is an instantiation accessor (see inst-vars package).
 
 Returns a potential."
   (let ((names (var-names acc))
@@ -44,11 +45,10 @@ Returns a potential."
 (defmethod vars ((pot function-potential))
   (fpot-vars pot))
   
-  
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (defmethod eval-pot ((pot function-potential) inst)
   (let ((acc (fpot-acc pot)))
@@ -56,8 +56,6 @@ Returns a potential."
 	   (map-into (fpot-args pot) 
 		     #'(lambda (i) (get-var-val acc inst i))
 		     (fpot-var-nums pot)))))
-
-
 
 (defmethod compose-potential (fn (pot function-potential))
   (make-function-potential 

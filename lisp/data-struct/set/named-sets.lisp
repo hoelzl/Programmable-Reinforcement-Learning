@@ -4,7 +4,6 @@
 
 (in-package #:set)
 
-
 (defmethod is-empty ((s symbol))
   nil)
 
@@ -30,15 +29,13 @@
 (defmethod item-number (item (s (eql 'natural-numbers)))
   (if (member? item s)
       item
-    (error 'item-not-in-set :item item :set s)))
+      (error 'item-not-in-set :item item :set s)))
   
 
 
 (defmethod item (num (s (eql 'natural-numbers)))
   "Todo condition"
   num)
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; real numbers

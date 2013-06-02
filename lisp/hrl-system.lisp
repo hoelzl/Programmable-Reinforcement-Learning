@@ -1,13 +1,14 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; hrl-system.lisp
 ;;
-;; Sets up the global variables for the hrl code and loads external packages necessary.  
-;; In Lisp, make sure your working directory is
-;; hrl/lisp (check this using the command :pwd), then type :ld hrl-system
-;; After loading, use the make or make-all functions to compile and load the hrl code.
+;; Sets up the global variables for the hrl code and loads external
+;; packages necessary.  In Lisp, make sure your working directory is
+;; hrl/lisp (check this using the command :pwd), then type :ld
+;; hrl-system After loading, use the make or make-all functions to
+;; compile and load the hrl code.
 ;; 
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (in-package cl-user)
@@ -23,7 +24,8 @@
 
 
 (defun make-all ()
-  "make-all.  Compiles and loads all source files in hrl system."
+  "make-all.  
+Compiles and loads all source files in hrl system."
   (asdf:operate 'asdf:load-op 'hrl :force t)
   (use-package "HELP"))
 
@@ -31,7 +33,9 @@
 
 
 (defun make ()
-  "make.  Recompiles modified source files and their dependents, and reloads binaries as necessary."
+  "make.
+Recompiles modified source files and their dependents, and reloads
+binaries as necessary."
   (asdf:operate 'asdf:load-op 'hrl)
   (use-package "HELP"))
   

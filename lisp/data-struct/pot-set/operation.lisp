@@ -6,7 +6,8 @@
 (in-package #:pot-set)
 
 (defstruct (operation (:conc-name op-) (:constructor make-op (identity func)))
-  "Structure type operation.  Represents a binary operation on a semiring, used by the graphical model code.  To create, use make-op with arguments
+  "Structure type operation.  Represents a binary operation on a semiring, used by the graphical
+model code.  To create, use make-op with arguments
 :identity - the identity element
 :func - a function of two arguments.
 

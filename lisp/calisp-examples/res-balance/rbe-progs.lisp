@@ -72,9 +72,9 @@ R
 
 (defun rbe-flat ()
   (let ((joint-actions 
-	 (make-instance '<prod-set>
-	   :alist-keys '(0 1)
-	   :sets '((N S E W R P D) (N S E W R P D)))))
+          (make-instance '<prod-set>
+            :alist-keys '(0 1)
+            :sets '((N S E W R P D) (N S E W R P D)))))
     (loop
       (with-choice action-choice 
 	  (a joint-actions)
@@ -119,8 +119,7 @@ R
     (choose get-res-choice
 	    (nav (nav loc))
 	    (pickup (action pickup 'P))
-	    (wait (action wait-get-resource 'R)))
-    ))
+	    (wait (action wait-get-resource 'R)))))
 
 (defun maxq-dropoff-resource ()
   (until (and (equal (my-position) (base-loc)) 
@@ -137,12 +136,13 @@ R
       (action move direction))))
   
 (defparameter *maxq-choice-priority-list*
-    '((new-peasant) (task-choice) (gather-wood-choice gather-gold-choice) (forest-choice mine-choice) (get-res-choice dropoff-res-choice) (nav-choice)))
+    '((new-peasant) (task-choice) (gather-wood-choice gather-gold-choice)
+      (forest-choice mine-choice) (get-res-choice dropoff-res-choice) (nav-choice)))
 
 (defparameter *rbe-maxq-prog* 
-    (make-instance '<calisp-program>
-      :root-fn #'rbe-maxq 
-      :choosing-thread-fn *maxq-choice-priority-list*))
+  (make-instance '<calisp-program>
+    :root-fn #'rbe-maxq 
+    :choosing-thread-fn *maxq-choice-priority-list*))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C. ordered
@@ -178,12 +178,12 @@ R
 
 
 (defparameter *choice-priority-list*
-    '((new-peasant) (task-choice) (get-resource dropoff-resource) (nav) (nav-choice)))
+  '((new-peasant) (task-choice) (get-resource dropoff-resource) (nav) (nav-choice)))
 
 (defparameter *rbe-prog* 
-    (make-instance '<calisp-program>
-      :root-fn #'rbe-ordered
-      :choosing-thread-fn *choice-priority-list*))
+  (make-instance '<calisp-program>
+    :root-fn #'rbe-ordered
+    :choosing-thread-fn *choice-priority-list*))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -199,15 +199,15 @@ R
     (let ((g (num-gathering-gold))
 	  (w (num-gathering-wood)))
       (cond
-       ((> g w) (call gather-wood ()))
-       ((> w g) (call gather-gold ()))
-       (t (choose task-choice
-		  (call (gather-gold))
-		  (call (gather-wood))))))))
+        ((> g w) (call gather-wood ()))
+        ((> w g) (call gather-gold ()))
+        (t (choose task-choice
+                   (call (gather-gold))
+                   (call (gather-wood))))))))
 
 (defparameter *ordering*
-    '((task-choice) (new-peasant) (gather-wood gather-gold)
-      (get-resource dropoff-resource) (nav) (nav-choice)))
+  '((task-choice) (new-peasant) (gather-wood gather-gold)
+    (get-resource dropoff-resource) (nav) (nav-choice)))
 
 (defun highest-priority (omega)
   (funcall 
@@ -221,9 +221,9 @@ R
       (otherwise thread-labels))))
 
 (defparameter *rbe-coord-prog*
-    (make-instance '<calisp-program>
-      :root-fn #'rbe-coord
-      :choosing-thread-fn #'single-highest-priority-thread))
+  (make-instance '<calisp-program>
+    :root-fn #'rbe-coord
+    :choosing-thread-fn #'single-highest-priority-thread))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; E. Uncoordinated
@@ -235,30 +235,27 @@ R
 
 (defun uncoord-peasant-top ()
   (loop  
-      for num-gathering-gold = (num-gathering-gold)
-      for num-gathering-wood = (num-gathering-wood)
-      for max-gold = (rbe:max-gold)
-      for max-wood = (rbe:max-wood)
-      for expected-gold = (+ num-gathering-gold (rbe:gold))
-      for expected-wood = (+ num-gathering-wood (rbe:wood))
+    for num-gathering-gold = (num-gathering-gold)
+    for num-gathering-wood = (num-gathering-wood)
+    for max-gold = (rbe:max-gold)
+    for max-wood = (rbe:max-wood)
+    for expected-gold = (+ num-gathering-gold (rbe:gold))
+    for expected-wood = (+ num-gathering-wood (rbe:wood))
 			  
-      do (cond ((>= expected-gold max-gold) (call gather-gold ()))
-	       ((>= expected-wood max-wood) (call gather-wood ()))
-	       ((>= num-gathering-gold num-gathering-wood) (call gather-gold ()))
-	       ((>= num-gathering-wood num-gathering-gold) (call gather-wood ()))
-	       (t (choose task-choice
-			  (call (gather-wood))
-			  (call (gather-gold)))))))
+    do (cond ((>= expected-gold max-gold) (call gather-gold ()))
+             ((>= expected-wood max-wood) (call gather-wood ()))
+             ((>= num-gathering-gold num-gathering-wood) (call gather-gold ()))
+             ((>= num-gathering-wood num-gathering-gold) (call gather-wood ()))
+             (t (choose task-choice
+                        (call (gather-wood))
+                        (call (gather-gold)))))))
 		       
-
 
 (defparameter *rbe-uncoord-prog*
-    (make-instance '<calisp-program>
-      :root-fn #'rbe-uncoord
-      :choosing-thread-fn #'single-highest-priority-thread))
-		       
-  
-  
+  (make-instance '<calisp-program>
+    :root-fn #'rbe-uncoord
+    :choosing-thread-fn #'single-highest-priority-thread))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; env accessors
@@ -285,8 +282,8 @@ R
 
 (defun num-gathering (gather-type)
   (loop
-      for ts being each hash-value in (js-thread-states (combined-state))
-      count (some-frame-has-name ts gather-type)))
+    for ts being each hash-value in (js-thread-states (combined-state))
+    count (some-frame-has-name ts gather-type)))
 
 (defun num-gathering-gold ()
   (num-gathering 'gather-gold))

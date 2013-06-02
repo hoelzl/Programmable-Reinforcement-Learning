@@ -47,8 +47,6 @@
   (is-dnf-formula *f4*) t
   (is-dnf-formula *f5*) t
   (is-dnf-formula *f6*) nil)
-  
-  
 
 (let ((s1 nil)
       (s2 '(foo bar baz))
@@ -68,8 +66,6 @@
     (holds s2 '(or (and foo bar) (not qux))) t
     (holds s3 '(or (and foo bar) (not qux))) nil
     (holds s1 '(or (and foo bar) (not qux))) t))
-
-
 
 (setf *f1* '(or (and foo bar) nil (not baz) (and (not bar) foo)))
 (setf *f2* '(or (and baz qux) (and (not qux) (not foo))))

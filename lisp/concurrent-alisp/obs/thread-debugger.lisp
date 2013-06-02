@@ -6,7 +6,6 @@
 
 (in-package #:calisp)
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Definitions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16,10 +15,11 @@
 		  :reader str
 		  :initform *standard-output*
 		  :type stream))
-  (:documentation "Class <thread-debugger>.  Subclass of <calisp-observer> that prints out thread-related events to a stream.
+  (:documentation "Class <thread-debugger> (<calisp-debugging-observer>)
+Subclass of <calisp-observer> that prints out thread-related events to a stream.
 
 Initargs
-:str - the stream to print to."))
+STR: the stream to print to."))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49,4 +49,3 @@ Initargs
 (defmethod inform-wait-effectors ((obs <thread-debugger>) omega id)
   (declare (ignore omega))
   (force-format (str obs) "~&Thread ~a waiting for effectors" id))
-

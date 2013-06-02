@@ -7,10 +7,13 @@
 
 (in-package #:test-set)
 
-
-(defparameter *s1* (make-instance '<var-set> :sets (list '(foo bar) 3) :element-type 'list))
-(defparameter *s2* (make-instance '<var-set> :sets (list '(foo bar) 3) :element-type 'list :iterate-quickly t))
-
+(defparameter *s1* (make-instance '<var-set>
+                     :sets (list '(foo bar) 3)
+                     :element-type 'list))
+(defparameter *s2* (make-instance '<var-set>
+                     :sets (list '(foo bar) 3)
+                     :element-type 'list
+                     :iterate-quickly t))
 
 (defun foo (s)
   (let ((iter (iterator s)))
@@ -28,9 +31,8 @@
 	   (funcall a 10)
 	   (funcall b 10)))))))
 
-
 (do-tests
-    "direct product sets"
+  "direct product sets"
   
   (foo *s1*)
   '((foo 0) (foo 1))
@@ -43,10 +45,9 @@
   
   (bar *s2*)
   '(12 12)
-
+  
   (list (size *s1*) (size *s2*))
   '(6 6))
-  
   
   
   

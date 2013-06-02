@@ -1,7 +1,9 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:indexed-set
-  (:documentation "An <indexed-set> is a type of <numbered-set> which also includes a hashtable mapping items to their number.  Used when the item-number operation needs to be fast.
+  (:documentation 
+   "An <indexed-set> is a type of <numbered-set> which also includes a hashtable mapping items
+to their number.  Used when the item-number operation needs to be fast.
 
 To create, use make-indexed-set.
 
@@ -29,7 +31,10 @@ All the standard operations on <set>s apply to <indexed-set>s.  See the set pack
 	:initarg :hta
         :initform (required-initarg :hta)
 	:writer set-hta))
-  (:documentation "An <indexed-set> consists of a [numbered-set] together with an #'equalp hashtable that maps set elements to their numbers.  Allows the item-number operation to be hashtable lookup, which is basically O(1). The remaining operations are forwarded to the underlying set."))
+  (:documentation 
+   "An <indexed-set> consists of a [numbered-set] together with an #'equalp hashtable that maps
+set elements to their numbers.  Allows the item-number operation to be hashtable lookup, which
+is basically O(1). The remaining operations are forwarded to the underlying set."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; constructor
@@ -37,24 +42,26 @@ All the standard operations on <set>s apply to <indexed-set>s.  See the set pack
 
 
 (defun make-indexed-set (s &key (key-fn (constantly 0)) (max-key 0) (test #'equalp))
-  "make-indexed-set NUMBERED-SET &key (KEY-FN (constantly 0)) (MAX-KEY 0) (TEST #'equalp).  Make an <indexed-set>.  If the set is already an <indexed-set>, just return it.  The elements must have a canonicalize method defined.
+  "make-indexed-set NUMBERED-SET &key (KEY-FN (constantly 0)) (MAX-KEY 0) (TEST #'equalp)
+Make an <indexed-set>.  If the set is already an <indexed-set>, just return it.  The elements
+must have a canonicalize method defined.
 
 See also documentation for <indexed-set>."
   (if (typep s '<indexed-set>)
       s
-    (let ((hta (hta:make-hta key-fn max-key :test test)))
-      (do-elements (x s nil i)
-	(hta:set-val x hta i))
-      (make-instance '<indexed-set>
-	:s s :hta hta))))
-	    
+      (let ((hta (hta:make-hta key-fn max-key :test test)))
+        (do-elements (x s nil i)
+          (hta:set-val x hta i))
+        (make-instance '<indexed-set>
+          :s s :hta hta))))
 
 
 (defmethod clone ((s <indexed-set>))
   (make-indexed-set (s s)))
 
 (defmethod print-object ((s <indexed-set>) str)
-  (format str "<<Indexed set with ~a elements >>" (size s)))
+  (print-unreadable-object (s str :type t)
+    (format str "~A" (size s))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; operations from set

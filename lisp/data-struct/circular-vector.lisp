@@ -30,7 +30,9 @@ get-flat-vector"))
 
 
 (defstruct (circular-vector (:conc-name nil) (:constructor create-circ-vec))
-  "A circular-vector is a data type that is useful for storing logs and histories.  It is like a standard vector, except after we reach a predefined number of items, we wrap back to the beginning (overwriting what was there before).  
+  "A circular-vector is a data type that is useful for storing logs and histories.  It is like a
+standard vector, except after we reach a predefined number of items, we wrap back to the
+beginning (overwriting what was there before).
 
 Operations
 ----------
@@ -58,7 +60,8 @@ Push 5 -> #(4 1 5)"
   (create-circ-vec :vec (make-array length) :start 0 :num 0))
 
 (defun get-flat-vector (v)
-  "get-flat-vector CIRCULAR-VECTOR.  Return a new vector containing the elements of CIRCULAR-VECTOR in the correct order."
+  "get-flat-vector CIRCULAR-VECTOR
+Return a new vector containing the elements of CIRCULAR-VECTOR in the correct order."
   (let ((n (num v))
 	(j (start v))
 	(vec (vec v)))
@@ -70,7 +73,9 @@ Push 5 -> #(4 1 5)"
 	  (setf j 0))))))
 
 (defun circular-push (x v)
-  "circular-push ITEM CIRCULAR-VECTOR.  Add the ITEM to the end of the CIRCULAR-VECTOR.  If have reached the maximum number of items, this might loop back to the beginning, overwriting existing items."
+  "circular-push ITEM CIRCULAR-VECTOR
+Add the ITEM to the end of the CIRCULAR-VECTOR.  If have reached the maximum number of items,
+this might loop back to the beginning, overwriting existing items."
   (let ((vec (vec v))
 	(n (num v))
 	(j (start v)))

@@ -11,7 +11,7 @@
 
 
 (defstruct (tabular-potential (:conc-name tab-pot-)
-	    (:constructor create-tabular-potential))
+                              (:constructor create-tabular-potential))
   "Structure type tabular-potential.  Create using make-tabular-potential."
   vars
   table
@@ -27,9 +27,10 @@
 (defun make-tabular-potential (s vars func)
   "make-tabular-potential SET VARS FUNC
 
-SET - the overall product set of values for complete joint instantiations
+SET -  the overall product set of values for complete joint instantiations
 VARS - the particular variables that this potential depends on
-FUNC - a function that takes in an instantiation and returns the value of this potential on it, which must be a floating point number."
+FUNC - a function that takes in an instantiation and returns the value of this potential on it,
+       which must be a floating point number."
 
   (let ((insts (make-subspace s vars t)))
     (create-tabular-potential
