@@ -4,7 +4,7 @@
 ;;
 ;; Defines the <bucketed-counts> class, for the following situation.  Suppose there is a set of 
 ;; objects, which are grouped into buckets.  Each bucket has a count which starts at 1.  There is
-;; also a function bucket-val which maps a bucket and count to a single-float.  
+;; also a function bucket-val which maps a bucket and count to a double-float.  
 ;; Calling the method (get-current-val X) increments the count for X's bucket and returns 
 ;; bucket-val applied to the old count.  Subclasses of this are used for learning rates and 
 ;; exploration policies.

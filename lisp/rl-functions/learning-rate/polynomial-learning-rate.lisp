@@ -5,15 +5,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass <polynomial-learning-rate> (<learning-rate>)
-  ((a :type single-float
+  ((a :type double-float
       :initarg :a
       :reader a
       :initform 0e0)
-   (b :type single-float
+   (b :type double-float
       :initarg :b
       :reader b
       :initform 1e0)
-   (n :type single-float
+   (n :type double-float
       :initarg :n
       :reader n
       :initform 1e0))
