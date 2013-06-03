@@ -1,5 +1,6 @@
 *~
 *.d*fsl
+*.fas
 *.fasl
 # Directories with test output
 lisp/rl-functions/policy/test/
