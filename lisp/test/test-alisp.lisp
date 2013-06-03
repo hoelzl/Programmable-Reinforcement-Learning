@@ -14,7 +14,13 @@
 (format t "~&Testing ALisp code")
 (fill-format-nl #\= 60)
 (format t "~&Creating objects")
-(defparameter *e* (td-taxi-env:make-example-env1))
+(defvar *use-large-env* nil)
+;; (setf *use-large-env* t)
+(defparameter *e*
+  (if *use-large-env*
+      (td-taxi-env:make-example-env2)
+      (td-taxi-env:make-example-env1)))
+
 (defparameter *p* #'td-taxi-prog)
 
 (defparameter *smdpq* (alisp-smdpq:make-smdpq-alg :hist-out-dir "test/temp"))
@@ -23,7 +29,10 @@
 (defparameter *hsa* (make-instance 'ahq:<hordq> :features *featurizer*))
 
 (terpri)
-(alisp-user:learn *p* *e* 'random (list *hordq* *smdpq* *gs* *hsa*) 20000 :hist-length 20)
+(alisp-user:learn *p* *e* 'random
+                  (list *hordq* *smdpq* *gs* *hsa*)
+                  (if *use-large-env* 100000 20000)
+                  :hist-length (if *use-large-env* 50 20))
 
 (terpri)
 (defparameter *sq-pol-hist* (alisp-user:get-policy-hist *smdpq*))
@@ -41,8 +50,8 @@
   (alisp-user:evaluate *p* *e* (alisp-user:get-policy-hist *hsa*)
                        :num-steps 25 :num-trials 5))
 
-(format t "~%~%Learning curves for SMDPQ, HORDQ, HORDQ-SA, and GS are ~a"
-	(map 'vector #'list *sq-rews* *hq-rews* *hqs-rews* *gs-rews*))
+(format t "~%~%Learning curves for SMDPQ, HORDQ, HORDQ-SA, and GS are:~%")
+(pprint (map 'vector #'list *sq-rews* *hq-rews* *hqs-rews* *gs-rews*))
 
 ;; since smdpq uses temporary files, delete them
 (reset *smdpq*)
