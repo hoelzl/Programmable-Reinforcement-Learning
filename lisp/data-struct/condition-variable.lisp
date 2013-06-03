@@ -105,7 +105,8 @@ multiple threads running."
      cv)
     (incf (cv-num-waiting cv))
     (unwind-protect
-         (mp::without-interrupts
+         ;;; TODO: This is probably not correct on an SMP Lisp. --tc
+         (mp::with-delayed-interrupts
            (process-unlock lock)
            (process-disable *current-process*))
       (process-lock lock))

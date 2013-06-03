@@ -190,6 +190,9 @@ DOC-STRING is empty if not supplied."
 (defmethod print-object ((q-fn <threadwise-q-function>) str)
   (if *print-readably*
       (progn
+        ;;; The function DEFAULT-FEATURIZER is not defined.  Maybe this should be a reference to
+        ;;; *DEFAULT-FEATURIZER* from rl-functions/q-functions/approx-q-function.lisp?
+        #+(or)
 	(assert (eq (q-fn:featurizer q-fn) #'default-featurizer) ()
                 #. (str "Unable to print <approx-q-fn> readably since it does not use "
                         "the default featurizer"))

@@ -1,5 +1,8 @@
 (defpackage #:stratagus-env
-  (:documentation "Package stratagus-env (s-env).  Defines <stratagus-env> class to communicate with a running instance of the stratagus game over a socket.  Make specific stratagus domains by subclassing this.  Exported symbols:
+  (:documentation "Package stratagus-env (s-env)
+
+Defines <stratagus-env> class to communicate with a running instance of the stratagus game over
+a socket.  Make specific stratagus domains by subclassing this.  Exported symbols:
 
 Class
 -----
@@ -27,19 +30,24 @@ Constants
 
 Methods inherited from env
 --------------------------
-do-action - actions must be a hashtable from unit id to action (see hrl/strat/docs/protocol.txt for what individual action commands look like).  Action may also be *noop*, in which case no command will be sent to that unit.
-reset
-at-terminal-state
-get-state
-io-interface
-effectors
+DO-ACTION:         actions must be a hashtable from unit id to action (see
+                   hrl/strat/docs/protocol.txt for what individual action commands look like).
+                   Action may also be *noop*, in which case no command will be sent to that
+                   unit.
+
+RESET:
+AT-TERMINAL-STATE:
+GET-STATE:
+IO-INTERFACE:
+EFFECTORS:
 
 Other methods
 -------------
-send
+SEND
 
 
-Make specific stratagus subdomains by subclassing <stratagus-env>.  Subclasses should provide methods for is-terminal-state and compute-reward.")
+Make specific stratagus subdomains by subclassing <stratagus-env>.  Subclasses should provide
+methods for is-terminal-state and compute-reward.")
   (:nicknames #:s-env units)
   (:use #:common-lisp
 	#:socket
@@ -137,6 +145,3 @@ Make specific stratagus subdomains by subclassing <stratagus-env>.  Subclasses s
 	   #:unit
 	   #:*socket*
 	   ))
-
-(in-package #:cl-user)
-

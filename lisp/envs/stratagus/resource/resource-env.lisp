@@ -40,4 +40,6 @@
 
 ; reset procedure has to be extended to set elapsed-cycles to 0 upon reset
 
-(defmethod reset :after ((e <resource-env>) &optional (reset-to-nonterminal-state t) &aux (s (stratagus-env::stratagus-env-game-socket e))))
+(defmethod reset :after
+    ((e <resource-env>) &optional (reset-to-nonterminal-state t)
+                        &aux (s (stratagus-env::stratagus-env-game-socket e))))

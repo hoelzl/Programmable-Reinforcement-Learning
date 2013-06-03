@@ -18,7 +18,7 @@ INSTANTIATION is a joint instantiation.
 Signals an error if any variable referred to by POT is uninstantiated."))
 
 ;;; Forward definition for MAKE-TABLULAR-POTENTIAL
-(declaim (ftype (function (t t function) *)
+(declaim (ftype (function (t t function) t)
                 make-tabular-potential))
 
 (defgeneric multiply (op s pot &rest pots)

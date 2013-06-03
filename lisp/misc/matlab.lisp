@@ -11,7 +11,7 @@ Writes sequence S to file F in matlab-readable (ascii) form.  If OVERWRITE is tr
 overwrite F if it already exists."
   (flet ((write-it (f)
            (map nil 
-                (lambda (x) (format f "~a " (float x)))
+                (lambda (x) (format f "~A " (float x)))
                 seq)))
     (if overwrite
 	(with-open-file (f filename :direction :output :if-exists :supersede)

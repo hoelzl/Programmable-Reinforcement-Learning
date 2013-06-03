@@ -1,12 +1,13 @@
 (defpackage #:tactical-fc-env
-  (:documentation "The tactical-fc-env package.  Defines <tactical-fc-env>, for the 'footmen and catapults' tactical environment.  In this environment, the player starts with a large amount of resources, and the ability to produce footmen and catapults.  The goal is to destroy the enemy great hall, which is protected by some units.  A cost-of-living is charged per timestep, and a reward of hp-reward is given for each unit of damage done to the great hall.")
+  (:documentation "The tactical-fc-env package
+Defines <tactical-fc-env>, for the 'footmen and catapults' tactical environment.  In this
+environment, the player starts with a large amount of resources, and the ability to produce
+footmen and catapults.  The goal is to destroy the enemy great hall, which is protected by some
+units.  A cost-of-living is charged per timestep, and a reward of hp-reward is given for each
+unit of damage done to the great hall.")
   (:use #:s-env
 	#:cl
 	#:utils))
-
-
-  
-  
 
 (in-package #:tactical-fc-env)
 
@@ -24,7 +25,7 @@
 		  :reader damage-reward
 		  :initform .01
 		  :initarg :damage-reward))
-   (:documentation "Class <tactical-fc-env>.  Constructor parameters 
+  (:documentation "Class <tactical-fc-env>.  Constructor parameters 
 :cost-of-living (.001 by default)
 :damage-reward (.01 by default)"))
 
@@ -40,8 +41,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ops
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
 ;; is-terminal-state s
 ;; Episode terminates when the enemy's great hall is destroyed
@@ -65,15 +64,7 @@
   (let ((gh (first (units-belonging-to-of-type *enemy-id* *unit-great-hall* s))))
     (if gh
 	(unit-hp (get-unit-state gh s))
-      0)))
-	
-  
-
-  
-
-
-(in-package common-lisp-user)
-
+        0)))
 
 
 

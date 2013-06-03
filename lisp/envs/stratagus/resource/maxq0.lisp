@@ -27,7 +27,7 @@
 Initargs
 :t-lrate learning rate
 :q-fn q-function
-"))
+")))
 
 (defmethod initialize-instance :after ((alg <maxq>) &rest args &key q-function)
   (declare (ignore args))

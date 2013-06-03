@@ -33,7 +33,8 @@ and choices are made by asking the user.  Store history in *hist*"
     (mapcar #'(lambda (a v) (set-debug-str v a)) algs saved-vals)))
 
 
-(defun learn (part-prog env policy obs num-steps &key (hist-length nil) (episode-print-inc 10) (step-print-inc 100))
+(defun learn (part-prog env policy obs num-steps
+              &key (hist-length nil) (episode-print-inc 10) (step-print-inc 100))
   "learn PART-PROG ENV POLICY OBSERVER-LIST NUM-STEPS
       &key (HIST-LENGTH nil) (EPISODE-PRINT-INC 10) (STEP-PRINT-INC 100)
 Run partial program PART-PROG in environment ENV using POLICY to make decisions.  POLICY can

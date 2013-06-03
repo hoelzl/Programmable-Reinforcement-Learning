@@ -44,4 +44,3 @@ Inform observer that the most recent choice block has been exited.")
   "inform-part-prog-terminated OBSERVER
 Inform observer that the partial program has terminated.")
 
-
