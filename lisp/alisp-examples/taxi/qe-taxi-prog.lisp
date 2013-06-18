@@ -1,7 +1,7 @@
 (in-package #:common-lisp-user)
 
 (defpackage #:qe-taxi-prog
-  (:documentation "td-taxi-prog.lisp
+  (:documentation "qe-taxi-prog.lisp
 Alisp program used in the qe-taxi domain
 
 Functions

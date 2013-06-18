@@ -23,7 +23,7 @@ A fully observable environment is one where the percept equals the current state
 Return the current state of FULLY-OBSERVABLE-ENV.  The returned object should be treated as
 immutable, since the environment might hold a reference to it.")
   (:method ((e <fully-observable-env>))
-	   (state e)))
+    (state e)))
 
 
 (defmethod set-state (s e)

@@ -341,13 +341,19 @@ Make instantiation accessors corresponding to storing instantiation in a vector.
 (defmacro make-struct-accessors (struct-name-dec field-descs)
   "Macro make-struct-accessors NAME FIELD-DESCS.
 
-Create accessors (see package doc) for a structure of type NAME (not evaluated).  FIELD-DESCS (not evaluated) is a list of descriptions of variables or sets of variables.  Each description is either
+Create accessors (see package doc) for a structure of type NAME (not evaluated).
+FIELD-DESCS (not evaluated) is a list of descriptions of variables or sets of variables.  Each
+description is either
 - a symbol, which means the value is stored in the field of that name
-- a list (FIELD-NAME ARRAY N) where FIELD-NAME (not evaluated) is the name of the field, ARRAY (not evaluated) is the symbol 'array, and N *evaluates* to a fixnum.  This refers to a set of N variables, stored in FIELD-NAME, which is an array of length at least N.
+- a list (FIELD-NAME ARRAY N) where FIELD-NAME (not evaluated) is the name of the field,
+  ARRAY (not evaluated) is the symbol 'array, and N *evaluates* to a fixnum.  This refers to a
+  set of N variables, stored in FIELD-NAME, which is an array of length at least N.
 
 As an example, the code (let ((n 6))
   (make-struct-accessors foo (bar (baz array n) qux)))
-evaluates to the accessors for a structure of type foo, where variable 1 is the field bar, variables 2-7 are stored in the field baz, which is an array, and variable 8 is in the field qux.  The names of the variables are 'bar, '(baz 0), ..., '(baz 5), 'qux."
+evaluates to the accessors for a structure of type foo, where variable 1 is the field bar,
+variables 2-7 are stored in the field baz, which is an array, and variable 8 is in the field
+qux.  The names of the variables are 'bar, '(baz 0), ..., '(baz 5), 'qux."
   
   (let (actual-conc-name struct-name)
     (when (listp struct-name-dec)
@@ -368,19 +374,19 @@ evaluates to the accessors for a structure of type foo, where variable 1 is the 
 	  :var-names ',(mapcar (lambda (d)
 				 (if (symbolp d)
 				     d
-				   (first d)))
+                                     (first d)))
 			       field-descs)
       
 	  :creator
 	  (lambda ()
 	    (let ((,inst (,(intern-compound-symbol 'make- struct-name))))
 	      ,@(loop
-		    for f in field-descs
-		    if (symbolp f)
+                  for f in field-descs
+                  if (symbolp f)
 		    collect `(setf (,(make-acc f) ,inst) 'uninstantiated)
-		    else
+                  else
 		    collect `(setf (,(make-acc (first f)) ,inst)
-			       (make-array ,(third f) :initial-element 'uninstantiated)))
+                                   (make-array ,(third f) :initial-element 'uninstantiated)))
 	      ,inst))
       
 
@@ -388,46 +394,46 @@ evaluates to the accessors for a structure of type foo, where variable 1 is the 
 	  (coerce
 	   (append
 	    ,@(loop 
-		  for f in field-descs
-		  if (symbolp f)
+                for f in field-descs
+                if (symbolp f)
 		  collect `(list #',(make-acc f))
-		  else
+                else
 		  collect 
-		  `(mapset
-		    'list
-		    (lambda (,i)
-		      #'(lambda (,x)
-			  (aref (,(make-acc (first f)) ,x) ,i)))
-		    ,(third f))))
+                `(mapset
+                  'list
+                  (lambda (,i)
+                    #'(lambda (,x)
+                        (aref (,(make-acc (first f)) ,x) ,i)))
+                  ,(third f))))
 	   'vector)
 	
 	  :writers
 	  (coerce 
 	   (append
 	    ,@(loop
-		  for f in field-descs
-		  if (symbolp f) 
+                for f in field-descs
+                if (symbolp f) 
 		  collect `(list #'(lambda (,x ,val) (setf (,(make-acc f) ,x) ,val)))
-		  else 
+                else 
 		  collect
-		  `(mapset
-		    'list
-		    (lambda (,i)
-		      #'(lambda (,x ,val) (setf (aref (,(make-acc (first f)) ,x) ,i) ,val)))
-		    ,(third f))))
+                `(mapset
+                  'list
+                  (lambda (,i)
+                    #'(lambda (,x ,val) (setf (aref (,(make-acc (first f)) ,x) ,i) ,val)))
+                  ,(third f))))
 	   'vector)
 	
 	  :var-num
 	  (let ((,h (make-hash-table :test #'equal))
 		(,i -1))
 	    ,@(loop
-		  for f in field-descs
-		  if (symbolp f)
+                for f in field-descs
+                if (symbolp f)
 		  collect `(setf (gethash ',f ,h) (incf ,i))
-		  else
+                else
 		  collect
-		  `(dotimes (,j ,(third f))
-		     (setf (gethash (list ',(first f) ,j) ,h) (incf ,i))))
+                `(dotimes (,j ,(third f))
+                   (setf (gethash (list ',(first f) ,j) ,h) (incf ,i))))
 	    (lambda (,name)
 	      (gethash ,name ,h))))))))
 	  

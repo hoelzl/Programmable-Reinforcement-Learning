@@ -92,7 +92,10 @@ evaluate each policy."
 			  :observers obs
 			  :num-steps num-steps
 			  :num-episodes 1)))
-	       (format t ".")
+               ;; TODO: We should attach an observer to that does the printing after
+               ;; STEP-PRINT-INC steps. --tc
+               (when step-print-inc
+                 (force-format t "."))
 	       (round-decimal
 		(/
 		 (loop

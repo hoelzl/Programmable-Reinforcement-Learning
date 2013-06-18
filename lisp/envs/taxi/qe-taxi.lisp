@@ -11,7 +11,7 @@ taxi-init-dist
 
 Actions
 -------
-N,S,E,W,P, D
+N,S,E,W,P,D
 
 Accessing the state
 -------------------

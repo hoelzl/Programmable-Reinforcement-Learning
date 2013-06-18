@@ -29,7 +29,11 @@ implementations (allegro, clisp, cmu, corman, gcl, lispworks, lucid, sbcl, ccl, 
   #+sbcl (sb-introspect:function-lambda-list fn)
   #+ccl (ccl:arglist fn)
   #+ecl (ext:function-lambda-list fn)
-  #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl ccl ecl)
+  #+abcl (mvbind (arglist present) (sys::arglist fn)
+           (if present
+               arglist
+               (mop::generic-function-lambda-list (symbol-function fn))))
+  #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl ccl ecl abcl)
   (error 'not-implemented :proc (list 'arglist fn))) 
 
 
