@@ -139,6 +139,7 @@ In addition, make-3partq-featurizer binds certain function symbols for use as fe
   (declare (ignore options))
   `(flet
        ((choice (omega u) (declare (ignore omega)) u))
+     (declare (ignorable  #'choice))
      (list
       ,@(mapcar
 	 ;; function that returns code that expands to featurizer description
