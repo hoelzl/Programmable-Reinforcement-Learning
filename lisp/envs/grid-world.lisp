@@ -37,6 +37,9 @@ Operations:
 - dimensions:           2-element list representing dimensions of map
 - manhattan-dist:       manhattan distance between two locations
 - shortest-path-dist:   shortest-path distance
+- shortest-path:        the shortest path between two nodes
+- shortest-paths:       hash table containing shortest-path information
+- next-nodes:           hash table containing information about the next nodes
 
 Exported symbols
 - N, S, E, W : directions
@@ -65,6 +68,9 @@ Constants
            #:unif-grid-dist-sampler
            #:dimensions
            #:shortest-path-dist
+           #:shortest-path
+           #:shortest-paths
+           #:next-nodes
            #:is-valid-loc
            #:is-legal-loc
            #:loc-value
@@ -85,8 +91,10 @@ Constants
    (legality-test :type function
 		  :initarg :legality-test :initform #'identity
 		  :reader test :writer set-test)
-   (shortest-paths :initform nil
-                   :reader shortest-paths :writer set-shortest-paths)))
+   (%shortest-paths :initform nil
+                   :reader %shortest-paths :writer set-shortest-paths)
+   (%next-nodes :initform nil
+                :reader %next-nodes :writer set-next-nodes)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Constants
@@ -278,10 +286,11 @@ Return t iff location is in grid, and legal (i.e. the agent can be at this locat
 
 
 (defun compute-shortest-paths (gw)
-  "compute-shortest-paths GRID-WORLD
-Uses Floyd's algorithm.  Returns a hashtable that maps pairs of valid locations l1 and l2 to the
-length of the shortest path between them, or nil if there's no such path.  Is cubic in the
-number of valid locations, so try not to call it too often."
+  "compute-shortest-paths GRID-WORLD Uses Floyd's algorithm.  Returns two values: (1) a
+hashtable that maps pairs of valid locations l1 and l2 to the length of the shortest path
+between them, or nil if there's no such path; and (2) a hashtable that maps pairs of locations
+to the coordinates of the highest intermediate node.  The algorithm is cubic in the number of
+valid locations, so try not to call it too often."
   (let* ((wm (world-map gw))
 	 (dims (array-dimensions wm))
 	 (legal-locs (loop
@@ -290,6 +299,9 @@ number of valid locations, so try not to call it too often."
                                    for j below (second dims)
                                    if (funcall (test gw) (aref wm i j))
                                      collect (list i j)))))
+    #+ (or)
+    ;; This is the optimized version; for which the computation of the next-nodes information is
+    ;; not yet implemented.
     (if (loop for i below (first dims)
               always (loop for j below (second dims)
                            always (funcall (test gw) (aref wm i j))))
@@ -297,16 +309,20 @@ number of valid locations, so try not to call it too often."
 	;; a hack that avoids the expensive computation when the map has no walls    
 	(loop
           with distances = (make-hash-table :test #'equal)
-          finally (return distances)
+          and next-nodes = (make-hash-table :test #'equal)
+          finally (return (values distances next-nodes))
 		    
           for l in legal-locs
           do (loop
                for l2 in legal-locs
-               do (setf (gethash (cons l l2) distances)
-			(manhattan-dist l l2))))
+               do (progn (setf (gethash (cons l l2) distances)
+                               (manhattan-dist l l2))
+                         ;; TODO: Update the next-nodes array in this case
+                         )))
         (loop
           with distances = (make-hash-table :test #'equal)
-          finally (return distances)
+          and next-nodes = (make-hash-table :test #'equal)
+          finally (return (values distances next-nodes))
           initially (loop
 		      for l in legal-locs
 		      do (setf (gethash (cons l l) distances) 0)
@@ -315,7 +331,7 @@ number of valid locations, so try not to call it too often."
                            with d of-type list
                            do (setf d (result l m))
                            when (is-legal-loc gw d)
-			     do (setf (gethash (cons l d) distances) 1)))
+			     do (progn (setf (gethash (cons l d) distances) 1))))
 		  
           for l1 in legal-locs
           do (loop
@@ -327,8 +343,50 @@ number of valid locations, so try not to call it too often."
                              (d3 (gethash (cons l2 l3) distances)))
                          (when (and d1 d2 (or (not d3) (> d3 (+ d1 d2))))
                            (setf (gethash (cons l2 l3) distances)
-                                 (+ d1 d2))))))))))
-			       
+                                 (+ d1 d2))
+                           (setf (gethash (cons l2 l3) next-nodes)
+                                 l1)))))))
+    (loop
+          with distances = (make-hash-table :test #'equal)
+          and next-nodes = (make-hash-table :test #'equal)
+          finally (return (values distances next-nodes))
+          initially (loop
+		      for l in legal-locs
+		      do (setf (gethash (cons l l) distances) 0)
+		      do (loop
+                           for m in *moves*
+                           with d of-type list
+                           do (setf d (result l m))
+                           when (is-legal-loc gw d)
+			     do (progn (setf (gethash (cons l d) distances) 1))))
+		  
+          for l1 in legal-locs
+          do (loop
+	       for l2 in legal-locs
+	       do (loop
+                    for l3 in legal-locs
+                    do (let ((d1 (gethash (cons l2 l1) distances))
+                             (d2 (gethash (cons l1 l3) distances))
+                             (d3 (gethash (cons l2 l3) distances)))
+                         (when (and d1 d2 (or (not d3) (> d3 (+ d1 d2))))
+                           (setf (gethash (cons l2 l3) distances)
+                                 (+ d1 d2))
+                           (setf (gethash (cons l2 l3) next-nodes)
+                                 l1))))))))
+
+
+(defmethod next-nodes ((gw <grid-world>))
+  (or (%next-nodes gw)
+      (multiple-value-bind (dists nexts) (compute-shortest-paths gw)
+        (set-shortest-paths dists gw)
+        (set-next-nodes nexts gw))))
+
+(defmethod shortest-paths ((gw <grid-world>))
+  (or (%shortest-paths gw)
+      (multiple-value-bind (dists nexts) (compute-shortest-paths gw)
+        (set-shortest-paths dists gw)
+        (set-next-nodes nexts gw))))
+
 (defun shortest-path-dist (gw l1 l2)
   "shortest-path-dist GW L1 L2
 Returns the shortest-path distance between L1 and L2 in the grid.  If it hasn't been called
@@ -336,9 +394,7 @@ before on this grid, then first runs Floyd's algorithm to compute and store all-
 paths.  So if the map is large, this could take a while."
   (let ((sp 
 	  (or (shortest-paths gw)
-	      (set-shortest-paths
-	       (compute-shortest-paths gw)
-	       gw))))
+              gw)))
     (gethash (cons l1 l2) sp)))
 	 
 ;; loc-value
@@ -367,12 +423,36 @@ paths.  So if the map is large, this could take a while."
 (defmethod test ((gw array))
   #'identity)
 
-(defmethod shortest-paths ((gw array))
-  (compute-shortest-paths gw))
-
 (defmethod loc-value ((gw array) l)
   (apply #'aref gw l))
 
+(define-condition no-path-condition ()
+  ((start-node :reader start-node :initarg :start-node)
+   (end-node :reader end-node :initarg :end-nodeq))
+  (:report (lambda (condition stream)
+             (format stream "No path from ~A to ~A."
+                     (start-node condition)
+                     (end-node condition)))))
 
+;;; TODO: Rewrite this to avoid consing
+(defun %shortest-path (gw l1 l2)
+  (let* ((dists (shortest-paths gw))
+         (dist (gethash (cons l1 l2) dists nil)))
+    (if dist
+        (let* ((nexts (next-nodes gw))
+               (intermediate (gethash (cons l1 l2) nexts nil)))
+          (if intermediate
+              (append (%shortest-path gw l1 intermediate)
+                      (list intermediate)
+                      (%shortest-path gw intermediate l2))
+              '()))
+        (error 'no-path-condition :start-node l1 :end-node l2))))
 
-
+(defun shortest-path (gw l1 l2)
+  (if (equal l1 l2)
+      (list l1)
+      (handler-case
+          (append (list l1)
+                  (%shortest-path gw l1 l2)
+                  (list l2))
+        (no-path-condition () nil))))
