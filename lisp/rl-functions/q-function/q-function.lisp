@@ -108,7 +108,7 @@ choose-randomly
 Represents the Q-function (action-value function) in a sequential decision process."))
 
 
-;;; TODO: import SET package to get rit of explicit package prefixes. --tc
+;;; TODO: import SET package to get rid of explicit package prefixes. --tc
 (defgeneric best-choice (q-fn omega)
   (:documentation "best-choice Q-FUNCTION STATE
 Return two values - the choice that maximizes the q-function at this state, and the Q-value of
@@ -234,6 +234,9 @@ idea in general."
 			 (handler-case 
 			     (evaluate q-fn omega choice)
 			   (unknown-state-action () 
+                             ;; Remove for now, since otherwise Boltzman exploration is almost
+                             ;; impossible
+                             #+ (or)
 			     (warn #. (str "Using default value 0 for unknown state-action in "
                                            "Boltzmann exploration.  This part of the code "
                                            "probably needs to be changed."))

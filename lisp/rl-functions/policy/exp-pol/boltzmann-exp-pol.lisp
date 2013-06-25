@@ -45,6 +45,6 @@ needed if you want to ensure that the optimal action gets done."
   (let ((q (/ (- g2 g1) c)))
     (lambda (count)
       (let ((temp (/ diff (log (+ g1 (* count q))))))
-	(vector-push-extend temp *temps*)
+	; (vector-push-extend temp *temps*)
 	temp))))
 

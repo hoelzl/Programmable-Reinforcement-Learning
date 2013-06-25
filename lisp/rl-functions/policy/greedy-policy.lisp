@@ -12,7 +12,9 @@
                :initform (required-initarg :q-function))
    (random-choice :initform t
 		  :reader random-choice
-		  :initarg :random-choice))
+		  :initarg :random-choice)
+   (dist-cache :initform (make-hash-table :test 'equalp)
+               :reader dist-cache))
   ;; TODO: The documentation for RANDOM-CHOICE claimed that when an unknown-state-action is
   ;; encountered the behavior is the same as for unknown-state, i.e., the function is applied to
   ;; the state.  This does not seem to be the case in the code.  Check whether this is the
@@ -32,7 +34,6 @@ Initargs
                  unknown-state-action errors are handled by choosing randomly from the known set
                  of available actions"))
 
-
 (defmethod make-choice ((d <greedy-policy>) omega)
   (handler-bind ((q-fn:unknown-state-action
                    #'(lambda (c)
@@ -46,6 +47,15 @@ Initargs
                            (use-value (prob:sample-uniformly (funcall it omega))))))))
     (q-fn:best-choice (q-function d) omega)))
 
+
+;;; Added this to better support the <policy> protocol. --tc
+(defmethod choice-dist ((d <greedy-policy>) omega)
+  (let* ((choice (make-choice d omega))
+         (cached-dist (gethash choice (dist-cache d) nil)))
+    (or cached-dist
+        (let ((dist (prob:make-multinomial-dist #(1.0) (list choice))))
+          (setf (gethash choice (dist-cache d)) dist)
+          dist))))
 
 (defmethod clone ((pol <greedy-policy>))
   (check-exact-class pol '<greedy-policy>)
