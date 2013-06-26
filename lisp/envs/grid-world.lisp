@@ -91,9 +91,9 @@ Constants
    (legality-test :type function
 		  :initarg :legality-test :initform #'identity
 		  :reader test :writer set-test)
-   (%shortest-paths :initform nil
+   (%shortest-paths :initform nil :initarg :shortest-paths
                    :reader %shortest-paths :writer set-shortest-paths)
-   (%next-nodes :initform nil
+   (%next-nodes :initform nil :initarg :next-nodes
                 :reader %next-nodes :writer set-next-nodes)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
