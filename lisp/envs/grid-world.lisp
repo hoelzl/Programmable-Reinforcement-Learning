@@ -374,12 +374,15 @@ valid locations, so try not to call it too often."
                            (setf (gethash (cons l2 l3) next-nodes)
                                  l1))))))))
 
+(defgeneric next-nodes (world))
 
 (defmethod next-nodes ((gw <grid-world>))
   (or (%next-nodes gw)
       (multiple-value-bind (dists nexts) (compute-shortest-paths gw)
         (set-shortest-paths dists gw)
         (set-next-nodes nexts gw))))
+
+(defgeneric shortest-paths (world))
 
 (defmethod shortest-paths ((gw <grid-world>))
   (or (%shortest-paths gw)
