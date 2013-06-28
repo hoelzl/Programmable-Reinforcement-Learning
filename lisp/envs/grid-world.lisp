@@ -431,7 +431,7 @@ paths.  So if the map is large, this could take a while."
 
 (define-condition no-path-condition ()
   ((start-node :reader start-node :initarg :start-node)
-   (end-node :reader end-node :initarg :end-nodeq))
+   (end-node :reader end-node :initarg :end-node))
   (:report (lambda (condition stream)
              (format stream "No path from ~A to ~A."
                      (start-node condition)
@@ -449,7 +449,7 @@ paths.  So if the map is large, this could take a while."
                       (list intermediate)
                       (%shortest-path gw intermediate l2))
               '()))
-        (error 'no-path-condition :start-node l1 :end-node l2))))
+	'())))
 
 (defun shortest-path (gw l1 l2)
   (if (equal l1 l2)
