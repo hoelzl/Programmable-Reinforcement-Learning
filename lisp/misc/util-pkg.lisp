@@ -5,6 +5,7 @@
   (:export #:consec
 	   #:clone
 	   #:undefmethod
+           #:defun*
 	   
 	   #:def-struct-clone-method
 	   #:copy-into

@@ -7,8 +7,24 @@
 
 (in-package #:utils)
 
+(defclass alisp-function (c2mop:funcallable-standard-object)
+  ((lambda-list :accessor lambda-list :initarg :lambda-list
+                :initform (required-initarg :lambda-list)))
+  (:metaclass c2mop:funcallable-standard-class))
 
-(defun get-lambda-list (fn)
+(defmacro defun* (name args &body body)
+  (with-gensyms (result)
+    `(let ((,result (make-instance 'alisp-function
+                      :lambda-list ',args)))
+       (c2mop:set-funcallable-instance-function
+        ,result (lambda ,args
+                  ,@body))
+       (setf (fdefinition ',name) ,result)
+       ',name)))
+
+(defgeneric get-lambda-list (functional))
+
+(defmethod get-lambda-list ((fn function))
   "get-lambda-list FUNCTION
 Return the lambda-list of the function.  There's no CL function that does this but most
 implementations provide a function.  Will signal an error if not using one of the supported
@@ -28,15 +44,20 @@ implementations (allegro, clisp, cmu, corman, gcl, lispworks, lucid, sbcl, ccl, 
   #+lucid (lcl:arglist fn)
   #+sbcl (sb-introspect:function-lambda-list fn)
   #+ccl (ccl:arglist fn)
-  #+ecl (ext:function-lambda-list fn)
+  #+ecl (multiple-value-bind (arglist availablep)
+            (ext:function-lambda-list fn)
+          (if availablep
+              arglist
+              (error "Cannot determine arglist of ~A" fn)))
   #+abcl (mvbind (arglist present) (sys::arglist fn)
            (if present
                arglist
                (mop::generic-function-lambda-list (symbol-function fn))))
   #-(or allegro clisp cmu cormanlisp gcl lispworks lucid sbcl ccl ecl abcl)
-  (error 'not-implemented :proc (list 'arglist fn))) 
+  (error 'not-implemented :proc (list 'arglist fn)))
 
-
+(defmethod get-lambda-list ((fn alisp-function))
+  (lambda-list fn))
 
 (declaim (inline indicator))
 (defun indicator (x)
