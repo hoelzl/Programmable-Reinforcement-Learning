@@ -14,13 +14,14 @@
 
 (defmacro defun* (name args &body body)
   (with-gensyms (result)
-    `(let ((,result (make-instance 'alisp-function
-                      :lambda-list ',args)))
-       (c2mop:set-funcallable-instance-function
-        ,result (lambda ,args
-                  ,@body))
-       (setf (fdefinition ',name) ,result)
-       ',name)))
+    `(eval-now
+       (let ((,result (make-instance 'alisp-function
+                        :lambda-list ',args)))
+         (c2mop:set-funcallable-instance-function
+          ,result (lambda ,args
+                    ,@body))
+         (setf (fdefinition ',name) ,result)
+         ',name))))
 
 (defgeneric get-lambda-list (functional))
 
