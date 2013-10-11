@@ -18,8 +18,15 @@
        (let ((,result (make-instance 'alisp-function
                         :lambda-list ',args)))
          (c2mop:set-funcallable-instance-function
-          ,result (lambda ,args
-                    ,@body))
+          ,result 
+          #-sbcl
+          (lambda ,args ,@body)
+          #+sbcl
+          (sb-int:named-lambda ,name ,args ,@body))
+         ;;; XXX
+         #+ (or)
+         (setf (sb-int:info)
+               (sb-c:source-location))
          (setf (fdefinition ',name) ,result)
          ',name))))
 
