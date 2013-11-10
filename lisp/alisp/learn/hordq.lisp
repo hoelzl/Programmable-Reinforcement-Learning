@@ -148,7 +148,7 @@ FEATURES:  if provided, this must be a list with three elements, namely the feat
 
 (defmethod inform-env-step ((alg <hordq>) act rew to term)
   (declare (ignore to act term))
-  
+
   (let ((tos (first (choice-stack alg)))
 	(disc (discount alg)))
     
@@ -158,17 +158,17 @@ FEATURES:  if provided, this must be a list with three elements, namely the feat
 	     `(let ((,x ,item))
 		(incf (,accumulator ,x) (* rew (csi-discount ,x)))
 		(multf (csi-discount ,x) disc)))))
-    
-      (assert tos nil "Choice stack was empty in inform-env-step.")
       
+      (assert tos () "Choice stack was empty in inform-env-step.")      
       ;; update Qc-acc for most recent choice on the same level
       (when (csi-visited tos)
 	(accumulate-reward csi-c-acc tos))
       
+      (assert (second (choice-stack alg)) () "No second level in choice stack?")
       ;; for the level above the current one, update r-acc (for levels above that, their
       ;; Qr-backup must have already happened)
       (accumulate-reward csi-r-acc (second (choice-stack alg)))
-      
+
       ;; for all active exit points, update the Q_e accumulator
       (dolist (item (active-exit-pts alg))
 	(accumulate-reward csi-e-acc item)))))
