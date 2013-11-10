@@ -53,7 +53,7 @@ Other
 
 (defclass <exp-pol> (<stochastic-policy>)
   ((bucket-function :initarg :bucket-fn :initform #'canonicalize :reader bucket-fn)
-   (test :initarg :initarg :initform #'equal :reader test)
+   (test :initarg :test :initform #'equal :reader test)
    (count-table :writer set-count-table :reader count-table))
   (:documentation "Class for exploration policies.  Subclass of <stochastic-policy>.
 

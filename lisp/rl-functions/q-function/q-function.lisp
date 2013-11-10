@@ -126,6 +126,7 @@ Q-value is 0.  If the state itself is unknown, signals an error of type 'unknown
           (values (set:item (random (set:size ch)) ch) 0))))))
 	
 
+;;; TODO: The restart seems to take up a lot of time.  Maybe remove the around method? --tc
 (defgeneric evaluate (q-fn omega u)
   (:documentation "evaluate Q-FN STATE ACTION
 Evaluate a Q-function on a STATE and ACTION.  Might signal an error of type
