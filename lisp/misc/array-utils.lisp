@@ -41,18 +41,26 @@ implementation intended only for debugging."
   "map-array FN &rest ARRAYS
 ARRAYS = A1...An must all be arrays with the same dimensions (and n must be >= 1).  Create a new
 array with the same dimension, where A[indices] = FN (A1[indices] A2[indices]... An[indices])."
-  (let ((dims (array-dimensions (first arrays))))
-    (assert
-     (loop 
-       for a in (rest arrays)
-       always (equal dims (array-dimensions a)))
-     () "All array arguments to map-array must have same dimensions.")
-    (loop
-      with result = (make-array dims)
-      for i below (array-total-size result)
-      do (setf (row-major-aref result i)
-               (apply f (mapcar (lambda (x) (row-major-aref x i)) arrays)))
-      finally (return result))))
+  (if (and arrays (not (rest arrays)) (vectorp (first arrays)))
+      ;; Only one vector; take into account the fill-pointer.
+      (let ((vec (first arrays)))
+        (loop
+          with result = (make-array (length vec))
+          for i below (length vec)
+          do (setf (aref result i) (funcall f (aref vec i)))
+          finally (return result)))
+      (let ((dims (array-dimensions (first arrays))))
+        (assert
+         (loop 
+           for a in (rest arrays)
+           always (equal dims (array-dimensions a)))
+         () "All array arguments to map-array must have same dimensions.")
+        (loop
+          with result = (make-array dims)
+          for i below (array-total-size result)
+          do (setf (row-major-aref result i)
+                   (apply f (mapcar (lambda (x) (row-major-aref x i)) arrays)))
+          finally (return result)))))
 
 (defun a+ (&rest arrays)
   "a+ &rest ARRAYS.  Elementwise addition."
