@@ -1,7 +1,7 @@
 (in-package asdf)
 
 (asdf:defsystem "hrl"
-  :depends-on (#:closer-mop)
+  :depends-on (#:closer-mop #+sbcl #:sb-introspect)
   :components ((:module "misc" :pathname "misc/" :serial t
                 :components
                 ((:file "package-utils")
