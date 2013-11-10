@@ -78,7 +78,12 @@ Create using make-instance with initialization arguments
 (defun reset-table (pol)
   "reset-table EXP-POL
 Make the count table of the policy be a new empty hash table.  See also reset-counts."
-  (set-count-table (make-hash-table :test (test pol)) pol))
+  (set-count-table
+   #-sbcl (make-hash-table :test (test pol)) 
+   #+sbcl (make-hash-table :test (test pol) 
+                           :size #.(expt 2 16)
+                           :rehash-size 2.0 :rehash-threshold 0.5)
+   pol))
 
 (defun reset-counts (pol)
   "reset-counts EXP-POL
