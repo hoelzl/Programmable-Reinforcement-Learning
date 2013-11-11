@@ -20,6 +20,9 @@
 (defmethod start ((part-prog function))
   (funcall part-prog))
 
+(defmethod start ((part-prog symbol))
+  (funcall part-prog))
+
 (defmacro def-env-accessor (feature-name fn-name &optional (doc-string ""))
   "Macro def-env-accessor FEATURE-NAME FUNCTION-NAME &optional (DOC-STRING \"\")
 Expands to a definition of a function of no arguments named FEATURE-NAME that applies
